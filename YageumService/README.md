@@ -1,2 +1,9 @@
-# ManagementService
-Management Service API for Studio I
+YageumService 백엔드 서버
+
+소개
+YageumService는 청년들을 위한 알뜰한 자산 정보를 제공하는 서비스입니다. 이 서비스는 사용자들이 금융적인 지식을 습득하고 효율적으로 자산을 관리할 수 있도록 돕습니다.
+
+정보
+사용자들에게 알뜰한 자산 관리에 관한 정보를 제공합니다.
+사용자들이 자산을 효율적으로 관리할 수 있는 도구를 제공합니다.
+
