@@ -1,0 +1,33 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+  application:
+    name: api
+
+  datasource:
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:mysql:8://testDB
+    username: root
+    password: 1234
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+
+jwt:
+  secret: ENC(acbDZy8Gz9X1OSL3fjOHVg==)
+
+user-service:
+  url: http://localhost:8081/user-service
+

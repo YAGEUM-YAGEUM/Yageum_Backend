@@ -1,0 +1,37 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  application:
+    name: Management-Service
+
+  datasource:
+    url: ENC(vK3ggYCmRnJlODS6cbBXJAi+7Mw7qpO3mKVnWz9PV+Mi+aQrVJBY++5ecNXwrnQxgbCgoivoVVDJjDe554GHnyoj8f2rUbkyNbgN/QmNAZa+Cc+Gp1x7huLrQD7BCeLC)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ENC(Oywg8yRSKPs0TXgE6rbNaA==)
+    password: ENC(R6oW03mOpylO0Fj2BJzvOeMuCiLGT568)
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+eureka:
+  instance:
+    hostname : 3.35.179.234
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${server.port}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://13.125.181.139:8761/eureka
+
+jwt:
+  secret: ENC(acbDZy8Gz9X1OSL3fjOHVg==)
+
+user-service:
+  url: http://52.78.155.253:8081/user-service
