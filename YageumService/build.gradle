@@ -39,14 +39,16 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'io.leopard.boot:leopard-boot-requestmapping:0.9.20'
-	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 	implementation 'com.nimbusds:nimbus-jose-jwt:9.31'
+
+	// MSA
+//	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
 	// Swagger 3
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4'

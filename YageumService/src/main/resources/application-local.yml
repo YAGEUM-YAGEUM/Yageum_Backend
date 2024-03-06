@@ -30,5 +30,5 @@ spring:
 jwt:
   secret: ENC(acbDZy8Gz9X1OSL3fjOHVg==)
 
-user-service:
-  url: http://localhost:8081/user-service
+#user-service:
+#  url: http://localhost:8081/user-service
