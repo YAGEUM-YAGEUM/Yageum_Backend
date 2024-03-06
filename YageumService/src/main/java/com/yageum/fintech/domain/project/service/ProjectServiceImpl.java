@@ -3,7 +3,6 @@ package com.yageum.fintech.domain.project.service;
 import com.yageum.fintech.domain.project.dto.response.GetProjectListResponseDto;
 import com.yageum.fintech.domain.project.dto.response.GetProjectResponseDto;
 import com.yageum.fintech.domain.project.dto.response.GetProjectUserResponseDto;
-import com.mju.management.domain.project.infrastructure.*;
 import com.yageum.fintech.domain.project.infrastructure.Project;
 import com.yageum.fintech.domain.project.infrastructure.ProjectRepository;
 import com.yageum.fintech.domain.project.infrastructure.ProjectUser;

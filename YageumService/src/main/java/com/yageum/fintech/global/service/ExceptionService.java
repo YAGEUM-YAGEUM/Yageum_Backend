@@ -1,6 +1,5 @@
 package com.yageum.fintech.global.service;
 
-import com.mju.management.global.model.Exception.*;
 import com.yageum.fintech.global.model.Result.CommonResult;
 import com.yageum.fintech.global.model.Exception.*;
 import io.jsonwebtoken.*;
