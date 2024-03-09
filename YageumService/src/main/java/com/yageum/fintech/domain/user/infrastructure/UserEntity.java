@@ -15,25 +15,26 @@ import java.util.Optional;
 public class UserEntity {
 
     @Id
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "product_id") // 외래 키 필드 추가
     private Long product_id;
 
-    @Column(nullable = false, length = 50, unique = true)
+    @Column(name = "email", nullable = false, length = 50, unique = true)
     private String email;
 
-    @Column(nullable = false, length = 50)
+    @Column(name= "name", nullable = false, length = 50)
     private String name;
 
-    @Column(nullable = false, length = 15)
+    @Column(name = "phone_number", nullable = false, length = 15)
     private String phoneNumber;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "encryptedPwd", nullable = false, length = 100)
     private String encryptedPwd;
 
-    @Column(nullable = false)
+    @Column(name = "isApproved", nullable = false)
     private boolean isApproved;
 
     private UserEntity(Optional<UserEntity> userEntity) {

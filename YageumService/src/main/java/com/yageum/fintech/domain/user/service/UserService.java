@@ -1,10 +1,10 @@
 package com.yageum.fintech.domain.user.service;
 
-import com.yageum.fintech.domain.user.dto.request.RequestLogin;
-import com.yageum.fintech.domain.user.dto.request.RequestUser;
-import com.yageum.fintech.domain.user.dto.response.EmailVerificationResult;
+import com.yageum.fintech.domain.user.dto.request.LoginRequest;
+import com.yageum.fintech.domain.user.dto.request.CreateUserRequestDto;
+import com.yageum.fintech.domain.user.dto.response.GetUserResponseDto;
+import com.yageum.fintech.global.model.Exception.EmailVerificationResult;
 import com.yageum.fintech.domain.user.dto.response.JWTAuthResponse;
-import com.yageum.fintech.domain.user.dto.response.UserResponse;
 import com.yageum.fintech.domain.user.infrastructure.UserEntity;
 
 import java.util.Optional;
@@ -13,13 +13,13 @@ public interface UserService{
 
     Optional<UserEntity> findOne(String email);
 
-    JWTAuthResponse login(RequestLogin requestLogin);
+    JWTAuthResponse login(LoginRequest loginRequest);
 
-    String register(RequestUser requestUser);
+    String register(CreateUserRequestDto createUserRequestDto);
 
-    UserResponse getUserResponseByUserId(Long userId);
+    GetUserResponseDto getUserResponseByUserId(Long userId);
 
-    UserResponse findUserResponseByEmail(String email);
+    GetUserResponseDto findUserResponseByEmail(String email);
 
     JWTAuthResponse reissueAccessToken(String encryptedRefreshToken);
 

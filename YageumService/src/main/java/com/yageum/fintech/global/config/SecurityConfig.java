@@ -25,7 +25,7 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint authenticationEntryPoint;
 
     private static final String[] WHITE_LIST = {
-            "/user-service/**",
+            "/api/users/**",
             "/",
             "/error"
     };
