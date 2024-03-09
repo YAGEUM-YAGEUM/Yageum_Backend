@@ -7,7 +7,7 @@ import com.yageum.fintech.domain.project.infrastructure.ProjectRepository;
 import com.yageum.fintech.domain.project.infrastructure.ProjectUserRepository;
 import com.yageum.fintech.domain.schedule.dto.response.GetScheduleResponseDto;
 import com.yageum.fintech.domain.schedule.infrastructure.Schedule;
-import com.yageum.fintech.global.config.jwtInterceptor.JwtContextHolder;
+import com.yageum.fintech.global.config.jwt.jwtInterceptor.JwtContextHolder;
 import com.yageum.fintech.domain.schedule.dto.reqeust.CreateScheduleRequestDto;
 import com.yageum.fintech.domain.schedule.infrastructure.ScheduleRepository;
 import com.yageum.fintech.global.model.Exception.*;

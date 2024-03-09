@@ -6,7 +6,7 @@ import com.yageum.fintech.domain.project.infrastructure.ProjectUserRepository;
 import com.yageum.fintech.domain.todo.dto.ToDoRequestDto;
 import com.yageum.fintech.domain.todo.infrastructure.ToDoEntity;
 import com.yageum.fintech.domain.todo.infrastructure.ToDoJpaRepository;
-import com.yageum.fintech.global.config.jwtInterceptor.JwtContextHolder;
+import com.yageum.fintech.global.config.jwt.jwtInterceptor.JwtContextHolder;
 import com.yageum.fintech.global.model.Exception.ExceptionList;
 import com.yageum.fintech.global.model.Exception.NonExistentException;
 import com.yageum.fintech.global.model.Exception.UnauthorizedAccessException;

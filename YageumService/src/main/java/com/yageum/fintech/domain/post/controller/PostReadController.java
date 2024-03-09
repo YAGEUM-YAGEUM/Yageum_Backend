@@ -2,7 +2,7 @@ package com.yageum.fintech.domain.post.controller;
 
 import com.yageum.fintech.domain.post.controller.port.PostReadService;
 import com.yageum.fintech.domain.post.controller.response.PostResponse;
-import com.yageum.fintech.global.config.jwtInterceptor.JwtContextHolder;
+import com.yageum.fintech.global.config.jwt.jwtInterceptor.JwtContextHolder;
 import com.yageum.fintech.global.model.Result.CommonResult;
 import com.yageum.fintech.global.service.ResponseService;
 import io.swagger.v3.oas.annotations.Operation;

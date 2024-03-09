@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.mju.management.domain.project.infrastructure.*;
 import com.yageum.fintech.domain.project.infrastructure.*;
-import com.yageum.fintech.global.config.jwtInterceptor.JwtContextHolder;
+import com.yageum.fintech.global.config.jwt.jwtInterceptor.JwtContextHolder;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;

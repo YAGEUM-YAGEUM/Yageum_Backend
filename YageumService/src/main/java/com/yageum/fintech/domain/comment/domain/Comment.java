@@ -1,7 +1,7 @@
 package com.yageum.fintech.domain.comment.domain;
 
 import com.yageum.fintech.domain.post.domain.Post;
-import com.yageum.fintech.global.config.jwtInterceptor.JwtContextHolder;
+import com.yageum.fintech.global.config.jwt.jwtInterceptor.JwtContextHolder;
 import lombok.Builder;
 import lombok.Getter;
 

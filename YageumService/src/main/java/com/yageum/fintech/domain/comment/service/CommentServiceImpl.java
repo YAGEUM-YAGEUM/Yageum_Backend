@@ -8,7 +8,7 @@ import com.yageum.fintech.domain.comment.service.port.CommentRepository;
 import com.yageum.fintech.domain.post.domain.Post;
 import com.yageum.fintech.domain.post.infrastructure.PostRepository;
 import com.yageum.fintech.domain.project.infrastructure.Project;
-import com.yageum.fintech.global.config.jwtInterceptor.JwtContextHolder;
+import com.yageum.fintech.global.config.jwt.jwtInterceptor.JwtContextHolder;
 import com.yageum.fintech.global.model.Exception.ExceptionList;
 import com.yageum.fintech.global.model.Exception.NonExistentException;
 import com.yageum.fintech.global.model.Exception.UnauthorizedAccessException;

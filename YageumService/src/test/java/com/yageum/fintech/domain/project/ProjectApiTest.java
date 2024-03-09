@@ -4,7 +4,7 @@ import com.yageum.fintech.BaseApiTest;
 import com.yageum.fintech.domain.project.dto.reqeust.CreateProjectRequestDto;
 import com.mju.management.domain.project.infrastructure.*;
 import com.yageum.fintech.domain.project.infrastructure.Project;
-import com.yageum.fintech.global.config.jwtInterceptor.JwtContextHolder;
+import com.yageum.fintech.global.config.jwt.jwtInterceptor.JwtContextHolder;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

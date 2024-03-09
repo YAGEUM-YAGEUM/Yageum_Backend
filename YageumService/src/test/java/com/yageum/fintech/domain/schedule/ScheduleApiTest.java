@@ -5,7 +5,7 @@ import com.yageum.fintech.domain.project.infrastructure.Project;
 import com.yageum.fintech.domain.schedule.dto.reqeust.CreateScheduleRequestDto;
 import com.yageum.fintech.domain.schedule.infrastructure.Schedule;
 import com.yageum.fintech.domain.schedule.infrastructure.ScheduleRepository;
-import com.yageum.fintech.global.config.jwtInterceptor.JwtContextHolder;
+import com.yageum.fintech.global.config.jwt.jwtInterceptor.JwtContextHolder;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

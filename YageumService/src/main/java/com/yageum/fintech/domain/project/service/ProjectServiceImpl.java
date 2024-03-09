@@ -9,7 +9,7 @@ import com.yageum.fintech.domain.project.infrastructure.ProjectUser;
 import com.yageum.fintech.domain.project.infrastructure.Role;
 import com.yageum.fintech.domain.user.dto.response.GetUserResponseDto;
 import com.yageum.fintech.domain.user.service.UserServiceImpl2;
-import com.yageum.fintech.global.config.jwtInterceptor.JwtContextHolder;
+import com.yageum.fintech.global.config.jwt.jwtInterceptor.JwtContextHolder;
 import com.yageum.fintech.global.model.Exception.ExceptionList;
 import com.yageum.fintech.global.model.Exception.NonExistentException;
 import com.yageum.fintech.domain.project.dto.reqeust.CreateProjectRequestDto;
