@@ -1,7 +1,7 @@
 package com.yageum.fintech.domain.project.dto.response;
 
 import com.yageum.fintech.domain.project.infrastructure.Role;
-import com.yageum.fintech.domain.user.dto.GetUserResponseDto;
+import com.yageum.fintech.domain.user.dto.response.GetUserResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

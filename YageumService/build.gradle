@@ -39,12 +39,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'io.leopard.boot:leopard-boot-requestmapping:0.9.20'
+	implementation 'org.modelmapper:modelmapper:3.1.1'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation 'com.nimbusds:nimbus-jose-jwt:9.31'
 
 	// MSA
 //	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
@@ -59,9 +59,21 @@ dependencies {
 	// Jasypt: DB 암호화
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 
+	//security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
 	// Jwt
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	implementation 'javax.xml.bind:jaxb-api:2.3.0'
+	implementation 'org.webjars.npm:jsonwebtoken:8.5.1'
+	implementation 'com.nimbusds:nimbus-jose-jwt:9.31'
+
+	//redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	//SMTP
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '3.0.5'
+	implementation 'jakarta.mail:jakarta.mail-api:2.1.2'
 
 	// test container
 	testImplementation "org.testcontainers:junit-jupiter:1.17.2"

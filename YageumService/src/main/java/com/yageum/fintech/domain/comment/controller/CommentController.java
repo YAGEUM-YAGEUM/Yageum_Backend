@@ -5,7 +5,7 @@ import com.yageum.fintech.domain.comment.controller.response.CommentResponse;
 import com.yageum.fintech.domain.comment.domain.Comment;
 import com.yageum.fintech.domain.comment.domain.CommentCreate;
 import com.yageum.fintech.domain.comment.domain.CommentUpdate;
-import com.yageum.fintech.domain.user.service.UserServiceImpl;
+import com.yageum.fintech.domain.user.service.UserServiceImpl2;
 import com.yageum.fintech.global.model.Result.CommonResult;
 import com.yageum.fintech.global.service.ResponseService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +27,7 @@ public class CommentController {
     private final CommentService commentService;
     private final ResponseService responseService;
 
-    private final UserServiceImpl userService;
+    private final UserServiceImpl2 userService;
 
     private String getName(long writtenId){
         return userService.getUsername(writtenId);
