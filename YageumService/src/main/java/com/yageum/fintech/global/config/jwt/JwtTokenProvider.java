@@ -45,7 +45,7 @@ public class JwtTokenProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    // generate JWT token
+    // JWT 토큰 생성
     public JWTAuthResponse generateToken(String email, Authentication authentication, Long userId) {
         String username = authentication.getName();
 
@@ -73,12 +73,12 @@ public class JwtTokenProvider {
 
         redisServiceImpl.setValues(email, refreshToken, Duration.ofMillis(REFRESH_TOKEN_VALID_TIME));
 
-        JWTAuthResponse response = new JWTAuthResponse();
-        response.setAccessToken(accessToken);
-        response.setRefreshToken(refreshToken);
-        response.setTokenType(BEARER);
-        response.setAccessTokenExpireDate(ACCESS_TOKEN_VALID_TIME);
-        return response;
+        return JWTAuthResponse.builder()
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .tokenType(BEARER)
+                    .accessTokenExpireDate(ACCESS_TOKEN_VALID_TIME)
+                    .build();
     }
 
     // Token 복호화 및 예외 발생(토큰 만료, 시그니처 오류)시 Claims 객체가 안만들어짐

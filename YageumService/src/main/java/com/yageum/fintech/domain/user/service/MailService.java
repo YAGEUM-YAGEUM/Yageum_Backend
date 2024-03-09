@@ -1,7 +1,7 @@
 package com.yageum.fintech.domain.user.service;
 
 import com.yageum.fintech.global.model.Exception.BusinessLogicException;
-import com.yageum.fintech.global.model.Exception.ExceptionCode;
+import com.yageum.fintech.global.model.Exception.ExceptionList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
@@ -26,7 +26,7 @@ public class MailService {
         } catch (RuntimeException e) {
             log.debug("MailService.sendEmail exception occur toEmail: {}, " +
                     "title: {}, text: {}", toEmail, title, text);
-            throw new BusinessLogicException(ExceptionCode.UNABLE_TO_SEND_EMAIL);
+            throw new BusinessLogicException(ExceptionList.UNABLE_TO_SEND_EMAIL);
         }
     }
 

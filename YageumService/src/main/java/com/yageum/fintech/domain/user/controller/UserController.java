@@ -3,15 +3,12 @@ package com.yageum.fintech.domain.user.controller;
 import com.yageum.fintech.domain.user.dto.request.LoginRequest;
 import com.yageum.fintech.domain.user.dto.request.CreateUserRequestDto;
 import com.yageum.fintech.domain.user.dto.response.GetUserResponseDto;
-import com.yageum.fintech.global.model.Exception.BlogAPIException;
 import com.yageum.fintech.global.model.Exception.EmailVerificationResult;
 import com.yageum.fintech.domain.user.dto.response.JWTAuthResponse;
 import com.yageum.fintech.domain.user.service.UserService;
 import com.yageum.fintech.global.config.jwt.JwtTokenProvider;
 import com.yageum.fintech.global.model.Exception.BusinessLogicException;
-import com.yageum.fintech.global.model.Exception.ExceptionCode;
-import com.yageum.fintech.global.model.Result.CommonResult;
-import com.yageum.fintech.global.model.Result.ListResult;
+import com.yageum.fintech.global.model.Exception.ExceptionList;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -71,16 +68,15 @@ public class UserController {
     @Operation(summary = "이메일 인증번호 전송")
     @PostMapping("/emails/verification-requests")
     public ResponseEntity sendMessage(@RequestParam("email") @Valid String email) {
-
         userService.sendCodeToEmail(email);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
     //이메일 인증번호 검증
     @Operation(summary = "이메일 인증번호 검증")
     @GetMapping("/emails/verifications")
     public ResponseEntity verificationEmail(@RequestParam("email") @Valid @Email String email,
                                             @RequestParam("code") String authCode) {
-
         EmailVerificationResult response = userService.verifiedCode(email, authCode);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -93,10 +89,10 @@ public class UserController {
             GetUserResponseDto userResponse = userService.getUserResponseByUserId(userId);
             return ResponseEntity.ok().body(userResponse);
         } catch (BusinessLogicException e) {
-            ExceptionCode exceptionCode = e.getExceptionCode();
-            int status = exceptionCode.getStatus();
-            String message = exceptionCode.getMessage();
-            return ResponseEntity.status(status).body(new GetUserResponseDto(message));
+            ExceptionList exceptionList = e.getExceptionList();
+
+            return ResponseEntity.status(exceptionList.getCode()).
+                    body(new GetUserResponseDto(exceptionList.getMessage()));
         }
     }
 
@@ -108,10 +104,10 @@ public class UserController {
             GetUserResponseDto userResponse = userService.findUserResponseByEmail(email);
             return ResponseEntity.ok().body(userResponse);
         } catch (BusinessLogicException e) {
-            ExceptionCode exceptionCode = e.getExceptionCode();
-            int status = exceptionCode.getStatus();
-            String message = exceptionCode.getMessage();
-            return ResponseEntity.status(status).body(new GetUserResponseDto(message));
+            ExceptionList exceptionList = e.getExceptionList();
+
+            return ResponseEntity.status(exceptionList.getCode()).
+                    body(new GetUserResponseDto(exceptionList.getMessage()));
         }
     }
 

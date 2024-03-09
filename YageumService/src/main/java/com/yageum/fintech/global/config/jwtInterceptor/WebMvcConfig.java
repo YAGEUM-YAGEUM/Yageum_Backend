@@ -11,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
     private final JwtInterceptor jwtInterceptor;
     private final Environment environment;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         String[] activeProfiles = environment.getActiveProfiles();
