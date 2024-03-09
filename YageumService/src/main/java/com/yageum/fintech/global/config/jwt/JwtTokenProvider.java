@@ -2,7 +2,7 @@ package com.yageum.fintech.global.config.jwt;
 
 import com.yageum.fintech.domain.user.dto.response.JWTAuthResponse;
 import com.yageum.fintech.domain.user.service.MyUserDetailsService;
-import com.yageum.fintech.domain.user.service.RedisService;
+import com.yageum.fintech.domain.user.service.RedisServiceImpl;
 import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,7 +37,7 @@ public class JwtTokenProvider {
 
     private final MyUserDetailsService userDetailsService;
 
-    private final RedisService redisService;
+    private final RedisServiceImpl redisServiceImpl;
 
     // 의존성 주입이 완료된 후에 실행되는 메소드, secretKey를 Base64로 인코딩한다.
     @PostConstruct
@@ -71,7 +71,7 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
-        redisService.setValues(email, refreshToken, Duration.ofMillis(REFRESH_TOKEN_VALID_TIME));
+        redisServiceImpl.setValues(email, refreshToken, Duration.ofMillis(REFRESH_TOKEN_VALID_TIME));
 
         JWTAuthResponse response = new JWTAuthResponse();
         response.setAccessToken(accessToken);

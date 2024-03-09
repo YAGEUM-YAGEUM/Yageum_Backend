@@ -1,10 +1,12 @@
 package com.yageum.fintech.domain.user.infrastructure;
 
-import com.yageum.fintech.domain.user.dto.response.UserResponse;
+import com.yageum.fintech.domain.user.dto.response.GetUserResponseDto;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> findByEmail(String email);
@@ -13,25 +15,15 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> findById(Long userId);
 
-    default UserResponse findUserResponseByUserId(Long userId) {
+    default GetUserResponseDto findUserResponseByUserId(Long userId) {
         Optional<UserEntity> userEntityOptional = findById(userId);
         UserEntity userEntity = userEntityOptional.get();
-        return new UserResponse(
-                userEntity.getId(),
-                userEntity.getEmail(),
-                userEntity.getName(),
-                userEntity.getPhoneNumber(),
-                userEntity.isApproved());
-        }
+        return GetUserResponseDto.from(userEntity);
+    }
 
-    default UserResponse findUserResponseByEmail(String email) {
+    default GetUserResponseDto findUserResponseByEmail(String email) {
         Optional<UserEntity> userEntityOptional = findByEmail(email);
         UserEntity userEntity = userEntityOptional.get();
-        return new UserResponse(
-                userEntity.getId(),
-                userEntity.getEmail(),
-                userEntity.getName(),
-                userEntity.getPhoneNumber(),
-                userEntity.isApproved());
+        return GetUserResponseDto.from(userEntity);
     }
 }

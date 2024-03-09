@@ -1,18 +1,16 @@
 package com.yageum.fintech.domain.user.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class JWTAuthResponse {
+
     private String tokenType;
     private String accessToken;
     private String refreshToken;
     private Long accessTokenExpireDate;
+
 }
 

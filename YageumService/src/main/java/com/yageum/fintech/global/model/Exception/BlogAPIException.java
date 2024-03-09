@@ -18,6 +18,10 @@ public class BlogAPIException extends RuntimeException {
         this.message = message1;
     }
 
+    public BlogAPIException(String message) {
+        this.message = message;
+    }
+
     public HttpStatus getStatus() {
         return status;
     }

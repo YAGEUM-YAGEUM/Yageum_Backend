@@ -1,10 +1,10 @@
 package com.yageum.fintech.domain.user.service;
 
-import com.yageum.fintech.domain.user.dto.request.RequestLogin;
-import com.yageum.fintech.domain.user.dto.request.RequestUser;
-import com.yageum.fintech.domain.user.dto.response.EmailVerificationResult;
+import com.yageum.fintech.domain.user.dto.request.LoginRequest;
+import com.yageum.fintech.domain.user.dto.request.CreateUserRequestDto;
+import com.yageum.fintech.domain.user.dto.response.GetUserResponseDto;
+import com.yageum.fintech.global.model.Exception.EmailVerificationResult;
 import com.yageum.fintech.domain.user.dto.response.JWTAuthResponse;
-import com.yageum.fintech.domain.user.dto.response.UserResponse;
 import com.yageum.fintech.domain.user.infrastructure.UserEntity;
 import com.yageum.fintech.domain.user.infrastructure.UserRepository;
 import com.yageum.fintech.global.config.jwt.JwtTokenProvider;
@@ -32,7 +32,6 @@ import java.util.Optional;
 import java.util.Random;
 
 @Slf4j
-@Transactional
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
@@ -44,7 +43,7 @@ public class UserServiceImpl implements UserService{
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final MyUserDetailsService myUserDetailsService;
-    private final RedisService redisService;
+    private final RedisServiceImpl redisServiceImpl;
 
     @Value("${spring.mail.auth-code-expiration-millis}")
     private long authCodeExpirationMillis;
@@ -54,29 +53,31 @@ public class UserServiceImpl implements UserService{
         return userRepository.findByEmail(email);
     }
 
+    @Transactional
     @Override
-    public JWTAuthResponse login(RequestLogin requestLogin) {
+    public JWTAuthResponse login(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                requestLogin.getEmail(), requestLogin.getPwd()));
+                loginRequest.getEmail(), loginRequest.getPwd()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        Long userId = myUserDetailsService.findUserIdByEmail(requestLogin.getEmail());
-        JWTAuthResponse token = jwtTokenProvider.generateToken(requestLogin.getEmail(), authentication, userId);
+        Long userId = myUserDetailsService.findUserIdByEmail(loginRequest.getEmail());
+        JWTAuthResponse token = jwtTokenProvider.generateToken(loginRequest.getEmail(), authentication, userId);
         return token;
     }
 
+    @Transactional
     @Override
-    public String register(RequestUser requestUser) {
+    public String register(CreateUserRequestDto createUserRequestDto) {
 
-        // add check for email exists in database
-        if(userRepository.existsByEmail(requestUser.getEmail())){
+        // 중복 이메일 체크
+        if(userRepository.existsByEmail(createUserRequestDto.getEmail())){
             throw new BlogAPIException(HttpStatus.BAD_REQUEST, "Email is already exists!.");
         }
 
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        UserEntity userEntity = mapper.map(requestUser, UserEntity.class);
-        userEntity.setEncryptedPwd(pwdEncoder.encode(requestUser.getPwd()));
+        UserEntity userEntity = mapper.map(createUserRequestDto, UserEntity.class);
+        userEntity.setEncryptedPwd(pwdEncoder.encode(createUserRequestDto.getPwd()));
         userEntity.setApproved(false);
         userRepository.save(userEntity);
 
@@ -84,8 +85,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserResponse getUserResponseByUserId(Long userId) {
-        UserResponse userResponse = userRepository.findUserResponseByUserId(userId);
+    public GetUserResponseDto getUserResponseByUserId(Long userId) {
+        GetUserResponseDto userResponse = userRepository.findUserResponseByUserId(userId);
         if (userResponse == null) {
             throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
         }
@@ -93,21 +94,22 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserResponse findUserResponseByEmail(String email) {
-        UserResponse userResponse = userRepository.findUserResponseByEmail(email);
+    public GetUserResponseDto findUserResponseByEmail(String email) {
+        GetUserResponseDto userResponse = userRepository.findUserResponseByEmail(email);
         if (userResponse == null) {
             throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
         }
         return userResponse;
     }
 
+    @Transactional
     @Override
     public JWTAuthResponse reissueAccessToken(String refreshToken) {
         this.verifiedRefreshToken(refreshToken);
         String email = jwtTokenProvider.getEmail(refreshToken);
-        String redisRefreshToken = redisService.getValues(email);
+        String redisRefreshToken = redisServiceImpl.getValues(email);
 
-        if (redisService.checkExistsValue(redisRefreshToken) && refreshToken.equals(redisRefreshToken)) {
+        if (redisServiceImpl.checkExistsValue(redisRefreshToken) && refreshToken.equals(redisRefreshToken)) {
             Optional<UserEntity> findUser = this.findOne(email);
             UserEntity userEntity = UserEntity.of(findUser);
             JWTAuthResponse tokenDto = jwtTokenProvider.generateToken(email, jwtTokenProvider.getAuthentication(refreshToken), userEntity.getId());
@@ -123,7 +125,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    //이메일 인증번호 관련 메소드
+    @Transactional
     public void sendCodeToEmail(String toEmail) {
         this.checkDuplicatedEmail(toEmail);
         String title = "STUDIO_i 회원가입 이메일 인증";
@@ -139,7 +141,7 @@ public class UserServiceImpl implements UserService{
         mailService.sendEmail(toEmail, title, emailContent);
 
         // 이메일 인증 요청 시 인증 번호 Redis에 저장( key = "AuthCode " + Email / value = AuthCode )
-        redisService.setValues(AUTH_CODE_PREFIX + toEmail,
+        redisServiceImpl.setValues(AUTH_CODE_PREFIX + toEmail,
                 authCode, Duration.ofMillis(this.authCodeExpirationMillis));
     }
 
@@ -171,8 +173,8 @@ public class UserServiceImpl implements UserService{
     //인증번호 확인
     public EmailVerificationResult verifiedCode(String email, String authCode) {
         this.checkDuplicatedEmail(email);
-        String redisAuthCode = redisService.getValues(AUTH_CODE_PREFIX + email);
-        boolean authResult = redisService.checkExistsValue(redisAuthCode) && redisAuthCode.equals(authCode);
+        String redisAuthCode = redisServiceImpl.getValues(AUTH_CODE_PREFIX + email);
+        boolean authResult = redisServiceImpl.checkExistsValue(redisAuthCode) && redisAuthCode.equals(authCode);
 
         return EmailVerificationResult.of(authResult);
     }

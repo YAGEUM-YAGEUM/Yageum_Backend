@@ -52,8 +52,5 @@ spring:
 jwt:
   secret: ENC(acbDZy8Gz9X1OSL3fjOHVg==)
 
-greeting:
-  message: Welcome to the Ice-Americano Page
-
 #user-service:
 #  url: http://localhost:8081/user-service
