@@ -3,14 +3,11 @@ package com.yageum.fintech.domain.user.service;
 import com.yageum.fintech.domain.user.dto.request.LoginRequest;
 import com.yageum.fintech.domain.user.dto.request.CreateUserRequestDto;
 import com.yageum.fintech.domain.user.dto.response.GetUserResponseDto;
-import com.yageum.fintech.global.model.Exception.EmailVerificationResult;
+import com.yageum.fintech.global.model.Exception.*;
 import com.yageum.fintech.domain.user.dto.response.JWTAuthResponse;
 import com.yageum.fintech.domain.user.infrastructure.UserEntity;
 import com.yageum.fintech.domain.user.infrastructure.UserRepository;
 import com.yageum.fintech.global.config.jwt.JwtTokenProvider;
-import com.yageum.fintech.global.model.Exception.BlogAPIException;
-import com.yageum.fintech.global.model.Exception.BusinessLogicException;
-import com.yageum.fintech.global.model.Exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -71,7 +68,7 @@ public class UserServiceImpl implements UserService{
 
         // 중복 이메일 체크
         if(userRepository.existsByEmail(createUserRequestDto.getEmail())){
-            throw new BlogAPIException(HttpStatus.BAD_REQUEST, "Email is already exists!.");
+            throw new BlogAPIException(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일입니다.");
         }
 
         ModelMapper mapper = new ModelMapper();
@@ -81,14 +78,14 @@ public class UserServiceImpl implements UserService{
         userEntity.setApproved(false);
         userRepository.save(userEntity);
 
-        return "User registered successfully!.";
+        return "회원가입이 성공적으로 완료되었습니다!";
     }
 
     @Override
     public GetUserResponseDto getUserResponseByUserId(Long userId) {
         GetUserResponseDto userResponse = userRepository.findUserResponseByUserId(userId);
         if (userResponse == null) {
-            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+            throw new BusinessLogicException(ExceptionList.MEMBER_NOT_FOUND);
         }
         return userResponse;
     }
@@ -97,7 +94,7 @@ public class UserServiceImpl implements UserService{
     public GetUserResponseDto findUserResponseByEmail(String email) {
         GetUserResponseDto userResponse = userRepository.findUserResponseByEmail(email);
         if (userResponse == null) {
-            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+            throw new BusinessLogicException(ExceptionList.MEMBER_NOT_FOUND);
         }
         return userResponse;
     }
@@ -116,27 +113,27 @@ public class UserServiceImpl implements UserService{
             String newAccessToken = tokenDto.getAccessToken();
             long refreshTokenExpirationMillis = jwtTokenProvider.getRefreshTokenExpirationMillis();
             return tokenDto;
-        } else throw new BusinessLogicException(ExceptionCode.TOKEN_IS_NOT_SAME);
+        } else throw new BusinessLogicException(ExceptionList.TOKEN_IS_NOT_SAME);
     }
 
     private void verifiedRefreshToken(String refreshToken) {
         if (refreshToken == null) {
-            throw new BusinessLogicException(ExceptionCode.HEADER_REFRESH_TOKEN_NOT_EXISTS);
+            throw new BusinessLogicException(ExceptionList.HEADER_REFRESH_TOKEN_NOT_EXISTS);
         }
     }
 
     @Transactional
     public void sendCodeToEmail(String toEmail) {
         this.checkDuplicatedEmail(toEmail);
-        String title = "STUDIO_i 회원가입 이메일 인증";
+        String title = "야금야금(YageumYageum) 회원가입 이메일 인증";
         String authCode = this.createCode();
 
         // 인증 이메일 내용을 작성
         String emailContent = "안녕하세요,\n\n";
-        emailContent += "STUDIO_i에서 발송한 이메일 인증 번호는 다음과 같습니다:\n\n";
+        emailContent += "야금야금(YageumYageum)에서 발송한 이메일 인증 번호는 다음과 같습니다:\n\n";
         emailContent += "인증 번호: " + authCode + "\n\n";
-        emailContent += "이 인증 번호를 STUDIO_i 웹 사이트 또는 애플리케이션에서 입력하여 이메일을 인증해주세요.\n\n";
-        emailContent += "감사합니다,\nSTUDIO_i 팀";
+        emailContent += "이 인증 번호를 야금야금(YageumYageum) 웹 사이트 또는 애플리케이션에서 입력하여 이메일을 인증해주세요.\n\n";
+        emailContent += "감사합니다,\n야금야금(YageumYageum) 서비스 운영팀";
 
         mailService.sendEmail(toEmail, title, emailContent);
 
@@ -150,7 +147,7 @@ public class UserServiceImpl implements UserService{
         Optional<UserEntity> userEntity = userRepository.findByEmail(email);
         if (userEntity.isPresent()) {
             log.debug("UserServiceImpl.checkDuplicatedEmail exception occur email: {}", email);
-            throw new BusinessLogicException(ExceptionCode.MEMBER_EXISTS);
+            throw new BusinessLogicException(ExceptionList.MEMBER_EXISTS);
         }
     }
 
@@ -166,7 +163,7 @@ public class UserServiceImpl implements UserService{
             return builder.toString();
         } catch (NoSuchAlgorithmException e) {
             log.debug("MemberService.createCode() exception occur");
-            throw new BusinessLogicException(ExceptionCode.NO_SUCH_ALGORITHM);
+            throw new BusinessLogicException(ExceptionList.NO_SUCH_ALGORITHM);
         }
     }
 

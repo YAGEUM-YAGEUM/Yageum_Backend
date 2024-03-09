@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @OpenAPIDefinition(
-        info = @Info(title = "Studio_I",
-                description = "Studio_I Api 명세서",
+        info = @Info(title = "YageumYageum",
+                description = "YageumYageum 청년자산관리 Api 명세서",
                 version = "v1"))
 @RequiredArgsConstructor
 @Configuration
@@ -30,7 +30,7 @@ public class Swagger3Config {
                 .name("session_id");
 
         return GroupedOpenApi.builder()
-                .group("Studio_I API v1")
+                .group("YageumYageum API v1")
                 .pathsToMatch(paths)
                 .build();
     }
