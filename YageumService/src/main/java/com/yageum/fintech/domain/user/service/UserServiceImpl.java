@@ -8,6 +8,7 @@ import com.yageum.fintech.domain.user.dto.response.JWTAuthResponse;
 import com.yageum.fintech.domain.user.infrastructure.UserEntity;
 import com.yageum.fintech.domain.user.infrastructure.UserRepository;
 import com.yageum.fintech.global.config.jwt.JwtTokenProvider;
+import feign.RetryableException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -82,6 +83,21 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public String getUsername(Long userId) {
+        GetUserResponseDto getUserResponseDto = null;
+        try{
+            getUserResponseDto = userRepository.findUserResponseByUserId(userId);
+        }catch (RetryableException e){
+            e.printStackTrace();
+            return "(응답 시간 초과)";
+        }catch (Exception e){
+            e.printStackTrace();
+            return "(알 수 없음)";
+        }
+        return getUserResponseDto.getName();
+    }
+
+    @Override
     public GetUserResponseDto getUserResponseByUserId(Long userId) {
         GetUserResponseDto userResponse = userRepository.findUserResponseByUserId(userId);
         if (userResponse == null) {
@@ -91,7 +107,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public GetUserResponseDto findUserResponseByEmail(String email) {
+    public GetUserResponseDto getUserResponseByEmail(String email) {
         GetUserResponseDto userResponse = userRepository.findUserResponseByEmail(email);
         if (userResponse == null) {
             throw new BusinessLogicException(ExceptionList.MEMBER_NOT_FOUND);

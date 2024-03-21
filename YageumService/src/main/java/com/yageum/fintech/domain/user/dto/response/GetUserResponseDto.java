@@ -3,10 +3,8 @@ package com.yageum.fintech.domain.user.dto.response;
 import com.yageum.fintech.domain.user.infrastructure.UserEntity;
 import lombok.*;
 
-@Data
+@Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class GetUserResponseDto {
     private Long id;
     private String email;

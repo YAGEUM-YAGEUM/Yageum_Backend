@@ -5,7 +5,7 @@ import com.yageum.fintech.domain.comment.controller.response.CommentResponse;
 import com.yageum.fintech.domain.comment.domain.Comment;
 import com.yageum.fintech.domain.comment.domain.CommentCreate;
 import com.yageum.fintech.domain.comment.domain.CommentUpdate;
-import com.yageum.fintech.domain.user.service.UserServiceImpl2;
+import com.yageum.fintech.domain.user.service.UserService;
 import com.yageum.fintech.global.model.Result.CommonResult;
 import com.yageum.fintech.global.service.ResponseService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Tag(name = "[기획 /제작/ 편집] 댓글 작성, 수정, 삭제, 조회 API")
+@Tag(name = "[기획/제작/편집] 댓글 작성, 수정, 삭제, 조회 API")
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -27,7 +27,7 @@ public class CommentController {
     private final CommentService commentService;
     private final ResponseService responseService;
 
-    private final UserServiceImpl2 userService;
+    private final UserService userService;
 
     private String getName(long writtenId){
         return userService.getUsername(writtenId);

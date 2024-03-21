@@ -17,9 +17,11 @@ public interface UserService{
 
     String register(CreateUserRequestDto createUserRequestDto);
 
+    String getUsername(Long userId);
+
     GetUserResponseDto getUserResponseByUserId(Long userId);
 
-    GetUserResponseDto findUserResponseByEmail(String email);
+    GetUserResponseDto getUserResponseByEmail(String email);
 
     JWTAuthResponse reissueAccessToken(String encryptedRefreshToken);
 

@@ -37,7 +37,7 @@ public class UserController {
         return "It's Working in User Service";
     }
 
-    //로그인
+    // 로그인
     @Operation(summary = "사용자 로그인")
     @PostMapping("/login")
     public ResponseEntity<JWTAuthResponse> login(@RequestBody LoginRequest loginRequest){
@@ -101,7 +101,7 @@ public class UserController {
     @GetMapping("/response_userByEmail/{email}")
     public ResponseEntity<GetUserResponseDto> findUserResponseByEmail(@PathVariable String email) {
         try {
-            GetUserResponseDto userResponse = userService.findUserResponseByEmail(email);
+            GetUserResponseDto userResponse = userService.getUserResponseByEmail(email);
             return ResponseEntity.ok().body(userResponse);
         } catch (BusinessLogicException e) {
             ExceptionList exceptionList = e.getExceptionList();
