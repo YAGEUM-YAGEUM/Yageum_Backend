@@ -8,7 +8,7 @@ import com.yageum.fintech.domain.project.infrastructure.ProjectRepository;
 import com.yageum.fintech.domain.project.infrastructure.ProjectUser;
 import com.yageum.fintech.domain.project.infrastructure.Role;
 import com.yageum.fintech.domain.user.dto.response.GetUserResponseDto;
-import com.yageum.fintech.domain.user.service.UserServiceImpl2;
+import com.yageum.fintech.domain.user.service.UserServiceImpl;
 import com.yageum.fintech.global.config.jwt.jwtInterceptor.JwtContextHolder;
 import com.yageum.fintech.global.model.Exception.ExceptionList;
 import com.yageum.fintech.global.model.Exception.NonExistentException;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService{
     private final ProjectRepository projectRepository;
-    private final UserServiceImpl2 userService;
+    private final UserServiceImpl userService;
 
     @Override
     @Transactional
@@ -167,7 +167,7 @@ public class ProjectServiceImpl implements ProjectService{
     private List<GetProjectUserResponseDto> getProjectUserResponseDtoList(List<ProjectUser> projectUserList) {
         List<GetProjectUserResponseDto> getProjectUserResponseDtoList = new ArrayList<>();
         for(ProjectUser projectUser : projectUserList){
-            GetUserResponseDto getUserResponseDto = userService.getUser(projectUser.getUserId());
+            GetUserResponseDto getUserResponseDto = userService.getUserResponseByUserId(projectUser.getUserId());
             if(getUserResponseDto==null) continue;
             GetProjectUserResponseDto getProjectUserResponseDto =
                     GetProjectUserResponseDto.from(getUserResponseDto, projectUser.getRole());
@@ -177,6 +177,6 @@ public class ProjectServiceImpl implements ProjectService{
     }
 
     private void filterNonExistentMemberId(Set<Long> memberIdList) {
-        memberIdList.removeIf(memberId -> userService.getUser(memberId) == null);
+        memberIdList.removeIf(memberId -> userService.getUserResponseByUserId(memberId) == null);
     }
 }

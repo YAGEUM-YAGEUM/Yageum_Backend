@@ -30,8 +30,6 @@ public class PostController {
     @Operation(summary = "기획/제작/편집 게시글 상세 조회 API")
     @GetMapping
     public CommonResult retrieveDetailPost(/* @AuthenticationPrincipal User user */ @Valid RetrieveDetailPostRequestDto retrieveDetailPostRequestDto  ){
-        System.out.println("sdfslakfjklafsjlkjflad" + retrieveDetailPostRequestDto);
-
         return postServiceImpl.retrieveDetailPost(/* user, */ retrieveDetailPostRequestDto.toServiceRequest());
     }
 
