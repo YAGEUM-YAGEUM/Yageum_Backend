@@ -1,8 +1,8 @@
 package com.yageum.fintech.global.config.jwt;
 
-import com.yageum.fintech.domain.user.dto.response.JWTAuthResponse;
-import com.yageum.fintech.domain.user.service.MyUserDetailsService;
-import com.yageum.fintech.domain.user.service.RedisServiceImpl;
+import com.yageum.fintech.domain.tenant.dto.response.JWTAuthResponse;
+import com.yageum.fintech.domain.tenant.service.MyUserDetailsService;
+import com.yageum.fintech.domain.tenant.service.RedisServiceImpl;
 import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;

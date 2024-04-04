@@ -7,8 +7,8 @@ import com.yageum.fintech.domain.project.infrastructure.Project;
 import com.yageum.fintech.domain.project.infrastructure.ProjectRepository;
 import com.yageum.fintech.domain.project.infrastructure.ProjectUser;
 import com.yageum.fintech.domain.project.infrastructure.Role;
-import com.yageum.fintech.domain.user.dto.response.GetUserResponseDto;
-import com.yageum.fintech.domain.user.service.UserServiceImpl;
+import com.yageum.fintech.domain.tenant.dto.response.GetUserResponseDto;
+import com.yageum.fintech.domain.tenant.service.TenantServiceImpl;
 import com.yageum.fintech.global.config.jwt.jwtInterceptor.JwtContextHolder;
 import com.yageum.fintech.global.model.Exception.ExceptionList;
 import com.yageum.fintech.global.model.Exception.NonExistentException;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService{
     private final ProjectRepository projectRepository;
-    private final UserServiceImpl userService;
+    private final TenantServiceImpl userService;
 
     @Override
     @Transactional

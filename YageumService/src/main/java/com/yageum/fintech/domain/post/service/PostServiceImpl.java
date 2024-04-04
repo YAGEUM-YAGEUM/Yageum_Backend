@@ -12,7 +12,7 @@ import com.yageum.fintech.domain.post.model.dto.request.RetrieveDetailPostReques
 import com.yageum.fintech.domain.post.model.dto.request.UpdatePostRequestServiceDto;
 import com.yageum.fintech.domain.project.infrastructure.Project;
 import com.yageum.fintech.domain.project.infrastructure.ProjectRepository;
-import com.yageum.fintech.domain.user.service.UserServiceImpl2;
+import com.yageum.fintech.domain.tenant.service.UserServiceImpl2;
 import com.yageum.fintech.global.config.jwt.jwtInterceptor.JwtContextHolder;
 import com.yageum.fintech.global.model.Exception.ExceptionList;
 import com.yageum.fintech.global.model.Exception.UnauthorizedAccessException;

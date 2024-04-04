@@ -5,7 +5,7 @@ import com.yageum.fintech.domain.comment.controller.response.CommentResponse;
 import com.yageum.fintech.domain.comment.domain.Comment;
 import com.yageum.fintech.domain.comment.domain.CommentCreate;
 import com.yageum.fintech.domain.comment.domain.CommentUpdate;
-import com.yageum.fintech.domain.user.service.UserService;
+import com.yageum.fintech.domain.tenant.service.TenantService;
 import com.yageum.fintech.global.model.Result.CommonResult;
 import com.yageum.fintech.global.service.ResponseService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,10 +27,10 @@ public class CommentController {
     private final CommentService commentService;
     private final ResponseService responseService;
 
-    private final UserService userService;
+    private final TenantService tenantService;
 
     private String getName(long writtenId){
-        return userService.getUsername(writtenId);
+        return tenantService.getUsername(writtenId);
     }
 
     @Operation(summary = "댓글 작성")
