@@ -1,13 +1,15 @@
-package com.yageum.fintech.domain.user.service;
+package com.yageum.fintech.domain.tenant.service;
 
-import com.yageum.fintech.domain.user.dto.request.LoginRequest;
-import com.yageum.fintech.domain.user.dto.request.CreateUserRequestDto;
-import com.yageum.fintech.domain.user.dto.response.GetUserResponseDto;
+import com.yageum.fintech.domain.tenant.dto.request.LoginRequest;
+import com.yageum.fintech.domain.tenant.dto.request.CreateTenantRequestDto;
+import com.yageum.fintech.domain.tenant.dto.response.GetUserResponseDto;
 import com.yageum.fintech.global.model.Exception.*;
-import com.yageum.fintech.domain.user.dto.response.JWTAuthResponse;
-import com.yageum.fintech.domain.user.infrastructure.UserEntity;
-import com.yageum.fintech.domain.user.infrastructure.UserRepository;
+import com.yageum.fintech.domain.tenant.dto.response.JWTAuthResponse;
+import com.yageum.fintech.domain.tenant.infrastructure.UserEntity;
+import com.yageum.fintech.domain.tenant.infrastructure.UserRepository;
 import com.yageum.fintech.global.config.jwt.JwtTokenProvider;
+import com.yageum.fintech.global.model.Result.CommonResult;
+import com.yageum.fintech.global.service.ResponseService;
 import feign.RetryableException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +33,9 @@ import java.util.Random;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class TenantServiceImpl implements TenantService {
 
     private static final String AUTH_CODE_PREFIX = "AuthCode ";
     private final MailService mailService;
@@ -43,6 +46,8 @@ public class UserServiceImpl implements UserService{
     private final MyUserDetailsService myUserDetailsService;
     private final RedisServiceImpl redisServiceImpl;
 
+    private final ResponseService responseService;
+
     @Value("${spring.mail.auth-code-expiration-millis}")
     private long authCodeExpirationMillis;
 
@@ -51,7 +56,6 @@ public class UserServiceImpl implements UserService{
         return userRepository.findByEmail(email);
     }
 
-    @Transactional
     @Override
     public JWTAuthResponse login(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -63,25 +67,25 @@ public class UserServiceImpl implements UserService{
         return token;
     }
 
-    @Transactional
     @Override
-    public String register(CreateUserRequestDto createUserRequestDto) {
+    public CommonResult register(CreateTenantRequestDto createTenantRequestDto) {
 
-        // 중복 이메일 체크
-        if(userRepository.existsByEmail(createUserRequestDto.getEmail())){
-            throw new BlogAPIException(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일입니다.");
+        // 중복 아이디 체크
+        if(userRepository.existsById(createTenantRequestDto.getUsername())){
+            return responseService.getFailResult(ExceptionList.ALREADY_EXISTS.getCode(), ExceptionList.ALREADY_EXISTS.getMessage());
         }
 
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        UserEntity userEntity = mapper.map(createUserRequestDto, UserEntity.class);
-        userEntity.setEncryptedPwd(pwdEncoder.encode(createUserRequestDto.getPwd()));
+        UserEntity userEntity = mapper.map(createTenantRequestDto, UserEntity.class);
+        userEntity.setEncryptedPwd(pwdEncoder.encode(createTenantRequestDto.getPassword()));
         userEntity.setApproved(false);
         userRepository.save(userEntity);
 
-        return "회원가입이 성공적으로 완료되었습니다!";
+        return responseService.getSuccessfulResultWithMessage("회원가입이 성공적으로 완료되었습니다!");
     }
 
+    @Transactional(readOnly = true)
     @Override
     public String getUsername(Long userId) {
         GetUserResponseDto getUserResponseDto = null;
@@ -97,6 +101,7 @@ public class UserServiceImpl implements UserService{
         return getUserResponseDto.getName();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public GetUserResponseDto getUserResponseByUserId(Long userId) {
         GetUserResponseDto userResponse = userRepository.findUserResponseByUserId(userId);
@@ -106,6 +111,7 @@ public class UserServiceImpl implements UserService{
         return userResponse;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public GetUserResponseDto getUserResponseByEmail(String email) {
         GetUserResponseDto userResponse = userRepository.findUserResponseByEmail(email);
@@ -115,7 +121,6 @@ public class UserServiceImpl implements UserService{
         return userResponse;
     }
 
-    @Transactional
     @Override
     public JWTAuthResponse reissueAccessToken(String refreshToken) {
         this.verifiedRefreshToken(refreshToken);
@@ -138,7 +143,6 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    @Transactional
     public void sendCodeToEmail(String toEmail) {
         this.checkDuplicatedEmail(toEmail);
         String title = "야금야금(YageumYageum) 회원가입 이메일 인증";

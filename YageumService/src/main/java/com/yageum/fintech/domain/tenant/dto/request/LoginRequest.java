@@ -1,4 +1,4 @@
-package com.yageum.fintech.domain.user.dto.request;
+package com.yageum.fintech.domain.tenant.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;

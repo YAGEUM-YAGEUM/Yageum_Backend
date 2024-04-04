@@ -1,6 +1,6 @@
-package com.yageum.fintech.domain.user.infrastructure;
+package com.yageum.fintech.domain.tenant.infrastructure;
 
-import com.yageum.fintech.domain.user.dto.response.GetUserResponseDto;
+import com.yageum.fintech.domain.tenant.dto.response.GetUserResponseDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +11,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> findByEmail(String email);
 
-    Boolean existsByEmail(String email);
+    Boolean existsById(String userId);
 
     Optional<UserEntity> findById(Long userId);
 

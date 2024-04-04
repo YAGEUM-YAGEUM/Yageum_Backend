@@ -2,6 +2,7 @@ package com.yageum.fintech.global.model.Exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 @RequiredArgsConstructor
 @Getter
@@ -13,10 +14,12 @@ public enum ExceptionList {
     NON_EXISTENT_CHECKLIST(5005, "내용이 존재하지 않습니다."),
     INVALID_USER_ID(5011, "요청으로 들어온 User의 식별자가 유효하지 않습니다."),
 
+    BAD_REQUEST(400, "잘못된 요청입니다"),
     TOKEN_IS_NOT_SAME(401, "액세스 토큰과 리프레시 토큰이 일치하지 않습니다"),
     HEADER_REFRESH_TOKEN_NOT_EXISTS(400, "요청 헤더에 리프레시 토큰이 누락되었습니다"),
     MEMBER_NOT_FOUND(404, "회원을 찾을 수 없습니다"),
     MEMBER_EXISTS(409, "이미 존재하는 회원입니다"),
+    ALREADY_EXISTS(409, "이미 존재하는 아이디입니다"),
     NO_SUCH_ALGORITHM(500, "존재하지 않는 알고리즘입니다"),
     UNABLE_TO_SEND_EMAIL(500, "이메일을 전송할 수 없습니다"),
 

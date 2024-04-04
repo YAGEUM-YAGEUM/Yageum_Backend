@@ -1,6 +1,6 @@
-package com.yageum.fintech.domain.user.dto.response;
+package com.yageum.fintech.domain.tenant.dto.response;
 
-import com.yageum.fintech.domain.user.infrastructure.UserEntity;
+import com.yageum.fintech.domain.tenant.infrastructure.UserEntity;
 import lombok.*;
 
 @Getter
