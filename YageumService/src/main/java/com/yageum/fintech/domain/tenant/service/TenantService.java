@@ -1,28 +1,31 @@
 package com.yageum.fintech.domain.tenant.service;
 
 import com.yageum.fintech.domain.tenant.dto.request.LoginRequest;
-import com.yageum.fintech.domain.tenant.dto.request.CreateTenantRequestDto;
-import com.yageum.fintech.domain.tenant.dto.response.GetUserResponseDto;
+import com.yageum.fintech.domain.tenant.dto.request.TenantProfileDto;
+import com.yageum.fintech.domain.tenant.dto.request.TenantRequestDto;
+import com.yageum.fintech.domain.tenant.dto.response.GetTenantResponseDto;
 import com.yageum.fintech.global.model.Exception.EmailVerificationResult;
 import com.yageum.fintech.domain.tenant.dto.response.JWTAuthResponse;
-import com.yageum.fintech.domain.tenant.infrastructure.UserEntity;
+import com.yageum.fintech.domain.tenant.infrastructure.TenantEntity;
 import com.yageum.fintech.global.model.Result.CommonResult;
 
 import java.util.Optional;
 
 public interface TenantService {
 
-    Optional<UserEntity> findOne(String email);
+    Optional<TenantEntity> findOne(String email);
 
     JWTAuthResponse login(LoginRequest loginRequest);
 
-    CommonResult register(CreateTenantRequestDto createTenantRequestDto);
+    CommonResult register(TenantRequestDto tenantRequestDto);
+
+    CommonResult registerProfile(TenantProfileDto tenantProfileDto);
 
     String getUsername(Long userId);
 
-    GetUserResponseDto getUserResponseByUserId(Long userId);
+    GetTenantResponseDto getUserResponseByUserId(Long userId);
 
-    GetUserResponseDto getUserResponseByEmail(String email);
+    GetTenantResponseDto getUserResponseByEmail(String email);
 
     JWTAuthResponse reissueAccessToken(String encryptedRefreshToken);
 

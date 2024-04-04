@@ -1,7 +1,7 @@
 package com.yageum.fintech.domain.project.dto.response;
 
 import com.yageum.fintech.domain.project.infrastructure.Role;
-import com.yageum.fintech.domain.tenant.dto.response.GetUserResponseDto;
+import com.yageum.fintech.domain.tenant.dto.response.GetTenantResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,12 +18,12 @@ public class GetProjectUserResponseDto {
     private String phoneNumber;
     private String role;
 
-    public static GetProjectUserResponseDto from(GetUserResponseDto getUserResponseDto, Role role){
+    public static GetProjectUserResponseDto from(GetTenantResponseDto getTenantResponseDto, Role role){
         return GetProjectUserResponseDto.builder()
-                .userId(getUserResponseDto.getId())
-                .name(getUserResponseDto.getName())
-                .email(getUserResponseDto.getEmail())
-                .phoneNumber(getUserResponseDto.getPhoneNumber())
+                .userId(getTenantResponseDto.getId())
+                .name(getTenantResponseDto.getName())
+                .email(getTenantResponseDto.getEmail())
+                .phoneNumber(getTenantResponseDto.getPhoneNumber())
                 .role(role.getDescription())
                 .build();
     }

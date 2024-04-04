@@ -1,8 +1,9 @@
 package com.yageum.fintech.domain.tenant.controller;
 
 import com.yageum.fintech.domain.tenant.dto.request.LoginRequest;
-import com.yageum.fintech.domain.tenant.dto.request.CreateTenantRequestDto;
-import com.yageum.fintech.domain.tenant.dto.response.GetUserResponseDto;
+import com.yageum.fintech.domain.tenant.dto.request.TenantProfileDto;
+import com.yageum.fintech.domain.tenant.dto.request.TenantRequestDto;
+import com.yageum.fintech.domain.tenant.dto.response.GetTenantResponseDto;
 import com.yageum.fintech.global.model.Exception.EmailVerificationResult;
 import com.yageum.fintech.domain.tenant.dto.response.JWTAuthResponse;
 import com.yageum.fintech.domain.tenant.service.TenantService;
@@ -49,8 +50,15 @@ public class TenantController {
     // 회원가입
     @Operation(summary = "회원가입")
     @PostMapping("/")
-    public CommonResult register(@RequestBody CreateTenantRequestDto createTenantRequestDto){
-        return tenantService.register(createTenantRequestDto);
+    public CommonResult register(@RequestBody TenantRequestDto tenantRequestDto){
+        return tenantService.register(tenantRequestDto);
+    }
+
+    // 임차인 정보 - 프로필 등록
+    @Operation(summary = "임차인 프로필 등록")
+    @PostMapping("/profile/{tenant_id}")
+    public CommonResult registerProfile(@RequestBody TenantProfileDto tenantRequestDto){
+        return tenantService.registerProfile(tenantRequestDto);
     }
 
     // 토큰 재발급
@@ -85,8 +93,8 @@ public class TenantController {
     @GetMapping("/response_user/{userId}")
     public CommonResult findUserResponseByUserId(@PathVariable("userId") Long userId) {
         try {
-            GetUserResponseDto userResponse = tenantService.getUserResponseByUserId(userId);
-            return responseService.getSingleResult(userResponse);
+            GetTenantResponseDto tenantResponse = tenantService.getUserResponseByUserId(userId);
+            return responseService.getSingleResult(tenantResponse);
         } catch (BusinessLogicException e) {
             ExceptionList exceptionList = e.getExceptionList();
             return responseService.getFailResult(exceptionList.getCode(), exceptionList.getMessage());
@@ -98,8 +106,8 @@ public class TenantController {
     @GetMapping("/response_userByEmail/{email}")
     public CommonResult findUserResponseByEmail(@PathVariable String email) {
         try {
-            GetUserResponseDto userResponse = tenantService.getUserResponseByEmail(email);
-            return responseService.getSingleResult(userResponse);
+            GetTenantResponseDto tenantResponse = tenantService.getUserResponseByEmail(email);
+            return responseService.getSingleResult(tenantResponse);
         } catch (BusinessLogicException e) {
             ExceptionList exceptionList = e.getExceptionList();
             return responseService.getFailResult(exceptionList.getCode(), exceptionList.getMessage());
