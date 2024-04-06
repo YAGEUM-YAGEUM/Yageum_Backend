@@ -9,4 +9,7 @@ import java.util.Optional;
 public interface TenantProfileRepository extends JpaRepository<TenantProfile, Long> {
 
     Optional<TenantProfile> findByTenantId(Long tenantId);
+
+    Optional<TenantProfile> findByProfileId(Long profileId);
+
 }

@@ -23,6 +23,8 @@ public interface TenantService {
 
     void createTenantProfile(Long tenantId, TenantProfileDto tenantProfileDto);
 
+    void updateTenantProfile(Long profileId, TenantProfileDto tenantProfileDto);
+
     GetTenantProfileDto getTenantProfile(Long tenantId);
 
     String getUsername(Long userId);

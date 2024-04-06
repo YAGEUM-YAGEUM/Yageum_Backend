@@ -59,6 +59,7 @@ public class ScheduleController {
         scheduleService.updateSchedule(scheduleId, updateScheduleRequestDto);
         return responseService.getSuccessfulResult();
     }
+
     //일정 삭제
     @Operation(summary = "일정 삭제하기", description = "일정을 삭제하는 API")
     @ResponseStatus(OK)

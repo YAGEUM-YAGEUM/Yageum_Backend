@@ -56,7 +56,7 @@ public class TenantController {
     }
 
     // 임차인 정보 - 프로필 등록
-    @Operation(summary = "임차인 프로필 등록")
+    @Operation(summary = "임차인 프로필 등록", description = "특정 임차인(사용자)의 프로필 정보를 등록하는 API")
     @PostMapping("/profile/{tenantId}")
     public CommonResult createTenantProfile(@PathVariable Long tenantId, @RequestBody TenantProfileDto tenantRequestDto){
         tenantService.createTenantProfile(tenantId, tenantRequestDto);
@@ -64,11 +64,19 @@ public class TenantController {
     }
 
     // 임차인 정보 - 프로필 조회
-    @Operation(summary = "임차인 프로필 조회")
+    @Operation(summary = "임차인 프로필 조회", description = "특정 임차인(사용자)의 프로필 정보를 조회하는 API")
     @GetMapping("/profile/{tenantId}")
-    public CommonResult createTenantProfile(@PathVariable Long tenantId){
+    public CommonResult getTenantProfile(@PathVariable Long tenantId){
         GetTenantProfileDto profile = tenantService.getTenantProfile(tenantId);
         return responseService.getSingleResult(profile);
+    }
+
+    // 임차인 정보 - 프로필 수정
+    @Operation(summary = "임차인 프로필 수정", description = "프로필 ID로 프로필 정보를 수정하는 API")
+    @PutMapping("/profile/{profileId}")
+    public CommonResult updateTenantProfile(@PathVariable Long profileId, @RequestBody TenantProfileDto tenantRequestDto){
+        tenantService.updateTenantProfile(profileId, tenantRequestDto);
+        return responseService.getSuccessfulResult();
     }
 
     // 토큰 재발급

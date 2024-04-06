@@ -56,11 +56,6 @@ public class TenantServiceImpl implements TenantService {
     private long authCodeExpirationMillis;
 
     @Override
-    public Optional<Tenant> findOne(String email) {
-        return tenantRepository.findByEmail(email);
-    }
-
-    @Override
     public JWTAuthResponse login(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginRequest.getEmail(), loginRequest.getPwd()));
@@ -106,6 +101,22 @@ public class TenantServiceImpl implements TenantService {
         return GetTenantProfileDto.from(tenant, tenantProfile);
     }
 
+    @Override
+    public void updateTenantProfile(Long profileId, TenantProfileDto tenantProfileDto) {
+        TenantProfile profile = tenantProfileRepository.findByProfileId(profileId)
+                .orElseThrow(()-> new NonExistentException(ExceptionList.NON_EXISTENT_TENANT));
+        /*
+        토큰 인증 추가
+         */
+        profile.update(tenantProfileDto);
+    }
+
+    @Override
+    public Optional<Tenant> findOne(String email) {
+        return tenantRepository.findByEmail(email);
+    }
+
+
     @Transactional(readOnly = true)
     @Override
     public String getUsername(Long userId) {
@@ -142,21 +153,21 @@ public class TenantServiceImpl implements TenantService {
         return userResponse;
     }
 
-    @Override
-    public JWTAuthResponse reissueAccessToken(String refreshToken) {
-        this.verifiedRefreshToken(refreshToken);
-        String email = jwtTokenProvider.getEmail(refreshToken);
-        String redisRefreshToken = redisServiceImpl.getValues(email);
-
-        if (redisServiceImpl.checkExistsValue(redisRefreshToken) && refreshToken.equals(redisRefreshToken)) {
-            Optional<Tenant> findUser = this.findOne(email);
-            Tenant tenant = Tenant.of(findUser);
-            JWTAuthResponse tokenDto = jwtTokenProvider.generateToken(email, jwtTokenProvider.getAuthentication(refreshToken), tenant.getId());
-            String newAccessToken = tokenDto.getAccessToken();
-            long refreshTokenExpirationMillis = jwtTokenProvider.getRefreshTokenExpirationMillis();
-            return tokenDto;
-        } else throw new BusinessLogicException(ExceptionList.TOKEN_IS_NOT_SAME);
-    }
+//    @Override
+//    public JWTAuthResponse reissueAccessToken(String refreshToken) {
+//        this.verifiedRefreshToken(refreshToken);
+//        String email = jwtTokenProvider.getEmail(refreshToken);
+//        String redisRefreshToken = redisServiceImpl.getValues(email);
+//
+//        if (redisServiceImpl.checkExistsValue(redisRefreshToken) && refreshToken.equals(redisRefreshToken)) {
+//            Optional<Tenant> findUser = this.findOne(email);
+//            Tenant tenant = Tenant.of(findUser);
+//            JWTAuthResponse tokenDto = jwtTokenProvider.generateToken(email, jwtTokenProvider.getAuthentication(refreshToken), tenant.getId());
+//            String newAccessToken = tokenDto.getAccessToken();
+//            long refreshTokenExpirationMillis = jwtTokenProvider.getRefreshTokenExpirationMillis();
+//            return tokenDto;
+//        } else throw new BusinessLogicException(ExceptionList.TOKEN_IS_NOT_SAME);
+//    }
 
     private void verifiedRefreshToken(String refreshToken) {
         if (refreshToken == null) {
