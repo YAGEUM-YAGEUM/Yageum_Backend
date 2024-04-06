@@ -46,6 +46,7 @@ public enum ExceptionList {
     // PROJECT
     INVALID_PROJECT_ID(5010, "요청으로 들어온 Project의 식별자가 유효하지 않습니다."),
     NON_EXISTENT_TENANT(5010, "존재하지 않는 임대인입니다."),
+    NON_EXISTENT_TENANT_PROFILE(5010, "프로필이 존재하지 않습니다"),
     TENANT_PROFILE_ALREADY_EXISTS(5010, "이미 해당 tenantId에 대한 프로필이 존재합니다."),
 
     // PROJECT & TEAM

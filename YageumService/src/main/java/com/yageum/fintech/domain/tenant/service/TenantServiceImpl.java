@@ -3,7 +3,9 @@ package com.yageum.fintech.domain.tenant.service;
 import com.yageum.fintech.domain.tenant.dto.request.LoginRequest;
 import com.yageum.fintech.domain.tenant.dto.request.TenantProfileDto;
 import com.yageum.fintech.domain.tenant.dto.request.TenantRequestDto;
+import com.yageum.fintech.domain.tenant.dto.response.GetTenantProfileDto;
 import com.yageum.fintech.domain.tenant.dto.response.GetTenantResponseDto;
+import com.yageum.fintech.domain.tenant.infrastructure.TenantProfile;
 import com.yageum.fintech.domain.tenant.infrastructure.TenantProfileRepository;
 import com.yageum.fintech.global.model.Exception.*;
 import com.yageum.fintech.domain.tenant.dto.response.JWTAuthResponse;
@@ -90,8 +92,18 @@ public class TenantServiceImpl implements TenantService {
     public void createTenantProfile(Long tenantId, TenantProfileDto tenantProfileDto) {
         Tenant tenant = tenantRepository.findByTenantId(tenantId)
                 .orElseThrow(()-> new NonExistentException(ExceptionList.NON_EXISTENT_TENANT));
-
+        /*
+        토큰 인증 추가
+         */
         tenantProfileRepository.save(tenantProfileDto.toEntity(tenant));
+    }
+
+    @Override
+    public GetTenantProfileDto getTenantProfile(Long tenantId) {
+        TenantProfile tenantProfile = tenantProfileRepository.findByTenantId(tenantId)
+                .orElseThrow(()-> new NonExistentException(ExceptionList.NON_EXISTENT_TENANT_PROFILE));
+        Tenant tenant = tenantProfile.getTenant();
+        return GetTenantProfileDto.from(tenant, tenantProfile);
     }
 
     @Transactional(readOnly = true)

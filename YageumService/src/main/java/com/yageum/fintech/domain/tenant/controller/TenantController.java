@@ -3,6 +3,7 @@ package com.yageum.fintech.domain.tenant.controller;
 import com.yageum.fintech.domain.tenant.dto.request.LoginRequest;
 import com.yageum.fintech.domain.tenant.dto.request.TenantProfileDto;
 import com.yageum.fintech.domain.tenant.dto.request.TenantRequestDto;
+import com.yageum.fintech.domain.tenant.dto.response.GetTenantProfileDto;
 import com.yageum.fintech.domain.tenant.dto.response.GetTenantResponseDto;
 import com.yageum.fintech.global.model.Exception.EmailVerificationResult;
 import com.yageum.fintech.domain.tenant.dto.response.JWTAuthResponse;
@@ -61,7 +62,14 @@ public class TenantController {
         tenantService.createTenantProfile(tenantId, tenantRequestDto);
         return responseService.getSuccessfulResult();
     }
-    
+
+    // 임차인 정보 - 프로필 조회
+    @Operation(summary = "임차인 프로필 조회")
+    @GetMapping("/profile/{tenantId}")
+    public CommonResult createTenantProfile(@PathVariable Long tenantId){
+        GetTenantProfileDto profile = tenantService.getTenantProfile(tenantId);
+        return responseService.getSingleResult(profile);
+    }
 
     // 토큰 재발급
     @Operation(summary = "토큰 재발급")
