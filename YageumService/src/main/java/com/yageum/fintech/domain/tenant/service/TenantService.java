@@ -6,20 +6,20 @@ import com.yageum.fintech.domain.tenant.dto.request.TenantRequestDto;
 import com.yageum.fintech.domain.tenant.dto.response.GetTenantResponseDto;
 import com.yageum.fintech.global.model.Exception.EmailVerificationResult;
 import com.yageum.fintech.domain.tenant.dto.response.JWTAuthResponse;
-import com.yageum.fintech.domain.tenant.infrastructure.TenantEntity;
+import com.yageum.fintech.domain.tenant.infrastructure.Tenant;
 import com.yageum.fintech.global.model.Result.CommonResult;
 
 import java.util.Optional;
 
 public interface TenantService {
 
-    Optional<TenantEntity> findOne(String email);
+    Optional<Tenant> findOne(String email);
 
     JWTAuthResponse login(LoginRequest loginRequest);
 
     CommonResult register(TenantRequestDto tenantRequestDto);
 
-    CommonResult registerProfile(TenantProfileDto tenantProfileDto);
+    void createTenantProfile(Long tenantId, TenantProfileDto tenantProfileDto);
 
     String getUsername(Long userId);
 

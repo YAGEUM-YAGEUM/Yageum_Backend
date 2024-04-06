@@ -7,7 +7,7 @@ import com.yageum.fintech.domain.project.infrastructure.Project;
 import com.yageum.fintech.domain.project.infrastructure.ProjectRepository;
 import com.yageum.fintech.domain.project.infrastructure.ProjectUser;
 import com.yageum.fintech.domain.project.infrastructure.Role;
-import com.yageum.fintech.domain.tenant.dto.response.GetUserResponseDto;
+import com.yageum.fintech.domain.tenant.dto.response.GetTenantResponseDto;
 import com.yageum.fintech.domain.tenant.service.TenantServiceImpl;
 import com.yageum.fintech.global.config.jwt.jwtInterceptor.JwtContextHolder;
 import com.yageum.fintech.global.model.Exception.ExceptionList;
@@ -167,10 +167,10 @@ public class ProjectServiceImpl implements ProjectService{
     private List<GetProjectUserResponseDto> getProjectUserResponseDtoList(List<ProjectUser> projectUserList) {
         List<GetProjectUserResponseDto> getProjectUserResponseDtoList = new ArrayList<>();
         for(ProjectUser projectUser : projectUserList){
-            GetUserResponseDto getUserResponseDto = userService.getUserResponseByUserId(projectUser.getUserId());
-            if(getUserResponseDto==null) continue;
+            GetTenantResponseDto getTenantResponseDto = userService.getUserResponseByUserId(projectUser.getUserId());
+            if(getTenantResponseDto ==null) continue;
             GetProjectUserResponseDto getProjectUserResponseDto =
-                    GetProjectUserResponseDto.from(getUserResponseDto, projectUser.getRole());
+                    GetProjectUserResponseDto.from(getTenantResponseDto, projectUser.getRole());
             getProjectUserResponseDtoList.add(getProjectUserResponseDto);
         }
         return getProjectUserResponseDtoList;

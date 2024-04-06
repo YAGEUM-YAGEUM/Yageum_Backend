@@ -1,17 +1,16 @@
 package com.yageum.fintech.domain.tenant.dto.request;
 
 import com.yageum.fintech.domain.tenant.infrastructure.Gender;
+import com.yageum.fintech.domain.tenant.infrastructure.Tenant;
+import com.yageum.fintech.domain.tenant.infrastructure.TenantProfile;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Getter
+@Data
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class TenantProfileDto {
@@ -49,4 +48,18 @@ public class TenantProfileDto {
     @NotBlank(message = "선호 방타입을 입력해주세요.")
     @Schema(description = "선호 방타입", example = "원룸")
     private String preferredType;
+
+    public TenantProfile toEntity(Tenant tenant){
+        return TenantProfile.builder()
+                .tenant(tenant)
+                .title(title)
+                .introduce(introduce)
+                .gender(gender)
+                .job(job)
+                .experience(experience)
+                .age(age)
+                .preferredLocation(preferredLocation)
+                .preferredType(preferredType)
+                .build();
+    }
 }

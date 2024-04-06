@@ -56,10 +56,12 @@ public class TenantController {
 
     // 임차인 정보 - 프로필 등록
     @Operation(summary = "임차인 프로필 등록")
-    @PostMapping("/profile/{tenant_id}")
-    public CommonResult registerProfile(@RequestBody TenantProfileDto tenantRequestDto){
-        return tenantService.registerProfile(tenantRequestDto);
+    @PostMapping("/profile/{tenantId}")
+    public CommonResult createTenantProfile(@PathVariable Long tenantId, @RequestBody TenantProfileDto tenantRequestDto){
+        tenantService.createTenantProfile(tenantId, tenantRequestDto);
+        return responseService.getSuccessfulResult();
     }
+    
 
     // 토큰 재발급
     @Operation(summary = "토큰 재발급")

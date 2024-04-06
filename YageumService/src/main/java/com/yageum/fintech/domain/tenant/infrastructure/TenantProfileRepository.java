@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface TenantProfileRepository extends JpaRepository<TenantProfileEntity, Long> {
+public interface TenantProfileRepository extends JpaRepository<TenantProfile, Long> {
 
-    Optional<TenantProfileEntity> findById(Long userId);
+    Optional<TenantProfile> findByTenantId(Long tenantId);
 }

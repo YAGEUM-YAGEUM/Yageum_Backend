@@ -1,16 +1,13 @@
 package com.yageum.fintech.domain.tenant.service;
 
-import com.yageum.fintech.domain.post.domain.Post;
-import com.yageum.fintech.domain.project.infrastructure.Project;
 import com.yageum.fintech.domain.tenant.dto.request.LoginRequest;
 import com.yageum.fintech.domain.tenant.dto.request.TenantProfileDto;
 import com.yageum.fintech.domain.tenant.dto.request.TenantRequestDto;
 import com.yageum.fintech.domain.tenant.dto.response.GetTenantResponseDto;
 import com.yageum.fintech.domain.tenant.infrastructure.TenantProfileRepository;
-import com.yageum.fintech.global.config.jwt.jwtInterceptor.JwtContextHolder;
 import com.yageum.fintech.global.model.Exception.*;
 import com.yageum.fintech.domain.tenant.dto.response.JWTAuthResponse;
-import com.yageum.fintech.domain.tenant.infrastructure.TenantEntity;
+import com.yageum.fintech.domain.tenant.infrastructure.Tenant;
 import com.yageum.fintech.domain.tenant.infrastructure.TenantRepository;
 import com.yageum.fintech.global.config.jwt.JwtTokenProvider;
 import com.yageum.fintech.global.model.Result.CommonResult;
@@ -53,13 +50,11 @@ public class TenantServiceImpl implements TenantService {
     private final MyUserDetailsService myUserDetailsService;
     private final RedisServiceImpl redisServiceImpl;
 
-
-
     @Value("${spring.mail.auth-code-expiration-millis}")
     private long authCodeExpirationMillis;
 
     @Override
-    public Optional<TenantEntity> findOne(String email) {
+    public Optional<Tenant> findOne(String email) {
         return tenantRepository.findByEmail(email);
     }
 
@@ -84,30 +79,19 @@ public class TenantServiceImpl implements TenantService {
 
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        TenantEntity tenantEntity = mapper.map(tenantRequestDto, TenantEntity.class);
-        tenantEntity.setEncryptedPwd(pwdEncoder.encode(tenantRequestDto.getPassword()));
-        tenantRepository.save(tenantEntity);
+        Tenant tenant = mapper.map(tenantRequestDto, Tenant.class);
+        tenant.setEncryptedPwd(pwdEncoder.encode(tenantRequestDto.getPassword()));
+        tenantRepository.save(tenant);
 
         return responseService.getSuccessfulResultWithMessage("회원가입이 성공적으로 완료되었습니다!");
     }
 
     @Override
-    public CommonResult registerProfile(TenantProfileDto tenantProfileDto) {
-        Optional<TenantProfileDto> optionalProfile = tenantProfileRepository.findById(tenantProfileDto.get());
-        if (optionalProject.isEmpty()){
-            return responseService.getFailResult(ExceptionList.INVALID_PROJECT_ID.getCode(), ExceptionList.INVALID_PROJECT_ID.getMessage());
-        }
-        Project project = optionalProject.get();
+    public void createTenantProfile(Long tenantId, TenantProfileDto tenantProfileDto) {
+        Tenant tenant = tenantRepository.findByTenantId(tenantId)
+                .orElseThrow(()-> new NonExistentException(ExceptionList.NON_EXISTENT_TENANT));
 
-        // 요청자가 해당 프로젝트의 팀원인지 확인
-        Long userId = JwtContextHolder.getUserId();
-        checkMemberAuthorization(project, userId);
-
-        Post post = dto.toEntity(userId);
-        project.createPost(post);
-        postRepository.save(post);
-        return responseService.getSuccessfulResultWithMessage("기획/제작/편집 게시글 작성에 성공하였습니다.");
-
+        tenantProfileRepository.save(tenantProfileDto.toEntity(tenant));
     }
 
     @Transactional(readOnly = true)
@@ -153,9 +137,9 @@ public class TenantServiceImpl implements TenantService {
         String redisRefreshToken = redisServiceImpl.getValues(email);
 
         if (redisServiceImpl.checkExistsValue(redisRefreshToken) && refreshToken.equals(redisRefreshToken)) {
-            Optional<TenantEntity> findUser = this.findOne(email);
-            TenantEntity tenantEntity = TenantEntity.of(findUser);
-            JWTAuthResponse tokenDto = jwtTokenProvider.generateToken(email, jwtTokenProvider.getAuthentication(refreshToken), tenantEntity.getId());
+            Optional<Tenant> findUser = this.findOne(email);
+            Tenant tenant = Tenant.of(findUser);
+            JWTAuthResponse tokenDto = jwtTokenProvider.generateToken(email, jwtTokenProvider.getAuthentication(refreshToken), tenant.getId());
             String newAccessToken = tokenDto.getAccessToken();
             long refreshTokenExpirationMillis = jwtTokenProvider.getRefreshTokenExpirationMillis();
             return tokenDto;
@@ -189,7 +173,7 @@ public class TenantServiceImpl implements TenantService {
 
     //중복 이메일 체크
     private void checkDuplicatedEmail(String email) {
-        Optional<TenantEntity> userEntity = tenantRepository.findByEmail(email);
+        Optional<Tenant> userEntity = tenantRepository.findByEmail(email);
         if (userEntity.isPresent()) {
             log.debug("UserServiceImpl.checkDuplicatedEmail exception occur email: {}", email);
             throw new BusinessLogicException(ExceptionList.MEMBER_EXISTS);

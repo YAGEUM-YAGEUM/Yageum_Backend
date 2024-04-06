@@ -1,6 +1,6 @@
 package com.yageum.fintech.domain.tenant.dto.response;
 
-import com.yageum.fintech.domain.tenant.infrastructure.TenantEntity;
+import com.yageum.fintech.domain.tenant.infrastructure.Tenant;
 import lombok.*;
 
 @Getter
@@ -13,13 +13,13 @@ public class GetTenantResponseDto {
     private String email;
     private String message;
 
-    public static GetTenantResponseDto from(TenantEntity tenantEntity){
+    public static GetTenantResponseDto from(Tenant tenant){
         return GetTenantResponseDto.builder()
-                .tenant_id(tenantEntity.getTenant_id())
-                .username(tenantEntity.getUsername())
-                .email(tenantEntity.getEmail())
-                .name(tenantEntity.getName())
-                .phone(tenantEntity.getPhone())
+                .tenant_id(tenant.getTenant_id())
+                .username(tenant.getUsername())
+                .email(tenant.getEmail())
+                .name(tenant.getName())
+                .phone(tenant.getPhone())
                 .build();
     }
 

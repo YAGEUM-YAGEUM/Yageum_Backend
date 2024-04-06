@@ -12,12 +12,12 @@ import java.util.Optional;
 @Entity
 @Table(name = "tenant")
 @AllArgsConstructor
-public class TenantEntity {
+public class Tenant {
 
     @Id
     @Column(name = "tenant_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tenant_id;
+    private Long tenantId;
 
     @Column(name = "username", nullable = false, length = 50, unique = true)
     private String username;
@@ -34,12 +34,14 @@ public class TenantEntity {
     @Column(name = "email", nullable = false, length = 50, unique = true)
     private String email;
 
+    //프로필 정보와 1:1 연관관계
+    @OneToOne(mappedBy = "tenant", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private TenantProfile profile;
 
-
-    private TenantEntity(Optional<TenantEntity> userEntity) {
-        if (userEntity.isPresent()) {
-            TenantEntity entity = userEntity.get();
-            this.tenant_id = entity.getTenant_id();
+    private Tenant(Optional<Tenant> tenant) {
+        if (tenant.isPresent()) {
+            Tenant entity = tenant.get();
+            this.tenantId = entity.getTenantId();
             this.username = entity.getUsername();
             this.email = entity.getEmail();
             this.name = entity.getName();
@@ -48,11 +50,11 @@ public class TenantEntity {
         }
     }
 
-    public TenantEntity() {
+    public Tenant() {
     }
 
-    public static TenantEntity of(Optional<TenantEntity> userEntity) {
-        return new TenantEntity(userEntity);
+    public static Tenant of(Optional<Tenant> userEntity) {
+        return new Tenant(userEntity);
     }
 
 }

@@ -7,23 +7,23 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface TenantRepository extends JpaRepository<TenantEntity, Long> {
+public interface TenantRepository extends JpaRepository<Tenant, Long> {
 
-    Optional<TenantEntity> findByEmail(String email);
+    Optional<Tenant> findByEmail(String email);
 
-    Boolean existsById(String userId);
+    Boolean existsById(String tenantId);
 
-    Optional<TenantEntity> findById(Long userId);
+    Optional<Tenant> findByTenantId(Long tenantId);
 
     default GetTenantResponseDto findUserResponseByUserId(Long userId) {
-        Optional<TenantEntity> userEntityOptional = findById(userId);
-        TenantEntity tenantEntity = userEntityOptional.get();
-        return GetTenantResponseDto.from(tenantEntity);
+        Optional<Tenant> userEntityOptional = findById(userId);
+        Tenant tenant = userEntityOptional.get();
+        return GetTenantResponseDto.from(tenant);
     }
 
     default GetTenantResponseDto findUserResponseByEmail(String email) {
-        Optional<TenantEntity> userEntityOptional = findByEmail(email);
-        TenantEntity tenantEntity = userEntityOptional.get();
-        return GetTenantResponseDto.from(tenantEntity);
+        Optional<Tenant> userEntityOptional = findByEmail(email);
+        Tenant tenant = userEntityOptional.get();
+        return GetTenantResponseDto.from(tenant);
     }
 }

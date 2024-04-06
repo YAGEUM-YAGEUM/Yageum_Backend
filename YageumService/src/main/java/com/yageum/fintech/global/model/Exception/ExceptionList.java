@@ -10,7 +10,7 @@ public enum ExceptionList {
 
     UNKNOWN(-9999, "알 수 없는 오류가 발생하였습니다."),
 
-    //User
+    //Tenant, Lessor
     NON_EXISTENT_CHECKLIST(5005, "내용이 존재하지 않습니다."),
     INVALID_USER_ID(5011, "요청으로 들어온 User의 식별자가 유효하지 않습니다."),
 
@@ -45,6 +45,8 @@ public enum ExceptionList {
 
     // PROJECT
     INVALID_PROJECT_ID(5010, "요청으로 들어온 Project의 식별자가 유효하지 않습니다."),
+    NON_EXISTENT_TENANT(5010, "존재하지 않는 임대인입니다."),
+    TENANT_PROFILE_ALREADY_EXISTS(5010, "이미 해당 tenantId에 대한 프로필이 존재합니다."),
 
     // PROJECT & TEAM
     NOT_TEAM_MEMBER(5012, "요청으로 들어온 User는 해당 Project의 팀원이 아닙니다."),
