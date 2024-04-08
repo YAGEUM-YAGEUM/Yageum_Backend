@@ -8,7 +8,7 @@ import com.yageum.fintech.domain.tenant.dto.response.GetTenantResponseDto;
 import com.yageum.fintech.global.model.Exception.EmailVerificationResult;
 import com.yageum.fintech.domain.tenant.dto.response.JWTAuthResponse;
 import com.yageum.fintech.domain.tenant.service.TenantService;
-import com.yageum.fintech.global.config.jwt.JwtTokenProvider;
+//import com.yageum.fintech.global.config.jwt.JwtTokenProvider;
 import com.yageum.fintech.global.model.Exception.BusinessLogicException;
 import com.yageum.fintech.global.model.Exception.ExceptionList;
 import com.yageum.fintech.global.model.Result.CommonResult;
@@ -30,26 +30,26 @@ import org.springframework.web.bind.annotation.*;
 public class TenantController {
 
     private final TenantService tenantService;
-    private final JwtTokenProvider jwtTokenProvider;
+//    private final JwtTokenProvider jwtTokenProvider;
     private final ResponseService responseService;
 
     //health-check
     @Operation(summary = "사용자 서비스 상태 확인")
-    @GetMapping("/health_check")
+    @GetMapping()
     public String status(){
         return "It's Working in Tenant Service";
     }
-
-    // 로그인
-    @Operation(summary = "사용자 로그인")
-    @PostMapping("/login")
-    public CommonResult login(@RequestBody LoginRequest loginRequest){
-        JWTAuthResponse token = tenantService.login(loginRequest);
-        return responseService.getSingleResult(token);
-    }
+//
+//    // 로그인
+//    @Operation(summary = "사용자 로그인")
+//    @PostMapping("/login")
+//    public CommonResult login(@RequestBody LoginRequest loginRequest){
+//        JWTAuthResponse token = tenantService.login(loginRequest);
+//        return responseService.getSingleResult(token);
+//    }
 
     // 회원가입
-    @Operation(summary = "회원가입")
+    @Operation(summary = "임차인 회원가입")
     @PostMapping("/")
     public CommonResult register(@RequestBody TenantRequestDto tenantRequestDto){
         return tenantService.register(tenantRequestDto);
@@ -79,32 +79,32 @@ public class TenantController {
         return responseService.getSuccessfulResult();
     }
 
-    // 토큰 재발급
-    @Operation(summary = "토큰 재발급")
-    @PatchMapping("/reissue")
-    public CommonResult reissue(HttpServletRequest request,
-                                                   HttpServletResponse response) {
+//    // 토큰 재발급
+//    @Operation(summary = "토큰 재발급")
+//    @PatchMapping("/reissue")
+//    public CommonResult reissue(HttpServletRequest request,
+//                                                   HttpServletResponse response) {
+//
+//        String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
+//        JWTAuthResponse newAccessToken = tenantService.reissueAccessToken(refreshToken);
+//        return responseService.getSingleResult(newAccessToken);
+//    }
 
-        String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
-        JWTAuthResponse newAccessToken = tenantService.reissueAccessToken(refreshToken);
-        return responseService.getSingleResult(newAccessToken);
-    }
-
-    // 이메일 인증번호 전송
-    @Operation(summary = "이메일 인증번호 전송")
-    @PostMapping("/emails/verification-requests")
-    public CommonResult sendMessage(@RequestParam("email") @Valid String email) {
-        tenantService.sendCodeToEmail(email);
-        return responseService.getSuccessfulResult();
-    }
-
-    //이메일 인증번호 검증
-    @Operation(summary = "이메일 인증번호 검증")
-    @GetMapping("/emails/verifications")
-    public EmailVerificationResult verificationEmail(@RequestParam("email") @Valid @Email String email,
-                                            @RequestParam("code") String authCode) {
-        return tenantService.verifiedCode(email, authCode);
-    }
+//    // 이메일 인증번호 전송
+//    @Operation(summary = "이메일 인증번호 전송")
+//    @PostMapping("/emails/verification-requests")
+//    public CommonResult sendMessage(@RequestParam("email") @Valid String email) {
+//        tenantService.sendCodeToEmail(email);
+//        return responseService.getSuccessfulResult();
+//    }
+//
+//    //이메일 인증번호 검증
+//    @Operation(summary = "이메일 인증번호 검증")
+//    @GetMapping("/emails/verifications")
+//    public EmailVerificationResult verificationEmail(@RequestParam("email") @Valid @Email String email,
+//                                            @RequestParam("code") String authCode) {
+//        return tenantService.verifiedCode(email, authCode);
+//    }
 
     // 사용자 정보 조회 by userId
     @Operation(summary = "userId로 사용자 정보 조회")

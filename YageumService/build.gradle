@@ -41,6 +41,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'io.leopard.boot:leopard-boot-requestmapping:0.9.20'
 	implementation 'org.modelmapper:modelmapper:3.1.1'
+	testImplementation 'org.projectlombok:lombok:1.18.22'
+	testImplementation 'junit:junit:4.13.1'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'

@@ -8,7 +8,7 @@ import java.util.Optional;
 @Repository
 public interface TenantProfileRepository extends JpaRepository<TenantProfile, Long> {
 
-    Optional<TenantProfile> findByTenantId(Long tenantId);
+    Optional<TenantProfile> findByTenant_TenantId(Long tenantId);
 
     Optional<TenantProfile> findByProfileId(Long profileId);
 

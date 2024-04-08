@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 
 @OpenAPIDefinition(
         info = @Info(title = "YageumYageum",
-                description = "YageumYageum 청년자산관리 Api 명세서",
+                description = "YageumYageum 부동산 거래 플랫폼 Api 명세서",
                 version = "v1"))
 @RequiredArgsConstructor
 @Configuration
