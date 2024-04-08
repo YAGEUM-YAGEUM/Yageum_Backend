@@ -1,7 +1,6 @@
 package com.yageum.fintech.domain.tenant.dto.response;
 
-import com.yageum.fintech.domain.project.dto.response.GetProjectResponseDto;
-import com.yageum.fintech.domain.project.dto.response.GetProjectUserResponseDto;
+//import com.yageum.fintech.domain.project.dto.response.GetProjectResponseDto;
 import com.yageum.fintech.domain.project.infrastructure.Project;
 import com.yageum.fintech.domain.tenant.infrastructure.Gender;
 import com.yageum.fintech.domain.tenant.infrastructure.Tenant;
@@ -14,8 +13,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @Builder
