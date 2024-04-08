@@ -1,16 +1,31 @@
- version: '3.8'
+version: '3.8'
 
 services:
   # mysql
   mysql:
-    container_name: IA_mysql
+    container_name: YG_mysql
     image: mysql:8.0
-    env_file:
-      - .env\
     environment:
-      TZ: Asia/Seoul
+      MYSQL_DATABASE: yageum
+      MYSQL_ROOT_PASSWORD: test1234
+      MYSQL_ROOT_HOST: '%'
+      TZ: 'Asia/Seoul'
     ports:
-      - "33061:3306"
+      - "3306:3306"
     command:
       - '--character-set-server=utf8mb4'
       - '--collation-server=utf8mb4_unicode_ci'
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+  redis:
+    image: redis
+    container_name: YG_redis
+    command: redis-server --port 6379
+    restart: always
+    hostname: redis
+    ports:
+      - "6379:6379"
