@@ -2,14 +2,13 @@ package com.yageum.fintech.domain.tenant.infrastructure;
 
 import com.yageum.fintech.domain.tenant.dto.request.TenantProfileDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Builder
 @Table(name = "tenant_profile")
 public class TenantProfile {
 
@@ -45,6 +44,20 @@ public class TenantProfile {
 
     @Column(name = "preferred_type", nullable = false)
     private String preferredType;
+
+    @Builder
+    public TenantProfile(Long profileId, Tenant tenant, String title, String introduce, Gender gender, String job, Integer experience, Integer age, String preferredLocation, String preferredType) {
+        this.profileId = profileId;
+        this.tenant = tenant;
+        this.title = title;
+        this.introduce = introduce;
+        this.gender = gender;
+        this.job = job;
+        this.experience = experience;
+        this.age = age;
+        this.preferredLocation = preferredLocation;
+        this.preferredType = preferredType;
+    }
 
     public void update(TenantProfileDto tenantProfileDto) {
         this.title = tenantProfileDto.getTitle();

@@ -13,7 +13,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="945c464c-eac8-4aa9-939b-c26ffbe85327">
-      <console name="yageum" type="STANDARD" schema="mysql" session="Main"><![CDATA[select * from post;]]></console>
+      <console name="yageum" type="STANDARD" schema="mysql" session="Main"><![CDATA[select * from tenant;]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
