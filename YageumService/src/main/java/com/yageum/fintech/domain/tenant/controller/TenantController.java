@@ -90,21 +90,21 @@ public class TenantController {
 //        return responseService.getSingleResult(newAccessToken);
 //    }
 
-//    // 이메일 인증번호 전송
-//    @Operation(summary = "이메일 인증번호 전송")
-//    @PostMapping("/emails/verification-requests")
-//    public CommonResult sendMessage(@RequestParam("email") @Valid String email) {
-//        tenantService.sendCodeToEmail(email);
-//        return responseService.getSuccessfulResult();
-//    }
-//
-//    //이메일 인증번호 검증
-//    @Operation(summary = "이메일 인증번호 검증")
-//    @GetMapping("/emails/verifications")
-//    public EmailVerificationResult verificationEmail(@RequestParam("email") @Valid @Email String email,
-//                                            @RequestParam("code") String authCode) {
-//        return tenantService.verifiedCode(email, authCode);
-//    }
+    // 이메일 인증번호 전송
+    @Operation(summary = "이메일 인증번호 전송")
+    @PostMapping("/emails/verification-requests")
+    public CommonResult sendMessage(@RequestParam("email") @Valid String email) {
+        tenantService.sendCodeToEmail(email);
+        return responseService.getSuccessfulResult();
+    }
+
+    //이메일 인증번호 검증
+    @Operation(summary = "이메일 인증번호 검증")
+    @GetMapping("/emails/verifications")
+    public EmailVerificationResult verificationEmail(@RequestParam("email") @Valid @Email String email,
+                                            @RequestParam("code") String authCode) {
+        return tenantService.verifiedCode(email, authCode);
+    }
 
     // 사용자 정보 조회 by userId
     @Operation(summary = "userId로 사용자 정보 조회")

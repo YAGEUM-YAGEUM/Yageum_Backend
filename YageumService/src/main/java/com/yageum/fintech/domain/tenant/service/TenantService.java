@@ -1,6 +1,5 @@
 package com.yageum.fintech.domain.tenant.service;
 
-import com.yageum.fintech.domain.project.dto.response.GetProjectResponseDto;
 import com.yageum.fintech.domain.tenant.dto.request.LoginRequest;
 import com.yageum.fintech.domain.tenant.dto.request.TenantProfileDto;
 import com.yageum.fintech.domain.tenant.dto.request.TenantRequestDto;
@@ -17,7 +16,7 @@ public interface TenantService {
 
     Optional<Tenant> findOne(String email);
 
-    JWTAuthResponse login(LoginRequest loginRequest);
+//    JWTAuthResponse login(LoginRequest loginRequest);
 
     CommonResult register(TenantRequestDto tenantRequestDto);
 
@@ -33,7 +32,7 @@ public interface TenantService {
 
     GetTenantResponseDto getUserResponseByEmail(String email);
 
-    JWTAuthResponse reissueAccessToken(String encryptedRefreshToken);
+//    JWTAuthResponse reissueAccessToken(String encryptedRefreshToken);
 
     void sendCodeToEmail(String toEmail);
 

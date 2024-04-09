@@ -13,8 +13,9 @@ services:
     ports:
       - "3306:3306"
     command:
-      - '--character-set-server=utf8mb4'
-      - '--collation-server=utf8mb4_unicode_ci'
+      - "mysqld"
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
     deploy:
       restart_policy:
         condition: on-failure

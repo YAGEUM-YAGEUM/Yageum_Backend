@@ -11,7 +11,7 @@ import com.yageum.fintech.global.model.Exception.*;
 import com.yageum.fintech.domain.tenant.dto.response.JWTAuthResponse;
 import com.yageum.fintech.domain.tenant.infrastructure.Tenant;
 import com.yageum.fintech.domain.tenant.infrastructure.TenantRepository;
-import com.yageum.fintech.global.config.jwt.JwtTokenProvider;
+//import com.yageum.fintech.global.config.jwt.JwtTokenProvider;
 import com.yageum.fintech.global.model.Result.CommonResult;
 import com.yageum.fintech.global.service.ResponseService;
 import feign.RetryableException;
@@ -48,29 +48,29 @@ public class TenantServiceImpl implements TenantService {
 
     private final BCryptPasswordEncoder pwdEncoder;
     private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider jwtTokenProvider;
+//    private final JwtTokenProvider jwtTokenProvider;
     private final MyUserDetailsService myUserDetailsService;
     private final RedisServiceImpl redisServiceImpl;
 
     @Value("${spring.mail.auth-code-expiration-millis}")
     private long authCodeExpirationMillis;
 
-    @Override
-    public JWTAuthResponse login(LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginRequest.getEmail(), loginRequest.getPwd()));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        Long userId = myUserDetailsService.findUserIdByEmail(loginRequest.getEmail());
-        JWTAuthResponse token = jwtTokenProvider.generateToken(loginRequest.getEmail(), authentication, userId);
-        return token;
-    }
+//    @Override
+//    public JWTAuthResponse login(LoginRequest loginRequest) {
+//        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+//                loginRequest.getEmail(), loginRequest.getPwd()));
+//
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        Long userId = myUserDetailsService.findUserIdByEmail(loginRequest.getEmail());
+////        JWTAuthResponse token = jwtTokenProvider.generateToken(loginRequest.getEmail(), authentication, userId);
+//        return token;
+//    }
 
     @Override
     public CommonResult register(TenantRequestDto tenantRequestDto) {
 
         // 중복 아이디 체크
-        if(tenantRepository.existsById(tenantRequestDto.getUsername())){
+        if(tenantRepository.existsByUsername(tenantRequestDto.getUsername())){
             return responseService.getFailResult(ExceptionList.ALREADY_EXISTS.getCode(), ExceptionList.ALREADY_EXISTS.getMessage());
         }
 
@@ -95,7 +95,7 @@ public class TenantServiceImpl implements TenantService {
 
     @Override
     public GetTenantProfileDto getTenantProfile(Long tenantId) {
-        TenantProfile tenantProfile = tenantProfileRepository.findByTenantId(tenantId)
+        TenantProfile tenantProfile = tenantProfileRepository.findByTenant_TenantId(tenantId)
                 .orElseThrow(()-> new NonExistentException(ExceptionList.NON_EXISTENT_TENANT_PROFILE));
         Tenant tenant = tenantProfile.getTenant();
         return GetTenantProfileDto.from(tenant, tenantProfile);
@@ -162,7 +162,7 @@ public class TenantServiceImpl implements TenantService {
 //        if (redisServiceImpl.checkExistsValue(redisRefreshToken) && refreshToken.equals(redisRefreshToken)) {
 //            Optional<Tenant> findUser = this.findOne(email);
 //            Tenant tenant = Tenant.of(findUser);
-//            JWTAuthResponse tokenDto = jwtTokenProvider.generateToken(email, jwtTokenProvider.getAuthentication(refreshToken), tenant.getId());
+//            JWTAuthResponse tokenDto = jwtTokenProvider.generateToken(email, jwtTokenProvider.getAuthentication(refreshToken), tenant.getTenantId());
 //            String newAccessToken = tokenDto.getAccessToken();
 //            long refreshTokenExpirationMillis = jwtTokenProvider.getRefreshTokenExpirationMillis();
 //            return tokenDto;
@@ -182,7 +182,7 @@ public class TenantServiceImpl implements TenantService {
 
         // 인증 이메일 내용을 작성
         String emailContent = "안녕하세요,\n\n";
-        emailContent += "야금야금(YageumYageum)에서 발송한 이메일 인증 번호는 다음과 같습니다:\n\n";
+        emailContent += "야금야금(YageumYageum)에서 발송한 이메일 인증 번호는 다음과 같습니다\n\n";
         emailContent += "인증 번호: " + authCode + "\n\n";
         emailContent += "이 인증 번호를 야금야금(YageumYageum) 웹 사이트 또는 애플리케이션에서 입력하여 이메일을 인증해주세요.\n\n";
         emailContent += "감사합니다,\n야금야금(YageumYageum) 서비스 운영팀";
