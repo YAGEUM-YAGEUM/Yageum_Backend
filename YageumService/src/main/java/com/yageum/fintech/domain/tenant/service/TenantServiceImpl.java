@@ -1,6 +1,5 @@
 package com.yageum.fintech.domain.tenant.service;
 
-import com.yageum.fintech.domain.tenant.dto.request.LoginRequest;
 import com.yageum.fintech.domain.tenant.dto.request.TenantProfileDto;
 import com.yageum.fintech.domain.tenant.dto.request.TenantRequestDto;
 import com.yageum.fintech.domain.tenant.dto.response.GetTenantProfileDto;
@@ -8,10 +7,8 @@ import com.yageum.fintech.domain.tenant.dto.response.GetTenantResponseDto;
 import com.yageum.fintech.domain.tenant.infrastructure.TenantProfile;
 import com.yageum.fintech.domain.tenant.infrastructure.TenantProfileRepository;
 import com.yageum.fintech.global.model.Exception.*;
-import com.yageum.fintech.domain.tenant.dto.response.JWTAuthResponse;
 import com.yageum.fintech.domain.tenant.infrastructure.Tenant;
 import com.yageum.fintech.domain.tenant.infrastructure.TenantRepository;
-//import com.yageum.fintech.global.config.jwt.JwtTokenProvider;
 import com.yageum.fintech.global.model.Result.CommonResult;
 import com.yageum.fintech.global.service.ResponseService;
 import feign.RetryableException;
@@ -21,9 +18,6 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,24 +41,10 @@ public class TenantServiceImpl implements TenantService {
     private final TenantProfileRepository tenantProfileRepository;
 
     private final BCryptPasswordEncoder pwdEncoder;
-    private final AuthenticationManager authenticationManager;
-//    private final JwtTokenProvider jwtTokenProvider;
-    private final MyUserDetailsService myUserDetailsService;
     private final RedisServiceImpl redisServiceImpl;
 
     @Value("${spring.mail.auth-code-expiration-millis}")
     private long authCodeExpirationMillis;
-
-//    @Override
-//    public JWTAuthResponse login(LoginRequest loginRequest) {
-//        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-//                loginRequest.getEmail(), loginRequest.getPwd()));
-//
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        Long userId = myUserDetailsService.findUserIdByEmail(loginRequest.getEmail());
-////        JWTAuthResponse token = jwtTokenProvider.generateToken(loginRequest.getEmail(), authentication, userId);
-//        return token;
-//    }
 
     @Override
     public CommonResult register(TenantRequestDto tenantRequestDto) {
@@ -111,11 +91,6 @@ public class TenantServiceImpl implements TenantService {
         profile.update(tenantProfileDto);
     }
 
-    @Override
-    public Optional<Tenant> findOne(String email) {
-        return tenantRepository.findByEmail(email);
-    }
-
 
     @Transactional(readOnly = true)
     @Override
@@ -151,28 +126,6 @@ public class TenantServiceImpl implements TenantService {
             throw new BusinessLogicException(ExceptionList.MEMBER_NOT_FOUND);
         }
         return userResponse;
-    }
-
-//    @Override
-//    public JWTAuthResponse reissueAccessToken(String refreshToken) {
-//        this.verifiedRefreshToken(refreshToken);
-//        String email = jwtTokenProvider.getEmail(refreshToken);
-//        String redisRefreshToken = redisServiceImpl.getValues(email);
-//
-//        if (redisServiceImpl.checkExistsValue(redisRefreshToken) && refreshToken.equals(redisRefreshToken)) {
-//            Optional<Tenant> findUser = this.findOne(email);
-//            Tenant tenant = Tenant.of(findUser);
-//            JWTAuthResponse tokenDto = jwtTokenProvider.generateToken(email, jwtTokenProvider.getAuthentication(refreshToken), tenant.getTenantId());
-//            String newAccessToken = tokenDto.getAccessToken();
-//            long refreshTokenExpirationMillis = jwtTokenProvider.getRefreshTokenExpirationMillis();
-//            return tokenDto;
-//        } else throw new BusinessLogicException(ExceptionList.TOKEN_IS_NOT_SAME);
-//    }
-
-    private void verifiedRefreshToken(String refreshToken) {
-        if (refreshToken == null) {
-            throw new BusinessLogicException(ExceptionList.HEADER_REFRESH_TOKEN_NOT_EXISTS);
-        }
     }
 
     public void sendCodeToEmail(String toEmail) {

@@ -20,7 +20,7 @@ public class TenantRequestDto {
     @Schema(description = "아이디", example = "yageum123")
     private String username;
 
-    @NotNull(message = "비밀번호를 입력해주세요.")
+    @NotBlank(message = "비밀번호를 입력해주세요.")
     @Size(min = 8, message = "비밀번호는 8자 이상이어야 합니다.")
     @Schema(description = "비밀번호", example = "password123")
     private String password;
@@ -30,7 +30,7 @@ public class TenantRequestDto {
     @Schema(description = "이름", example = "김청년")
     private String name;
 
-    @NotNull(message = "전화번호를 입력해주세요.")
+    @NotBlank(message = "전화번호를 입력해주세요.")
     @Size(min = 10, max = 15, message = "전화번호는 10자에서 15자 사이여야 합니다.")
     @Schema(description = "전화번호", example = "01012341234")
     private String phone;

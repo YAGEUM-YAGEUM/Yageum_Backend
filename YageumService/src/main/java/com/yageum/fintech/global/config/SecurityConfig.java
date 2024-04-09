@@ -1,8 +1,10 @@
 package com.yageum.fintech.global.config;
 
-import com.yageum.fintech.global.config.jwt.JwtAuthenticationEntryPoint;
-//import com.yageum.fintech.global.config.jwt.JwtAuthenticationFilter;
-//import com.yageum.fintech.global.config.jwt.JwtTokenProvider;
+import com.yageum.fintech.domain.auth.jwt.JwtAuthenticationEntryPoint;
+//import com.yageum.fintech.domain.auth.jwt.JwtAuthenticationFilter;
+//import com.yageum.fintech.domain.auth.jwt.JwtTokenProvider;
+import com.yageum.fintech.domain.auth.jwt.JwtAuthenticationFilter;
+import com.yageum.fintech.domain.auth.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-//    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
     private final JwtAuthenticationEntryPoint authenticationEntryPoint;
 
     private static final String[] WHITE_LIST = {
@@ -52,11 +54,11 @@ public class SecurityConfig {
                         .requestMatchers(WHITE_LIST).permitAll()
                                 .requestMatchers("/swagger-resources/**").permitAll()// swagger
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // swagger
-//                        .anyRequest().authenticated() //어떠한 요청이라도 인증 필요
+                        .anyRequest().authenticated() //어떠한 요청이라도 인증 필요
                 )
-//                .exceptionHandling(exception -> exception
-//                        .authenticationEntryPoint(authenticationEntryPoint))
-//                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(authenticationEntryPoint))
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
         ;
 
         return http.build();
