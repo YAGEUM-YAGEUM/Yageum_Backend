@@ -1,5 +1,7 @@
 package com.yageum.fintech.domain.auth.service;
 
+import com.yageum.fintech.domain.lessor.infrastructure.Lessor;
+import com.yageum.fintech.domain.lessor.infrastructure.LessorRepository;
 import com.yageum.fintech.domain.tenant.infrastructure.Tenant;
 import com.yageum.fintech.domain.tenant.infrastructure.TenantRepository;
 import lombok.RequiredArgsConstructor;
@@ -73,5 +75,5 @@ public class MyUserDetailsService implements UserDetailsService {
 
         throw new UsernameNotFoundException("해당하는 사용자가 없습니다: " + username);
     }
-    }
+
 }

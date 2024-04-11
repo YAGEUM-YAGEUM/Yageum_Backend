@@ -24,7 +24,4 @@ public interface TenantService {
 
     GetTenantResponseDto getUserResponseByEmail(String email);
 
-    void sendCodeToEmail(String toEmail);
-
-    EmailVerificationResult verifiedCode(String email, String authCode);
 }
