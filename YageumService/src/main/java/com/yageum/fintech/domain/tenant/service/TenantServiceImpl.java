@@ -36,12 +36,13 @@ public class TenantServiceImpl implements TenantService {
 
     private static final String AUTH_CODE_PREFIX = "AuthCode ";
     private final MailService mailService;
-    private final ResponseService responseService;
+    private final RedisServiceImpl redisServiceImpl;
     private final TenantRepository tenantRepository;
+    private final LessorRepository lessorRepository;
     private final TenantProfileRepository tenantProfileRepository;
 
     private final BCryptPasswordEncoder pwdEncoder;
-    private final RedisServiceImpl redisServiceImpl;
+    private final ResponseService responseService;
 
     @Value("${spring.mail.auth-code-expiration-millis}")
     private long authCodeExpirationMillis;
@@ -49,8 +50,13 @@ public class TenantServiceImpl implements TenantService {
     @Override
     public CommonResult register(TenantRequestDto tenantRequestDto) {
 
-        // 중복 아이디 체크
+        /* 임차인 중복 아이디 체크 */
         if(tenantRepository.existsByUsername(tenantRequestDto.getUsername())){
+            return responseService.getFailResult(ExceptionList.ALREADY_EXISTS.getCode(), ExceptionList.ALREADY_EXISTS.getMessage());
+        }
+
+        /* 임대인 중복 아이디 체크 */
+        if(lessorRepository.existsByUsername(tenantRequestDto.getUsername())){
             return responseService.getFailResult(ExceptionList.ALREADY_EXISTS.getCode(), ExceptionList.ALREADY_EXISTS.getMessage());
         }
 
