@@ -28,10 +28,16 @@ public class AuthController {
     @Operation(summary = "임차인 로그인")
     @PostMapping("/tenant/login")
     public CommonResult tenantLogin(@RequestBody LoginRequest loginRequest){
-        JWTAuthResponse token = authService.login(loginRequest);
+        JWTAuthResponse token = authService.tenantLogin(loginRequest);
         return responseService.getSingleResult(token);
     }
 
+    @Operation(summary = "임대인 로그인")
+    @PostMapping("/lessor/login")
+    public CommonResult lessorLogin(@RequestBody LoginRequest loginRequest){
+        JWTAuthResponse token = authService.lessorLogin(loginRequest);
+        return responseService.getSingleResult(token);
+    }
 
     // 토큰 재발급
     @Operation(summary = "토큰 재발급")

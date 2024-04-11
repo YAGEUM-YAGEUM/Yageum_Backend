@@ -31,7 +31,20 @@ public class AuthServiceImpl implements AuthService{
 
     @Transactional(readOnly = true)
     @Override
-    public JWTAuthResponse login(LoginRequest loginRequest) {
+    public JWTAuthResponse tenantLogin(LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                loginRequest.getUsername(), loginRequest.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        Long tenantId = myUserDetailsService.findUserIdByUsername(loginRequest.getUsername());
+        String name = myUserDetailsService.findNameByUsername(loginRequest.getUsername());
+        JWTAuthResponse token = jwtTokenProvider.generateToken(loginRequest.getUsername(), authentication, tenantId, name);
+        return token;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public JWTAuthResponse lessorLogin(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginRequest.getUsername(), loginRequest.getPassword()));
 

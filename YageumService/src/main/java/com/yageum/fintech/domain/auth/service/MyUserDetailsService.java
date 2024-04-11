@@ -18,31 +18,60 @@ import java.util.Optional;
 public class MyUserDetailsService implements UserDetailsService {
 
     private final TenantRepository tenantRepository;
+    private final LessorRepository lessorRepository;
 
     @Transactional
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Tenant> findOne = tenantRepository.findByUsername(username);
-        Tenant tenant = findOne.orElseThrow(() -> new UsernameNotFoundException("없는 임차인입니다"));
+        Optional<Tenant> tenantOptional = tenantRepository.findByUsername(username);
+        if (tenantOptional.isPresent()) {
+            Tenant tenant = tenantOptional.get();
+            return User.builder()
+                    .username(tenant.getUsername())
+                    .password(tenant.getEncryptedPwd())
+                    .authorities(new SimpleGrantedAuthority("TENANT"))
+                    .build();
+        }
 
-        return User.builder()
-                .username(tenant.getUsername()) //아이디
-                .password(tenant.getEncryptedPwd()) //비번
-                .authorities(new SimpleGrantedAuthority("ADMIN"))
-                .build();
+        Optional<Lessor> lessorOptional = lessorRepository.findByUsername(username);
+        if (lessorOptional.isPresent()) {
+            Lessor lessor = lessorOptional.get();
+            return User.builder()
+                    .username(lessor.getUsername())
+                    .password(lessor.getEncryptedPwd())
+                    .authorities(new SimpleGrantedAuthority("LESSOR"))
+                    .build();
+        }
+
+        throw new UsernameNotFoundException("해당하는 사용자가 없습니다: " + username);
     }
 
     public Long findUserIdByUsername(String username) {
-        Optional<Tenant> findOne = tenantRepository.findByUsername(username);
-        Tenant tenant = findOne.orElseThrow(() -> new UsernameNotFoundException("없는 회원입니다"));
+        Optional<Tenant> tenantOptional = tenantRepository.findByUsername(username);
+        if (tenantOptional.isPresent()) {
+            return tenantOptional.get().getTenantId();
+        }
 
-        return tenant.getTenantId();
+        Optional<Lessor> lessorOptional = lessorRepository.findByUsername(username);
+        if (lessorOptional.isPresent()) {
+            return lessorOptional.get().getLessorId();
+        }
+
+        throw new UsernameNotFoundException("해당하는 사용자가 없습니다: " + username);
     }
 
     public String findNameByUsername(String username) {
-        Optional<Tenant> findOne = tenantRepository.findByUsername(username);
-        Tenant tenant = findOne.orElseThrow(() -> new UsernameNotFoundException("없는 회원입니다"));
+        Optional<Tenant> tenantOptional = tenantRepository.findByUsername(username);
+        if (tenantOptional.isPresent()) {
+            return tenantOptional.get().getName();
+        }
 
-        return tenant.getName();
+        Optional<Lessor> lessorOptional = lessorRepository.findByUsername(username);
+        if (lessorOptional.isPresent()) {
+            return lessorOptional.get().getName();
+        }
+
+        throw new UsernameNotFoundException("해당하는 사용자가 없습니다: " + username);
+    }
     }
 }

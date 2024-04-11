@@ -9,7 +9,8 @@ import java.util.Optional;
 public interface AuthService {
 
     Optional<Tenant> findOne(String username);
-    JWTAuthResponse login(LoginRequest loginRequest);
+    JWTAuthResponse tenantLogin(LoginRequest loginRequest);
+    JWTAuthResponse lessorLogin(LoginRequest loginRequest);
     JWTAuthResponse reissueAccessToken(String encryptedRefreshToken);
 
 }
