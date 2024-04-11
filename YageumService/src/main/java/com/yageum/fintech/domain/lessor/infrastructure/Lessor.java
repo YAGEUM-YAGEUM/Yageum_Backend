@@ -1,5 +1,7 @@
-package com.yageum.fintech.domain.tenant.infrastructure;
+package com.yageum.fintech.domain.lessor.infrastructure;
 
+import com.yageum.fintech.domain.tenant.infrastructure.Tenant;
+import com.yageum.fintech.domain.tenant.infrastructure.TenantProfile;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,14 +12,13 @@ import java.util.Optional;
 @Setter
 @Getter
 @Entity
-@Table(name = "tenant")
+@Table(name = "lessor")
 @AllArgsConstructor
-public class Tenant {
-
+public class Lessor {
     @Id
-    @Column(name = "tenant_id")
+    @Column(name = "lessor_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tenantId;
+    private Long lessorId;
 
     @Column(name = "username", nullable = false, length = 50, unique = true)
     private String username;
@@ -35,13 +36,13 @@ public class Tenant {
     private String email;
 
     //프로필 정보와 1:1 연관관계
-    @OneToOne(mappedBy = "tenant", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private TenantProfile profile;
+    @OneToOne(mappedBy = "lessor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private LessorProfile profile;
 
-    private Tenant(Optional<Tenant> tenant) {
-        if (tenant.isPresent()) {
-            Tenant entity = tenant.get();
-            this.tenantId = entity.getTenantId();
+    private Lessor(Optional<Lessor> lessor) {
+        if (lessor.isPresent()) {
+            Lessor entity = lessor.get();
+            this.lessorId = entity.getLessorId();
             this.username = entity.getUsername();
             this.email = entity.getEmail();
             this.name = entity.getName();
@@ -50,11 +51,11 @@ public class Tenant {
         }
     }
 
-    public Tenant() {
+    public Lessor() {
     }
 
-    public static Tenant of(Optional<Tenant> tenantEntity) {
-        return new Tenant(tenantEntity);
+    public static Lessor of(Optional<Lessor> lessorEntity) {
+        return new Lessor(lessorEntity);
     }
 
 }

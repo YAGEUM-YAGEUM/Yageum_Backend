@@ -17,7 +17,7 @@ import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "임차인 API", description = "회원가입, 프로필 등록 및 수정, 조회, 이메일 인증과 관련된 API")
+@Tag(name = "임차인 API", description = "임차인 회원가입, 프로필 등록 및 수정, 조회와 관련된 API")
 @RestController
 @RequestMapping("/api/v1/tenant")
 @RequiredArgsConstructor
@@ -60,7 +60,7 @@ public class TenantController {
     // 임차인 정보 - 프로필 수정
     @Operation(summary = "임차인 프로필 수정", description = "프로필 ID로 프로필 정보를 수정하는 API")
     @PutMapping("/profile/{profileId}")
-    public CommonResult updateTenantProfile(@PathVariable Long profileId, @RequestBody TenantProfileDto tenantRequestDto){
+    public CommonResult updateTenantProfile(@PathVariable Long profileId, @RequestBody TenantProfileDto tenantProfileDto){
         tenantService.updateTenantProfile(profileId, tenantRequestDto);
         return responseService.getSuccessfulResult();
     }

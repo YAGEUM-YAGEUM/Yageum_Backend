@@ -1,4 +1,4 @@
-package com.yageum.fintech.domain.tenant.dto.request;
+package com.yageum.fintech.domain.lessor.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
@@ -12,21 +12,21 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class TenantRequestDto {
+public class LessorRequestDto {
 
     @NotBlank(message = "아이디를 입력해주세요.")
     @Size(min = 5, message = "아이디는 5자 이상이어야 합니다.")
-    @Schema(description = "아이디", example = "yageum123")
+    @Schema(description = "아이디", example = "lessor123")
     private String username;
 
     @NotBlank(message = "비밀번호를 입력해주세요.")
     @Size(min = 8, message = "비밀번호는 8자 이상이어야 합니다.")
-    @Schema(description = "비밀번호", example = "password123")
+    @Schema(description = "비밀번호", example = "password011")
     private String password;
 
     @NotBlank(message = "이름을 입력해주세요.")
     @Size(min = 2, message = "이름은 2자 이상이어야 합니다.")
-    @Schema(description = "이름", example = "김청년")
+    @Schema(description = "이름", example = "김야금")
     private String name;
 
     @NotBlank(message = "전화번호를 입력해주세요.")

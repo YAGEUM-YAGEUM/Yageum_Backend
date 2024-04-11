@@ -5,10 +5,8 @@ import com.yageum.fintech.domain.tenant.dto.request.TenantRequestDto;
 import com.yageum.fintech.domain.tenant.dto.response.GetTenantProfileDto;
 import com.yageum.fintech.domain.tenant.dto.response.GetTenantResponseDto;
 import com.yageum.fintech.global.model.Exception.EmailVerificationResult;
-import com.yageum.fintech.domain.tenant.infrastructure.Tenant;
 import com.yageum.fintech.global.model.Result.CommonResult;
 
-import java.util.Optional;
 
 public interface TenantService {
 

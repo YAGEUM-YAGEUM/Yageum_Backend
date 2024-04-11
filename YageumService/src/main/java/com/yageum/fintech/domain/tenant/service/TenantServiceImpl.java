@@ -1,5 +1,6 @@
 package com.yageum.fintech.domain.tenant.service;
 
+import com.yageum.fintech.domain.lessor.infrastructure.LessorRepository;
 import com.yageum.fintech.domain.tenant.dto.request.TenantProfileDto;
 import com.yageum.fintech.domain.tenant.dto.request.TenantRequestDto;
 import com.yageum.fintech.domain.tenant.dto.response.GetTenantProfileDto;
@@ -66,7 +67,7 @@ public class TenantServiceImpl implements TenantService {
         tenant.setEncryptedPwd(pwdEncoder.encode(tenantRequestDto.getPassword()));
         tenantRepository.save(tenant);
 
-        return responseService.getSuccessfulResultWithMessage("회원가입이 성공적으로 완료되었습니다!");
+        return responseService.getSuccessfulResultWithMessage("임차인 회원가입이 성공적으로 완료되었습니다!");
     }
 
     @Override

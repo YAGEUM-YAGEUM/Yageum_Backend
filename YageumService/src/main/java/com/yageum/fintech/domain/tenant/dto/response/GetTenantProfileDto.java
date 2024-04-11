@@ -1,14 +1,8 @@
 package com.yageum.fintech.domain.tenant.dto.response;
 
-//import com.yageum.fintech.domain.project.dto.response.GetProjectResponseDto;
-import com.yageum.fintech.domain.project.infrastructure.Project;
 import com.yageum.fintech.domain.tenant.infrastructure.Gender;
 import com.yageum.fintech.domain.tenant.infrastructure.Tenant;
 import com.yageum.fintech.domain.tenant.infrastructure.TenantProfile;
-import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
