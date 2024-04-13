@@ -4,7 +4,6 @@ import com.yageum.fintech.domain.tenant.dto.request.TenantProfileDto;
 import com.yageum.fintech.domain.tenant.dto.request.TenantRequestDto;
 import com.yageum.fintech.domain.tenant.dto.response.GetTenantProfileDto;
 import com.yageum.fintech.domain.tenant.dto.response.GetTenantResponseDto;
-import com.yageum.fintech.global.model.Exception.EmailVerificationResult;
 import com.yageum.fintech.domain.tenant.service.TenantService;
 import com.yageum.fintech.global.model.Exception.BusinessLogicException;
 import com.yageum.fintech.global.model.Exception.ExceptionList;
@@ -59,7 +58,7 @@ public class TenantController {
     @Operation(summary = "임차인 프로필 수정", description = "프로필 ID로 프로필 정보를 수정하는 API")
     @PutMapping("/profile/{profileId}")
     public CommonResult updateTenantProfile(@PathVariable Long profileId, @RequestBody TenantProfileDto tenantProfileDto){
-        tenantService.updateTenantProfile(profileId, tenantRequestDto);
+        tenantService.updateTenantProfile(profileId, tenantProfileDto);
         return responseService.getSuccessfulResult();
     }
 

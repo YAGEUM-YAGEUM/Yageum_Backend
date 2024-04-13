@@ -46,7 +46,7 @@ public class LessorController {
 
     // 임차인 정보 - 프로필 수정
     @Operation(summary = "임대인 프로필 수정", description = "프로필 ID로 프로필 정보를 수정하는 API")
-    @PutMapping("/profile/{lessorId}")
+    @PutMapping("/profile/{profileId}")
     public CommonResult updateLessorProfile(@PathVariable Long profileId, @RequestBody LessorProfileDto lessorProfileDto){
         lessorService.updateLessorProfile(profileId, lessorProfileDto);
         return responseService.getSuccessfulResult();
