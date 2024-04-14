@@ -80,6 +80,10 @@ public class House {
     @Column(nullable = false)
     private String location;
 
+    //OneToOne
+    @OneToOne(mappedBy = "house", cascade = CascadeType.ALL)
+    private HouseOption houseOption;
+
     @Builder
     public House(Long houseId, Lessor lessor, Category category, Long deposit, Long monthlyRent, Long fee,
                  Integer activeFloor, Integer totalFloor, Float exclusiveArea, Integer totalRoom,

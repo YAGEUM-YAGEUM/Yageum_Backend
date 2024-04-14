@@ -2,10 +2,7 @@ package com.yageum.fintech.domain.lessor.dto.response;
 
 import com.yageum.fintech.domain.lessor.infrastructure.Lessor;
 import com.yageum.fintech.domain.lessor.infrastructure.LessorProfile;
-import com.yageum.fintech.domain.tenant.dto.response.GetTenantProfileDto;
 import com.yageum.fintech.domain.tenant.infrastructure.Gender;
-import com.yageum.fintech.domain.tenant.infrastructure.Tenant;
-import com.yageum.fintech.domain.tenant.infrastructure.TenantProfile;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
