@@ -53,4 +53,11 @@ public class HouseServiceImpl implements HouseService{
         if(houseList.isEmpty()) throw new NonExistentException(ExceptionList.NON_EXISTENT_HOUSELIST);
         return houseList;
     }
+
+    @Override
+    public void deleteHouse(Long houseId) {
+        House house = houseRepository.findByHouseId(houseId)
+                .orElseThrow(()-> new NonExistentException(ExceptionList.NON_EXISTENT_HOUSE));
+        houseRepository.deleteByHouseId(houseId);
+    }
 }

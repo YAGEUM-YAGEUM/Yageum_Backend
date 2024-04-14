@@ -15,6 +15,7 @@ import java.util.Optional;
 @Table(name = "lessor")
 @AllArgsConstructor
 public class Lessor {
+
     @Id
     @Column(name = "lessor_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

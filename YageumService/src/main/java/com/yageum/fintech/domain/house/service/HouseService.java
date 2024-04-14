@@ -12,4 +12,6 @@ public interface HouseService {
     void updateHouse(Long houseId, HouseRequestDto houseRequestDto);
 
     List<HouseResponseDto> getHousesByLessorId(Long lessorId);
+
+    void deleteHouse(Long houseId);
 }

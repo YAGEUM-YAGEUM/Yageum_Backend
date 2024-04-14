@@ -41,11 +41,16 @@ public class HouseController {
 
     // 임대인 정보 - 매물 수정
     @Operation(summary = "매물 수정", description = "매물 ID로 매등 정보를 수정하는 API")
-    @PutMapping("/property/{lessorId}")
+    @PutMapping("/property/{houseId}")
     public CommonResult updateHouse(@PathVariable Long houseId, @RequestBody HouseRequestDto houseRequestDto){
         houseService.updateHouse(houseId, houseRequestDto);
         return responseService.getSuccessfulResult();
     }
 
-    //임대인 정보-매물 삭제
+    @Operation(summary = "매물 삭제", description = "매물 ID로 매물을 삭제하는 API")
+    @DeleteMapping("/property/{houseId}")
+    public CommonResult deleteHouse(@PathVariable Long houseId){
+        houseService.deleteHouse(houseId);
+        return responseService.getSuccessfulResult();
+    }
 }
