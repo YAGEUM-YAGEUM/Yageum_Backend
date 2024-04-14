@@ -1,12 +1,12 @@
 package com.yageum.fintech.domain.house.infrastructure;
 
+
 import com.yageum.fintech.domain.house.dto.request.HouseRequestDto;
 import com.yageum.fintech.domain.lessor.infrastructure.Lessor;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 

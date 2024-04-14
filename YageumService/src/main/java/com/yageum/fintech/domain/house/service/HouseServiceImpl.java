@@ -43,7 +43,7 @@ public class HouseServiceImpl implements HouseService{
     public List<HouseResponseDto> getHousesByLessorId(Long lessorId) {
         Lessor lessor = lessorRepository.findByLessorId(lessorId)
                 .orElseThrow(() -> new NonExistentException(ExceptionList.NON_EXISTENT_LESSOR));
-        List<House> houses = houseRepository.findByLessorId(lessorId);
+        List<House> houses = houseRepository.findByLessor_LessorId(lessorId);
 
         List<HouseResponseDto> houseList =
                 houses.stream()
