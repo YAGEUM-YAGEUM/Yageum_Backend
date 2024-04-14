@@ -16,3 +16,4 @@ public interface LessorService {
     GetLessorProfileDto getLessorProfile(Long lessorId);
 
 }
+

@@ -4,7 +4,6 @@ import com.yageum.fintech.domain.lessor.dto.request.LessorProfileDto;
 import com.yageum.fintech.domain.lessor.dto.request.LessorRequestDto;
 import com.yageum.fintech.domain.lessor.dto.response.GetLessorProfileDto;
 import com.yageum.fintech.domain.lessor.service.LessorService;
-import com.yageum.fintech.domain.tenant.dto.response.GetTenantProfileDto;
 import com.yageum.fintech.global.model.Result.CommonResult;
 import com.yageum.fintech.global.service.ResponseService;
 import io.swagger.v3.oas.annotations.Operation;

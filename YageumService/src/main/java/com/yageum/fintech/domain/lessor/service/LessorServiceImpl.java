@@ -57,7 +57,7 @@ public class LessorServiceImpl implements LessorService{
     @Override
     public void createLessorProfile(Long lessorId, LessorProfileDto lessorProfileDto) {
         Lessor lessor = lessorRepository.findByLessorId(lessorId)
-                .orElseThrow(()-> new NonExistentException(ExceptionList.NON_EXISTENT_TENANT));
+                .orElseThrow(()-> new NonExistentException(ExceptionList.NON_EXISTENT_LESSOR));
         /*
         토큰 인증 추가
          */
@@ -68,7 +68,7 @@ public class LessorServiceImpl implements LessorService{
     @Override
     public void updateLessorProfile(Long profileId, LessorProfileDto lessorProfileDto) {
         LessorProfile profile = lessorProfileRepository.findByProfileId(profileId)
-                .orElseThrow(()-> new NonExistentException(ExceptionList.NON_EXISTENT_TENANT));
+                .orElseThrow(()-> new NonExistentException(ExceptionList.NON_EXISTENT_LESSOR));
         /*
         토큰 인증 추가
          */
@@ -78,7 +78,7 @@ public class LessorServiceImpl implements LessorService{
     @Override
     public GetLessorProfileDto getLessorProfile(Long lessorId) {
         LessorProfile lessorProfile = lessorProfileRepository.findByLessor_LessorId(lessorId)
-                .orElseThrow(()-> new NonExistentException(ExceptionList.NON_EXISTENT_TENANT_PROFILE));
+                .orElseThrow(()-> new NonExistentException(ExceptionList.NON_EXISTENT_LESSOR_PROFILE));
         Lessor lessor = lessorProfile.getLessor();
         return GetLessorProfileDto.from(lessor, lessorProfile);
     }

@@ -45,8 +45,10 @@ public enum ExceptionList {
 
     // PROJECT
     INVALID_PROJECT_ID(5010, "요청으로 들어온 Project의 식별자가 유효하지 않습니다."),
-    NON_EXISTENT_TENANT(5010, "존재하지 않는 임대인입니다."),
-    NON_EXISTENT_TENANT_PROFILE(5010, "프로필이 존재하지 않습니다"),
+    NON_EXISTENT_TENANT(5010, "존재하지 않는 임차인입니다."),
+    NON_EXISTENT_TENANT_PROFILE(5010, "임차인 프로필이 존재하지 않습니다"),
+    NON_EXISTENT_LESSOR(5010, "존재하지 않는 임대인입니다."),
+    NON_EXISTENT_LESSOR_PROFILE(5010, "임대인 프로필이 존재하지 않습니다"),
     TENANT_PROFILE_ALREADY_EXISTS(5010, "이미 해당 tenantId에 대한 프로필이 존재합니다."),
 
     // PROJECT & TEAM
@@ -59,6 +61,10 @@ public enum ExceptionList {
     // Comment
     NON_EXISTENT_COMMENT(5020, "존재하지 않는 댓글입니다."),
     NON_EXISTENT_CATEGORY(5021, "존재하지 않는 카테고리입니다."),
+
+    //HOUSE
+    NON_EXISTENT_HOUSE(5030, "존재하지 않은 매물입니다."),
+    NON_EXISTENT_HOUSELIST(5031, "매물 목록이 존재하지 않습니다."),
 
     // 권한
     UNAUTHORIZED_ACCESS(8000, "접근 권한이 없습니다.");
