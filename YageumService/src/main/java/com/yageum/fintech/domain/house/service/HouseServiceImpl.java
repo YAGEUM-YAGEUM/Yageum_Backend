@@ -1,8 +1,12 @@
 package com.yageum.fintech.domain.house.service;
 
+import com.yageum.fintech.domain.house.dto.request.HouseOptionDto;
 import com.yageum.fintech.domain.house.dto.request.HouseRequestDto;
+import com.yageum.fintech.domain.house.dto.response.HouseOptionResponseDto;
 import com.yageum.fintech.domain.house.dto.response.HouseResponseDto;
 import com.yageum.fintech.domain.house.infrastructure.House;
+import com.yageum.fintech.domain.house.infrastructure.HouseOption;
+import com.yageum.fintech.domain.house.infrastructure.HouseOptionRepository;
 import com.yageum.fintech.domain.house.infrastructure.HouseRepository;
 import com.yageum.fintech.domain.lessor.infrastructure.Lessor;
 import com.yageum.fintech.domain.lessor.infrastructure.LessorRepository;
@@ -22,6 +26,7 @@ public class HouseServiceImpl implements HouseService{
 
     private final LessorRepository lessorRepository;
     private final HouseRepository houseRepository;
+    private final HouseOptionRepository houseOptionRepository;
 
     @Override
     public void createHouse(Long lessorId, HouseRequestDto houseRequestDto) {
@@ -59,5 +64,34 @@ public class HouseServiceImpl implements HouseService{
         House house = houseRepository.findByHouseId(houseId)
                 .orElseThrow(()-> new NonExistentException(ExceptionList.NON_EXISTENT_HOUSE));
         houseRepository.deleteByHouseId(houseId);
+    }
+
+    @Override
+    public void createHouseOption(Long houseId, HouseOptionDto houseOptionDto) {
+        House house = houseRepository.findByHouseId(houseId)
+                .orElseThrow(()-> new NonExistentException(ExceptionList.NON_EXISTENT_HOUSE));
+
+        HouseOption houseOption = houseOptionDto.toEntity(house);
+        houseOptionRepository.save(houseOption);
+    }
+
+    @Override
+    public void updateHouseOption(Long houseId, HouseOptionDto houseOptionDto) {
+        House house = houseRepository.findByHouseId(houseId)
+                .orElseThrow(() -> new NonExistentException(ExceptionList.NON_EXISTENT_HOUSE));
+
+        HouseOption existingHouseOption = houseOptionRepository.findByHouseId(houseId)
+                .orElseThrow(() -> new NonExistentException(ExceptionList.NON_EXISTENT_HOUSEOPTION));
+
+        existingHouseOption.update(houseOptionDto);
+    }
+
+    @Override
+    public HouseOptionResponseDto getHouseOptionByHouseId(Long houseId) {
+        HouseOption houseOption = houseOptionRepository.findByHouseId(houseId)
+                .orElseThrow(() -> new NonExistentException(ExceptionList.NON_EXISTENT_HOUSEOPTION));
+
+        return HouseOptionResponseDto.from(houseOption);
+
     }
 }

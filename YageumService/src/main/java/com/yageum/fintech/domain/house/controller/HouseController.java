@@ -1,9 +1,10 @@
 package com.yageum.fintech.domain.house.controller;
 
+import com.yageum.fintech.domain.house.dto.request.HouseOptionDto;
 import com.yageum.fintech.domain.house.dto.request.HouseRequestDto;
+import com.yageum.fintech.domain.house.dto.response.HouseOptionResponseDto;
 import com.yageum.fintech.domain.house.dto.response.HouseResponseDto;
 import com.yageum.fintech.domain.house.service.HouseService;
-import com.yageum.fintech.domain.lessor.dto.request.LessorProfileDto;
 import com.yageum.fintech.domain.lessor.dto.response.GetLessorProfileDto;
 import com.yageum.fintech.global.model.Result.CommonResult;
 import com.yageum.fintech.global.service.ResponseService;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin("*")
 public class HouseController {
+
     private final HouseService houseService;
     private final ResponseService responseService;
 
@@ -53,4 +55,32 @@ public class HouseController {
         houseService.deleteHouse(houseId);
         return responseService.getSuccessfulResult();
     }
+
+
+    /* 매물 옵션 */
+
+    // 매물 정보 - 옵션 등록
+    @Operation(summary = "옵션 등록", description = "특정 매물의 옵션을 등록하는 API")
+    @PostMapping("/property/option/{houseId}")
+    public CommonResult createHouseOption(@PathVariable Long houseId, @RequestBody HouseOptionDto houseOptionDto){
+        houseService.createHouseOption(houseId, houseOptionDto);
+        return responseService.getSuccessfulResult();
+    }
+
+    // 매물 정보 - 옵션 조회
+    @Operation(summary = "옵션 조회", description = "특정 매물의 옵션을 조회하는 API")
+    @GetMapping("/property/option/{houseId}")
+    public CommonResult getHouseOption(@PathVariable Long houseId){
+        HouseOptionResponseDto houseoption = houseService.getHouseOptionByHouseId(houseId);
+        return responseService.getSingleResult(houseoption);
+    }
+
+    // 매물 정보 - 옵션 수정
+    @Operation(summary = "옵션 수정", description = "특정 매물의 옵션을 수정하는 API")
+    @PutMapping("/property/option/{houseId}")
+    public CommonResult updateHouseOption(@PathVariable Long houseId, @RequestBody HouseOptionDto houseOptionDto){
+        houseService.updateHouseOption(houseId, houseOptionDto);
+        return responseService.getSuccessfulResult();
+    }
+
 }

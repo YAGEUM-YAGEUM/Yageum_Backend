@@ -65,6 +65,7 @@ public enum ExceptionList {
     //HOUSE
     NON_EXISTENT_HOUSE(5030, "존재하지 않은 매물입니다."),
     NON_EXISTENT_HOUSELIST(5031, "매물 목록이 존재하지 않습니다."),
+    NON_EXISTENT_HOUSEOPTION(5032, "매물 옵션이 존재하지 않습니다."),
 
     // 권한
     UNAUTHORIZED_ACCESS(8000, "접근 권한이 없습니다.");
