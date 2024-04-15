@@ -1,14 +1,14 @@
 package com.yageum.fintech.domain.match.infrastructure;
 
 import com.yageum.fintech.domain.house.infrastructure.House;
+import com.yageum.fintech.domain.lessor.dto.request.LessorProfileDto;
+import com.yageum.fintech.domain.match.dto.request.UpdateMatchStateDto;
 import com.yageum.fintech.domain.tenant.infrastructure.Tenant;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
 
 @Entity
 @Getter
@@ -35,4 +35,8 @@ public class Matching{
     @Column(name = "state", nullable = false)
     @Enumerated(EnumType.STRING)
     private MatchState state;
+
+    public void update(UpdateMatchStateDto updateMatchStateDto) {
+        this.state = updateMatchStateDto.getState();
+     }
 }

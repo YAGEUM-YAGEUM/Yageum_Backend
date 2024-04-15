@@ -1,6 +1,7 @@
 package com.yageum.fintech.domain.match.controller;
 
 import com.yageum.fintech.domain.house.dto.response.HouseResponseDto;
+import com.yageum.fintech.domain.match.dto.request.UpdateMatchStateDto;
 import com.yageum.fintech.domain.match.dto.response.MatchHouseResponseDto;
 import com.yageum.fintech.domain.match.dto.response.MatchTenantResponseDto;
 import com.yageum.fintech.domain.match.service.MatchService;
@@ -48,4 +49,11 @@ public class MatchController {
         return responseService.getListResult(tenantList);
     }
 
+    // 관심 매물 상태 수정
+    @Operation(summary = "관심 매물 상태 수정", description = "특정 관심 매물의 상태를 수정하는 API")
+    @PutMapping("/{matchId}/state")
+    public CommonResult updateMatchState(@PathVariable Long matchId, @RequestBody UpdateMatchStateDto updateMatchStateDto) {
+        matchService.updateMatchState(matchId, updateMatchStateDto);
+        return responseService.getSuccessfulResult();
+    }
 }

@@ -2,6 +2,7 @@ package com.yageum.fintech.domain.match.service;
 
 import com.yageum.fintech.domain.house.infrastructure.House;
 import com.yageum.fintech.domain.house.infrastructure.HouseRepository;
+import com.yageum.fintech.domain.match.dto.request.UpdateMatchStateDto;
 import com.yageum.fintech.domain.match.dto.response.MatchHouseResponseDto;
 import com.yageum.fintech.domain.match.dto.response.MatchTenantResponseDto;
 import com.yageum.fintech.domain.match.infrastructure.Matching;
@@ -79,5 +80,13 @@ public class MatchServiceImpl implements MatchService{
         if (responseDtoList.isEmpty()) throw new NonExistentException(ExceptionList.NON_EXISTENT_TENANTLIST);
         return responseDtoList;
 
+    }
+
+    @Override
+    public void updateMatchState(Long matchId, UpdateMatchStateDto updateDto) {
+        Matching matching = matchRepository.findById(matchId)
+                .orElseThrow(() -> new NonExistentException(ExceptionList.NON_EXISTENT_MATCH));
+
+        matching.update(updateDto);
     }
 }
