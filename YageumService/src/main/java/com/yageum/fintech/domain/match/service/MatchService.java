@@ -16,4 +16,5 @@ public interface MatchService {
 
     void updateMatchState(Long matchId, UpdateMatchStateDto updateDto);
 
+    void deleteMatch(Long matchId);
 }

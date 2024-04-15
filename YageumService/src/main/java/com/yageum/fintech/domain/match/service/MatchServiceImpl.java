@@ -89,4 +89,12 @@ public class MatchServiceImpl implements MatchService{
 
         matching.update(updateDto);
     }
+
+    @Override
+    public void deleteMatch(Long matchId) {
+        Matching matching = matchRepository.findById(matchId)
+                .orElseThrow(() -> new NonExistentException(ExceptionList.NON_EXISTENT_MATCH));
+
+        matchRepository.deleteById(matchId);
+    }
 }

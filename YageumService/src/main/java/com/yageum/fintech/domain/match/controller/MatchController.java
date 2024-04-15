@@ -56,4 +56,13 @@ public class MatchController {
         matchService.updateMatchState(matchId, updateMatchStateDto);
         return responseService.getSuccessfulResult();
     }
+
+    // 관심 매물 삭제
+    @Operation(summary = "관심 매물 삭제", description = "특정 관심 매물을 삭제하는 API")
+    @DeleteMapping("/{matchId}")
+    public CommonResult deleteMatch(@PathVariable Long matchId) {
+        matchService.deleteMatch(matchId);
+        return responseService.getSuccessfulResult();
+    }
+
 }
