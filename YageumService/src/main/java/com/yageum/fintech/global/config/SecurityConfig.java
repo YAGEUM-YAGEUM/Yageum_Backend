@@ -27,8 +27,11 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint authenticationEntryPoint;
 
     private static final String[] WHITE_LIST = {
-            "/api/**",
-            "/",
+            "/test/**",
+            "/swagger-resources/**",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/api/v1/auth/**",
             "/error"
     };
 
@@ -52,8 +55,6 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(WHITE_LIST).permitAll()
-                                .requestMatchers("/swagger-resources/**").permitAll()// swagger
-                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // swagger
                         .anyRequest().authenticated() //어떠한 요청이라도 인증 필요
                 )
                 .exceptionHandling(exception -> exception

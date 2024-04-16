@@ -46,12 +46,12 @@ public class JwtTokenProvider {
     }
 
     // JWT 토큰 생성
-    public JWTAuthResponse generateToken(String username, Authentication authentication, Long tenantId, String name) {
+    public JWTAuthResponse generateToken(String username, Authentication authentication, Long userId, String name) {
         String id = authentication.getName();
 
         Claims claims = Jwts.claims().setSubject(username);
-        claims.put("tenantId", tenantId);
-        claims.put("name", name);
+        claims.put("userId", userId);
+        claims.put("username", name);
 
         Date currentDate = new Date();
         Date accessTokenExpireDate = new Date(currentDate.getTime() + ACCESS_TOKEN_VALID_TIME);

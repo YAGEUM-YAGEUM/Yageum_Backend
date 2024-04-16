@@ -62,9 +62,9 @@ public class AuthServiceImpl implements AuthService{
                 loginRequest.getUsername(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        Long tenantId = myUserDetailsService.findUserIdByUsername(loginRequest.getUsername());
+        Long lessorId = myUserDetailsService.findUserIdByUsername(loginRequest.getUsername());
         String name = myUserDetailsService.findNameByUsername(loginRequest.getUsername());
-        JWTAuthResponse token = jwtTokenProvider.generateToken(loginRequest.getUsername(), authentication, tenantId, name);
+        JWTAuthResponse token = jwtTokenProvider.generateToken(loginRequest.getUsername(), authentication, lessorId, name);
         return token;
     }
 
