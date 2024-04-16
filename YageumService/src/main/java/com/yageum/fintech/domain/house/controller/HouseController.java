@@ -5,7 +5,6 @@ import com.yageum.fintech.domain.house.dto.request.HouseRequestDto;
 import com.yageum.fintech.domain.house.dto.response.HouseOptionResponseDto;
 import com.yageum.fintech.domain.house.dto.response.HouseResponseDto;
 import com.yageum.fintech.domain.house.service.HouseService;
-import com.yageum.fintech.domain.lessor.dto.response.GetLessorProfileDto;
 import com.yageum.fintech.global.model.Result.CommonResult;
 import com.yageum.fintech.global.service.ResponseService;
 import io.swagger.v3.oas.annotations.Operation;

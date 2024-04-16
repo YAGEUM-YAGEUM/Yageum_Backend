@@ -2,7 +2,7 @@ package com.yageum.fintech.domain.auth.jwt;
 
 import com.yageum.fintech.domain.auth.dto.response.JWTAuthResponse;
 import com.yageum.fintech.domain.auth.service.MyUserDetailsService;
-import com.yageum.fintech.domain.tenant.service.RedisServiceImpl;
+import com.yageum.fintech.domain.auth.service.RedisServiceImpl;
 import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,9 +49,9 @@ public class JwtTokenProvider {
     public JWTAuthResponse generateToken(String username, Authentication authentication, Long userId, String name) {
         String id = authentication.getName();
 
-        Claims claims = Jwts.claims().setSubject(username);
-        claims.put("userId", userId);
-        claims.put("username", name);
+        Claims claims = Jwts.claims().setSubject(username); //사용자 아이디
+        claims.put("userId", userId); //사용자 UID
+        claims.put("name", name); //사용자 이름
 
         Date currentDate = new Date();
         Date accessTokenExpireDate = new Date(currentDate.getTime() + ACCESS_TOKEN_VALID_TIME);
@@ -94,6 +94,22 @@ public class JwtTokenProvider {
         return REFRESH_TOKEN_VALID_TIME;
     }
 
+    // Access Token의 만료 시간을 가져오는 메서드
+    public Long getAccessTokenExpiration(String accessToken) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(accessToken)
+                .getBody();
+        Date expiration = claims.getExpiration();
+
+        if (expiration != null) {
+            return expiration.getTime();
+        } else {
+            // 만료 시간이 null이면 기본값인 0 반환
+            return 0L;
+        }
+    }
+
     public String getUsername(String token) {
         return Jwts.parser()
                 .setSigningKey(secretKey)
@@ -129,6 +145,11 @@ public class JwtTokenProvider {
     public boolean validateToken(String jwtToken) {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
+
+            //블랙리스트 검증
+            if(redisServiceImpl.hasKeyBlackList(jwtToken)) {
+                return false;
+            }
             return true;
         } catch (SecurityException e) {
             throw new JwtException("잘못된 JWT 서명입니다.");

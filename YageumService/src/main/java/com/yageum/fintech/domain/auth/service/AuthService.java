@@ -15,10 +15,11 @@ public interface AuthService {
 
     JWTAuthResponse lessorLogin(LoginRequest loginRequest);
 
-    JWTAuthResponse reissueAccessToken(String encryptedRefreshToken);
+    JWTAuthResponse reissueAccessToken(String refreshToken);
 
     void sendCodeToEmail(String toEmail);
 
     EmailVerificationResult verifiedCode(String email, String authCode);
 
+    void logout(String accessToken, String refreshToken);
 }

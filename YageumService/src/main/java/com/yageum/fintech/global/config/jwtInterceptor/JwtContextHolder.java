@@ -2,8 +2,8 @@ package com.yageum.fintech.global.config.jwtInterceptor;
 
 public class JwtContextHolder {
     private static final ThreadLocal<Long> userIdContext = new ThreadLocal<>();
-    private static final ThreadLocal<String> usernameContext = new ThreadLocal<>();
-    private static final ThreadLocal<String> idContext = new ThreadLocal<>();
+    private static final ThreadLocal<String> nameContext = new ThreadLocal<>();
+    private static final ThreadLocal<String> uidContext = new ThreadLocal<>();
 
 
     public static void setUserId(Long userId) {
@@ -14,25 +14,25 @@ public class JwtContextHolder {
         return userIdContext.get();
     }
 
-    public static void setUsername(String username) {
-        usernameContext.set(username);
+    public static void setName(String name) {
+        nameContext.set(name);
     }
 
-    public static String getUsername() {
-        return usernameContext.get();
+    public static String getName() {
+        return nameContext.get();
     }
 
     public static void setId(String id) {
-        idContext.set(id);
+        uidContext.set(id);
     }
 
     public static String getId() {
-        return idContext.get();
+        return uidContext.get();
     }
 
     public static void clear() {
         userIdContext.remove();
-        usernameContext.remove();
-        idContext.remove();
+        nameContext.remove();
+        uidContext.remove();
     }
 }

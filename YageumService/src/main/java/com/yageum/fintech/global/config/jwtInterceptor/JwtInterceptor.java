@@ -42,14 +42,14 @@ public class JwtInterceptor implements HandlerInterceptor {
                 .getBody();
 
         Long userId = claims.get("userId", Long.class);
-        String username = claims.get("username", String.class);
+        String username = claims.get("name", String.class);
         String id = claims.getSubject();
         if(userId==null||!StringUtils.hasText(username)||!StringUtils.hasText(id))
             throw new MalformedJwtException("");
 
 
         JwtContextHolder.setUserId(claims.get("userId", Long.class));
-        JwtContextHolder.setUsername(claims.get("username", String.class));
+        JwtContextHolder.setName(claims.get("name", String.class));
         JwtContextHolder.setId(claims.getSubject());
         return true;
     }

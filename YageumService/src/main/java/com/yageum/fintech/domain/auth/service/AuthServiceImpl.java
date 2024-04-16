@@ -5,11 +5,11 @@ import com.yageum.fintech.domain.auth.dto.response.JWTAuthResponse;
 import com.yageum.fintech.domain.lessor.service.MailService;
 import com.yageum.fintech.domain.tenant.infrastructure.Tenant;
 import com.yageum.fintech.domain.tenant.infrastructure.TenantRepository;
-import com.yageum.fintech.domain.tenant.service.RedisServiceImpl;
 import com.yageum.fintech.domain.auth.jwt.JwtTokenProvider;
 import com.yageum.fintech.global.model.Exception.BusinessLogicException;
 import com.yageum.fintech.global.model.Exception.EmailVerificationResult;
 import com.yageum.fintech.global.model.Exception.ExceptionList;
+import com.yageum.fintech.global.model.Exception.UnauthorizedAccessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -82,18 +82,32 @@ public class AuthServiceImpl implements AuthService{
         } else throw new BusinessLogicException(ExceptionList.TOKEN_IS_NOT_SAME);
     }
 
-    private void verifiedRefreshToken(String refreshToken) {
-        if (refreshToken == null) {
-            throw new BusinessLogicException(ExceptionList.HEADER_REFRESH_TOKEN_NOT_EXISTS);
-        }
-    }
-
     @Transactional(readOnly = true)
     @Override
     public Optional<Tenant> findOne(String username) {
         return tenantRepository.findByUsername(username);
     }
 
+    @Override
+    public void logout(String accessToken, String refreshToken) {
+        //access token 검증
+        if (!jwtTokenProvider.validateToken(accessToken)) {
+            throw new UnauthorizedAccessException(ExceptionList.SIGNATURE_JWT);
+        }
+        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+        String username = authentication.getName(); //사용자 아이디
+        redisServiceImpl.deleteValues(username);
+
+        Long expiration = jwtTokenProvider.getAccessTokenExpiration(accessToken);
+        redisServiceImpl.setBlackList(accessToken, "access_token", expiration);
+    }
+
+
+    private void verifiedRefreshToken(String refreshToken) {
+        if (refreshToken == null) {
+            throw new BusinessLogicException(ExceptionList.HEADER_REFRESH_TOKEN_NOT_EXISTS);
+        }
+    }
 
     public void sendCodeToEmail(String toEmail) {
         this.checkDuplicatedEmail(toEmail);
@@ -145,4 +159,5 @@ public class AuthServiceImpl implements AuthService{
 
         return EmailVerificationResult.of(authResult);
     }
+
 }
