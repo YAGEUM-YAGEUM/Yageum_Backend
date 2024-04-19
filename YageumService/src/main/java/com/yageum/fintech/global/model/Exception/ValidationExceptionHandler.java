@@ -1,7 +1,5 @@
 package com.yageum.fintech.global.model.Exception;
 
-import static com.yageum.fintech.global.model.Exception.ExceptionList.*;
-
 import com.yageum.fintech.global.model.Result.CommonResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -14,6 +12,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.yageum.fintech.global.service.ResponseService;
 
 import lombok.RequiredArgsConstructor;
+
+import static com.yageum.fintech.global.model.Exception.ExceptionList.INVALID_INPUT_VALUE;
 
 @RestControllerAdvice
 @RequiredArgsConstructor

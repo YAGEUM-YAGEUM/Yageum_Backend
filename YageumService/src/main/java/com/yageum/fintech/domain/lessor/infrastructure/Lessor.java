@@ -1,7 +1,5 @@
 package com.yageum.fintech.domain.lessor.infrastructure;
 
-import com.yageum.fintech.domain.tenant.infrastructure.Tenant;
-import com.yageum.fintech.domain.tenant.infrastructure.TenantProfile;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

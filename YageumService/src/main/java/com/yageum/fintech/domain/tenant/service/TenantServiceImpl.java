@@ -60,9 +60,7 @@ public class TenantServiceImpl implements TenantService {
     public void createTenantProfile(Long tenantId, TenantProfileDto tenantProfileDto) {
         Tenant tenant = tenantRepository.findByTenantId(tenantId)
                 .orElseThrow(()-> new NonExistentException(ExceptionList.NON_EXISTENT_TENANT));
-        /*
-        토큰 인증 추가
-         */
+
         tenantProfileRepository.save(tenantProfileDto.toEntity(tenant));
     }
 
@@ -78,9 +76,7 @@ public class TenantServiceImpl implements TenantService {
     public void updateTenantProfile(Long profileId, TenantProfileDto tenantProfileDto) {
         TenantProfile profile = tenantProfileRepository.findByProfileId(profileId)
                 .orElseThrow(()-> new NonExistentException(ExceptionList.NON_EXISTENT_TENANT));
-        /*
-        토큰 인증 추가
-         */
+
         profile.update(tenantProfileDto);
     }
 

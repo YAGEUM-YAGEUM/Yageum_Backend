@@ -1,7 +1,6 @@
 package com.yageum.fintech.domain.match.infrastructure;
 
 import com.yageum.fintech.domain.house.infrastructure.House;
-import com.yageum.fintech.domain.lessor.dto.request.LessorProfileDto;
 import com.yageum.fintech.domain.match.dto.request.UpdateMatchStateDto;
 import com.yageum.fintech.domain.tenant.infrastructure.Tenant;
 import jakarta.persistence.*;

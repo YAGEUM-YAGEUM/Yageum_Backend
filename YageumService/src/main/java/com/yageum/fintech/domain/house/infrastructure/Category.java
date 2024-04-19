@@ -2,7 +2,6 @@ package com.yageum.fintech.domain.house.infrastructure;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.yageum.fintech.domain.tenant.infrastructure.Gender;
 
 public enum Category {
     YEAR, //전세

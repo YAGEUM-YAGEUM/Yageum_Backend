@@ -1,7 +1,5 @@
 package com.yageum.fintech.domain.match.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.yageum.fintech.domain.match.infrastructure.Matching;
 import com.yageum.fintech.domain.match.infrastructure.MatchState;
 import com.yageum.fintech.domain.tenant.infrastructure.Tenant;
