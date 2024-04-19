@@ -31,12 +31,12 @@ public class TenantController {
         return "It's Working in Tenant Service";
     }
 
-    // 회원가입
-    @Operation(summary = "임차인 회원가입")
-    @PostMapping("/")
-    public CommonResult register(@RequestBody TenantRequestDto tenantRequestDto){
-        return tenantService.register(tenantRequestDto);
-    }
+//    // 회원가입
+//    @Operation(summary = "임차인 회원가입")
+//    @PostMapping("")
+//    public CommonResult register(@RequestBody TenantRequestDto tenantRequestDto){
+//        return tenantService.register(tenantRequestDto);
+//    }
 
     // 임차인 정보 - 프로필 등록
     @Operation(summary = "임차인 프로필 등록", description = "특정 임차인(사용자)의 프로필 정보를 등록하는 API")

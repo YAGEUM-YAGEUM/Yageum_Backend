@@ -1,8 +1,6 @@
 package com.yageum.fintech.global.config;
 
 import com.yageum.fintech.domain.auth.jwt.JwtAuthenticationEntryPoint;
-//import com.yageum.fintech.domain.auth.jwt.JwtAuthenticationFilter;
-//import com.yageum.fintech.domain.auth.jwt.JwtTokenProvider;
 import com.yageum.fintech.domain.auth.jwt.JwtAuthenticationFilter;
 import com.yageum.fintech.domain.auth.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;

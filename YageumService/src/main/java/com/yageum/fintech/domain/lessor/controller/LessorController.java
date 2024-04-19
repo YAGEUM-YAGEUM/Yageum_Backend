@@ -20,12 +20,6 @@ public class LessorController {
     private final LessorService lessorService;
     private final ResponseService responseService;
 
-    // 회원가입
-    @Operation(summary = "임대인 회원가입")
-    @PostMapping("/")
-    public CommonResult register(@RequestBody LessorRequestDto lessorRequestDto){
-        return lessorService.register(lessorRequestDto);
-    }
 
     // 임차인 정보 - 프로필 등록
     @Operation(summary = "임대인 프로필 등록", description = "특정 임대인(사용자)의 프로필 정보를 등록하는 API")

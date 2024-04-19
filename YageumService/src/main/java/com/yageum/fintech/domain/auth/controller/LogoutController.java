@@ -23,7 +23,7 @@ public class LogoutController {
     private final ResponseService responseService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Operation(summary = "로그아웃", description = "사용자(임대인, 임차인 공통)의 로그아웃 API")
+    @Operation(summary = "로그아웃", description = "사용자(임대인, 임차인 공통)의 로그아웃과 관련된 API")
     @DeleteMapping
     public CommonResult logout(HttpServletRequest request) {
 
