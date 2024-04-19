@@ -68,7 +68,7 @@ public class LessorServiceImpl implements LessorService{
     @Override
     public void updateLessorProfile(Long profileId, LessorProfileDto lessorProfileDto) {
         LessorProfile profile = lessorProfileRepository.findByProfileId(profileId)
-                .orElseThrow(()-> new NonExistentException(ExceptionList.NON_EXISTENT_LESSOR));
+                .orElseThrow(()-> new NonExistentException(ExceptionList.NON_EXISTENT_LESSOR_PROFILE));
         /*
         토큰 인증 추가
          */

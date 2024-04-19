@@ -39,7 +39,7 @@ public class JwtTokenProvider {
 
     private final RedisServiceImpl redisServiceImpl;
 
-    // 의존성 주입이 완료된 후에 실행되는 메소드, secretKey를 Base64로 인코딩한다.
+    // 의존성 주입이 완료된 후에 실행되는 메소드, secretKey를 Base64로 인코딩
     @PostConstruct
     protected void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
@@ -81,7 +81,7 @@ public class JwtTokenProvider {
                     .build();
     }
 
-    // Token 복호화 및 예외 발생(토큰 만료, 시그니처 오류)시 Claims 객체가 안만들어짐
+    // Token 복호화 및 예외 발생(토큰 만료, 시그니처 오류)시 Claims 객체 미생성
     public Claims parseClaims(String token) {
         return Jwts.parser()
                 .setSigningKey(secretKey)

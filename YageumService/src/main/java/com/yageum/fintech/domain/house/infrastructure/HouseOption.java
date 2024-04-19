@@ -1,6 +1,5 @@
 package com.yageum.fintech.domain.house.infrastructure;
 
-
 import com.yageum.fintech.domain.house.dto.request.HouseOptionDto;
 import jakarta.persistence.*;
 import lombok.Builder;

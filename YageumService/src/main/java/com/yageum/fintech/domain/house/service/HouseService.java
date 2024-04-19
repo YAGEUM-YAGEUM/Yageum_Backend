@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface HouseService {
 
-    //house
+    //HOUSE
     void createHouse(Long lessorId, HouseRequestDto houseRequestDto);
 
     void updateHouse(Long houseId, HouseRequestDto houseRequestDto);
@@ -18,7 +18,7 @@ public interface HouseService {
 
     void deleteHouse(Long houseId);
 
-    //house-option
+    //HOUSE-OPTION
     void createHouseOption(Long houseId, HouseOptionDto houseOptionDto);
 
     HouseOptionResponseDto getHouseOptionByHouseId(Long houseId);

@@ -54,15 +54,15 @@ public class MatchServiceImpl implements MatchService{
 
         List<Matching> matchings = matchRepository.findByTenantTenantId(tenantId);
 
-        List<MatchHouseResponseDto> responseDtoList = new ArrayList<>();
+        List<MatchHouseResponseDto> responseMatchHouseList = new ArrayList<>();
         for (Matching matching : matchings) {
             House house = matching.getHouse();
             MatchHouseResponseDto responseDto = MatchHouseResponseDto.from(house, matching);
-            responseDtoList.add(responseDto);
+            responseMatchHouseList.add(responseDto);
         }
 
-        if (responseDtoList.isEmpty()) throw new NonExistentException(ExceptionList.NON_EXISTENT_HOUSELIST);
-        return responseDtoList;
+        if (responseMatchHouseList.isEmpty()) throw new NonExistentException(ExceptionList.NON_EXISTENT_HOUSELIST);
+        return responseMatchHouseList;
     }
 
     @Override
@@ -71,14 +71,14 @@ public class MatchServiceImpl implements MatchService{
                 .orElseThrow(()-> new NonExistentException(ExceptionList.NON_EXISTENT_HOUSE));
         List<Matching> matchings = matchRepository.findByHouseHouseId(houseId);
 
-        List<MatchTenantResponseDto> responseDtoList = new ArrayList<>();
+        List<MatchTenantResponseDto> responseMatchHouseList = new ArrayList<>();
         for (Matching matching : matchings) {
             Tenant tenant = matching.getTenant();
             MatchTenantResponseDto responseDto = MatchTenantResponseDto.from(tenant, matching);
-            responseDtoList.add(responseDto);
+            responseMatchHouseList.add(responseDto);
         }
-        if (responseDtoList.isEmpty()) throw new NonExistentException(ExceptionList.NON_EXISTENT_TENANTLIST);
-        return responseDtoList;
+        if (responseMatchHouseList.isEmpty()) throw new NonExistentException(ExceptionList.NON_EXISTENT_TENANTLIST);
+        return responseMatchHouseList;
 
     }
 

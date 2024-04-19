@@ -1,7 +1,6 @@
 package com.yageum.fintech.domain.tenant.controller;
 
 import com.yageum.fintech.domain.tenant.dto.request.TenantProfileDto;
-import com.yageum.fintech.domain.tenant.dto.request.TenantRequestDto;
 import com.yageum.fintech.domain.tenant.dto.response.GetTenantProfileDto;
 import com.yageum.fintech.domain.tenant.dto.response.GetTenantResponseDto;
 import com.yageum.fintech.domain.tenant.service.TenantService;
@@ -14,7 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "임차인 API", description = "임차인 회원가입, 프로필 등록 및 수정, 조회와 관련된 API")
+@Tag(name = "임차인 API", description = "임차인 프로필 등록 및 수정, 조회와 관련된 API")
 @RestController
 @RequestMapping("/api/v1/tenant")
 @RequiredArgsConstructor
@@ -31,12 +30,6 @@ public class TenantController {
         return "It's Working in Tenant Service";
     }
 
-//    // 회원가입
-//    @Operation(summary = "임차인 회원가입")
-//    @PostMapping("")
-//    public CommonResult register(@RequestBody TenantRequestDto tenantRequestDto){
-//        return tenantService.register(tenantRequestDto);
-//    }
 
     // 임차인 정보 - 프로필 등록
     @Operation(summary = "임차인 프로필 등록", description = "특정 임차인(사용자)의 프로필 정보를 등록하는 API")

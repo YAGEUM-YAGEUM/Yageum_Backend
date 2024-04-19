@@ -111,15 +111,16 @@ public class AuthServiceImpl implements AuthService{
 
     public void sendCodeToEmail(String toEmail) {
         this.checkDuplicatedEmail(toEmail);
-        String title = "야금야금(YageumYageum) 회원가입 이메일 인증";
+        String title = "YageumYageum 인증 코드";
         String authCode = this.createCode();
 
         // 인증 이메일 내용을 작성
         String emailContent = "안녕하세요,\n\n";
+        emailContent += "귀하의 이메일 주소를 통해 YageumYageum 계정에 대한 인증이 요청되었습니다.";
         emailContent += "야금야금(YageumYageum)에서 발송한 이메일 인증 번호는 다음과 같습니다\n\n";
         emailContent += "인증 번호: " + authCode + "\n\n";
         emailContent += "이 인증 번호를 야금야금(YageumYageum) 웹 사이트 또는 애플리케이션에서 입력하여 이메일을 인증해주세요.\n\n";
-        emailContent += "감사합니다,\n야금야금(YageumYageum) 서비스 운영팀";
+        emailContent += "감사합니다.\n야금야금(YageumYageum) 서비스 운영팀";
 
         mailService.sendEmail(toEmail, title, emailContent);
 

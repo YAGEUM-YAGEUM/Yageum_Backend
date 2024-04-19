@@ -33,13 +33,13 @@ public class AuthController {
     //회원가입
     @Operation(summary = "임차인 회원가입")
     @PostMapping("/tenant/register")
-    public CommonResult register(@RequestBody TenantRequestDto tenantRequestDto){
+    public CommonResult tenantRegister(@RequestBody TenantRequestDto tenantRequestDto){
         return tenantService.register(tenantRequestDto);
     }
 
     @Operation(summary = "임대인 회원가입")
     @PostMapping("/lessor/register")
-    public CommonResult register(@RequestBody LessorRequestDto lessorRequestDto){
+    public CommonResult lessorRegister(@RequestBody LessorRequestDto lessorRequestDto){
         return lessorService.register(lessorRequestDto);
     }
 

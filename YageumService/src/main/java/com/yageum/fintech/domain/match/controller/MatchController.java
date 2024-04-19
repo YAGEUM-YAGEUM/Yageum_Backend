@@ -1,11 +1,9 @@
 package com.yageum.fintech.domain.match.controller;
 
-import com.yageum.fintech.domain.house.dto.response.HouseResponseDto;
 import com.yageum.fintech.domain.match.dto.request.UpdateMatchStateDto;
 import com.yageum.fintech.domain.match.dto.response.MatchHouseResponseDto;
 import com.yageum.fintech.domain.match.dto.response.MatchTenantResponseDto;
 import com.yageum.fintech.domain.match.service.MatchService;
-import com.yageum.fintech.domain.tenant.dto.request.TenantProfileDto;
 import com.yageum.fintech.global.model.Result.CommonResult;
 import com.yageum.fintech.global.service.ResponseService;
 import io.swagger.v3.oas.annotations.Operation;
