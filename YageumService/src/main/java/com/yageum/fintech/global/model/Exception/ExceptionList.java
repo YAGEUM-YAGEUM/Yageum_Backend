@@ -15,9 +15,10 @@ public enum ExceptionList {
     HEADER_REFRESH_TOKEN_NOT_EXISTS(400, "요청 헤더에 리프레시 토큰이 누락되었습니다"),
     MEMBER_NOT_FOUND(404, "회원을 찾을 수 없습니다"),
     MEMBER_EXISTS(409, "이미 존재하는 회원입니다"),
-    ALREADY_EXISTS(409, "이미 존재하는 아이디입니다"),
+    ALREADY_EXISTS(410, "이미 존재하는 아이디입니다"),
+    ALREADY_EXISTS_WALLET(411, "이미 지갑 계정이 존재합니다"),
     NO_SUCH_ALGORITHM(500, "존재하지 않는 알고리즘입니다"),
-    UNABLE_TO_SEND_EMAIL(500, "이메일을 전송할 수 없습니다"),
+    UNABLE_TO_SEND_EMAIL(501, "이메일을 전송할 수 없습니다"),
 
     // Jwt
     NULL_JWT_TOKEN(7000, "토큰이 존재하지 않습니다."),
@@ -48,6 +49,9 @@ public enum ExceptionList {
 
     //MATCH
     NON_EXISTENT_MATCH(5033, "관심 매물이 존재하지 않습니다."),
+
+    //WALLET
+    NON_EXISTENT_WALLET(5034, "지갑 주소가 존재하지 않습니다"),
 
     // 권한
     UNAUTHORIZED_ACCESS(8000, "접근 권한이 없습니다.");
