@@ -30,6 +30,12 @@ contract RealEstateContract {
         lessorPublicKey = msg.sender;
     }
 
+    // 임차인 또는 임대인 modifier
+    modifier onlyTenantOrLessor() {
+        require(msg.sender == tenantPublicKey || msg.sender == lessorPublicKey, "임차인 또는 임대인만 계약에 서명할 수 있습니다");
+        _;
+    }
+
     // 계약 상태 확인 modifier
     modifier onlyValidStatus(ContractStatus _status) {
         require(contractStatus == _status, "잘못된 상태입니다");
