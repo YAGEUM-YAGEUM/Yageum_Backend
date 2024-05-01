@@ -27,8 +27,10 @@ pragma solidity ^0.8.0;
         request_renewal
     }
 
-    enum ContractState {
-        Start,
-        Processing,
-        Success
+    enum ContractStatus {
+        Initiated, // 초기화
+        Accepted,  // 수락
+        Signed,    // 서명완료
+        Completed, // 완료
+        Canceled   // 취소
     }
