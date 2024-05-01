@@ -6,7 +6,7 @@ contract Agreement {
         uint deposit; // 보증금
         uint rentAmount; // 월세
         uint paymentSchedule; // 지불 일정
-        string propertyAddress; // 주소
+        string propertyAddress; // 매물 주소
         string specialTerms; // 특약사항
     }
 
@@ -20,11 +20,17 @@ contract Agreement {
 
     // 계약 내용을 해시하여 반환하는 함수
     function generateHash(ContractDetails memory details) private pure returns (bytes32) {
-        return keccak256(abi.encodePacked(details.deposit, details.rentAmount, details.paymentSchedule, details.propertyAddress, details.specialTerms));
+        return keccak256(abi.encodePacked(
+            details.deposit,
+            details.rentAmount,
+            details.paymentSchedule,
+            details.propertyAddress,
+            details.specialTerms
+        ));
     }
 
     // 계약 내용을 업데이트하는 함수
-    function updateAgreementDetails(uint _deposit, uint _rentAmount, uint _paymentSchedule, string memory _propertyAddress, string memory _specialTerms) public {
+    function updateAgreementDetails(uint _deposit, uint _rentAmount, uint _paymentSchedule, string memory _propertyAddress, string memory _specialTerms, address signerPublicKey) public {
         agreementDetails.deposit = _deposit;
         agreementDetails.rentAmount = _rentAmount;
         agreementDetails.paymentSchedule = _paymentSchedule;
@@ -32,4 +38,5 @@ contract Agreement {
         agreementDetails.specialTerms = _specialTerms;
         agreementHash = generateHash(agreementDetails);
     }
+
 }
