@@ -4,20 +4,18 @@ pragma solidity ^0.8.0;
 import "./EnumDeclaration.sol";
 import "./Agreement.sol";
 import "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 contract RealEstateContract {
-    // 공개 및 개인 키
+    // 공개 키
     address public lessorPublicKey;
-    address public lessorPrivateKey;
     address public tenantPublicKey;
-    address public tenantPrivateKey;
 
-    // 암호화된 계약 내용과 전자 서명
-    bytes public encryptedContractContent;
-    bytes public encryptedSignature;
-
-    // 서명에 사용될 메시지의 해시값
+    // 계약서 내용 해시값
     bytes32 public messageHash;
+
+    // 사용자의 서명을 저장하는 매핑
+    mapping(address => bytes) public signatures;
 
     // 계약 상태
     ContractStatus public contractStatus;
@@ -53,6 +51,7 @@ contract RealEstateContract {
         Agreement agreement = new Agreement(_deposit, _rentAmount, _paymentSchedule, _propertyAddress, _specialTerms);
         messageHash = agreement.agreementHash();
         contractStatus = ContractStatus.Initiated;
+
         emit ContractInitiated(lessorPublicKey, agreement.agreementDetails.rentAmount, agreement.agreementDetails.propertyAddress);
     }
 
@@ -65,53 +64,12 @@ contract RealEstateContract {
         emit ContractAccepted(tenantPublicKey, agreement.agreementDetails.rentAmount);
     }
 
-    // 공개 키로 데이터를 암호화하는 함수
-    function encryptWithPublicKey(bytes memory _hashData, address _publicKey) private pure returns (bytes memory) {
-        //수정 필요
-        bytes memory encryptedData = abi.encodePacked(_hashData);
-        return encryptedData;
-    }
-
-    // 주소를 문자열로 변환하는 함수
-    function addressToString(address _addr) private pure returns(string memory) {
-        bytes32 value = bytes32(uint256(_addr));
-        bytes memory alphabet = "0123456789abcdef";
-
-        bytes memory str = new bytes(42);
-        str[0] = '0';
-        str[1] = 'x';
-        for (uint256 i = 0; i < 20; i++) {
-            str[2+i*2] = alphabet[uint8(value[i + 12] >> 4)];
-            str[3+i*2] = alphabet[uint8(value[i + 12] & 0x0f)];
-        }
-        return string(str);
-    }
-
-    // uint를 문자열로 변환하는 함수
-    function uintToString(uint _i) private pure returns (string memory _uintAsString) {
-        if (_i == 0) {
-            return "0";
-        }
-        uint j = _i;
-        uint len;
-        while (j != 0) {
-            len++;
-            j /= 10;
-        }
-        bytes memory bstr = new bytes(len);
-        uint k = len - 1;
-        while (_i != 0) {
-            bstr[k--] = byte(uint8(48 + _i % 10));
-            _i /= 10;
-        }
-        return string(bstr);
-    }
-
     // 임차인 또는 임대인이 계약을 서명하는 함수
     function signContract(bytes memory _signature) public onlyTenantOrLessor {
         require(contractStatus == ContractStatus.Accepted, "계약이 아직 수락되지 않았습니다");
         require(messageHash != 0, "계약이 아직 초기화되지 않았습니다");
 
+        // 계약서의 내용과 서명자에 따른 해시 값 계산
         bytes32 hash = keccak256(abi.encodePacked(messageHash, msg.sender == tenantPublicKey));
         require(SignatureChecker.isValidSignatureNow(msg.sender, hash, _signature), "잘못된 서명입니다");
 
@@ -123,10 +81,15 @@ contract RealEstateContract {
             lessorPublicKey = msg.sender;
         }
 
-        if (tenantPublicKey != address(0) && lessorPublicKey != address(0)) {
+        // 사용자의 서명을 저장
+        signatures[msg.sender] = _signature;
+
+        // 양쪽 사용자가 모두 서명했는지 확인하고, 모든 조건이 충족되면 계약을 완료
+        if (signatures[tenantPublicKey].length > 0 && signatures[lessorPublicKey].length > 0) {
             contractStatus = ContractStatus.Signed;
             completeTransaction();
         }
+
     }
 
     // 계약을 완료하는 함수
@@ -147,4 +110,26 @@ contract RealEstateContract {
         contractStatus = ContractStatus.Canceled;
         emit ContractCanceled(msg.sender, _reason);
     }
+
+    // 공개 키로 데이터를 암호화하는 함수
+    function encryptWithPublicKey(bytes memory _hashData, address _publicKey) private pure returns (bytes memory) {
+        // 실제 암호화 로직을 구현해야 합니다.
+        return _hashData; // 임시적으로 해시 데이터를 반환합니다.
+    }
+
+    // 주소를 문자열로 변환하는 함수
+    function addressToString(address _addr) private pure returns(string memory) {
+        bytes32 value = bytes32(uint256(_addr));
+        bytes memory alphabet = "0123456789abcdef";
+
+        bytes memory str = new bytes(42);
+        str[0] = '0';
+        str[1] = 'x';
+        for (uint256 i = 0; i < 20; i++) {
+            str[2+i*2] = alphabet[uint8(value[i + 12] >> 4)];
+            str[3+i*2] = alphabet[uint8(value[i + 12] & 0x0f)];
+        }
+        return string(str);
+    }
+
 }
