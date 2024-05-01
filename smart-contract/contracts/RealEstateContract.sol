@@ -20,11 +20,14 @@ contract RealEstateContract {
     // 계약 상태
     ContractStatus public contractStatus;
 
+    //해시값 - 계약서 내용 원본 값 매핑
+    mapping(bytes32 => string) private dataByHash;
+
     // 반환되는 값
     event ContractInitiated(address indexed _lessor, uint _rentAmount, string _propertyAddress);
-    event ContractAccepted(address indexed _tenant, uint _rentAmount);
+    event ContractAccepted(address indexed _tenant);
     event ContractSigned(address indexed _signer, bool _isTenant);
-    event ContractCompleted(address indexed _lessor, address indexed _tenant, uint _rentAmount);
+    event ContractCompleted(address indexed _lessor, address indexed _tenant);
     event ContractCanceled(address indexed _canceller, string _reason);
 
     constructor() {
@@ -37,22 +40,39 @@ contract RealEstateContract {
         _;
     }
 
-    // 계약 상태 확인 modifier
-    modifier onlyValidStatus(ContractStatus _status) {
-        require(contractStatus == _status, "잘못된 상태입니다");
-        _;
+    // Getter 함수를 통해 계약 상태를 클라이언트에 제공
+    function getContractStatus() public view returns (ContractStatus) {
+        require(msg.sender == tenantPublicKey || msg.sender == lessorPublicKey, "임대인 또는 임차인만 조회할 수 있습니다");
+        return contractStatus;
+    }
+
+    // Getter 함수를 통해 계약서 내용 해시값을 클라이언트에 제공
+    function getMessageHash() public view returns (bytes32) {
+        require(msg.sender == tenantPublicKey || msg.sender == lessorPublicKey, "임대인 또는 임차인만 조회할 수 있습니다");
+        return messageHash;
+    }
+
+    // 해시 값에 해당하는 매물 정보를 조회하는 함수
+    function getPropertyDataByHash(bytes32 _hash) public view returns (string memory) {
+        return dataByHash[_hash];
     }
 
     // 임대인이 매물 정보를 입력하고 계약서를 작성하여 임차인에게 보내는 함수
     function sendContract(address _tenant, uint _rentAmount, uint _deposit, uint _paymentSchedule, string memory _propertyAddress, string memory _specialTerms) public {
         require(msg.sender == lessorPublicKey, "임대인만 계약을 보낼 수 있습니다");
 
-        tenantPublicKey = _tenant;
         Agreement agreement = new Agreement(_deposit, _rentAmount, _paymentSchedule, _propertyAddress, _specialTerms);
+
+        string memory propertyData = agreement.agreementDetails();
         messageHash = agreement.agreementHash();
+
+        // 해시-데이터 매핑에 매물 정보 추가
+        dataByHash[messageHash] = propertyData;
+
+        tenantPublicKey = _tenant;
         contractStatus = ContractStatus.Initiated;
 
-        emit ContractInitiated(lessorPublicKey, agreement.agreementDetails.rentAmount, agreement.agreementDetails.propertyAddress);
+        emit ContractInitiated(lessorPublicKey, _rentAmount, _propertyAddress);
     }
 
     // 임차인이 계약을 수락하는 함수
@@ -61,7 +81,7 @@ contract RealEstateContract {
         require(tenantPublicKey != address(0), "계약이 아직 수락되지 않았습니다");
 
         contractStatus = ContractStatus.Accepted;
-        emit ContractAccepted(tenantPublicKey, agreement.agreementDetails.rentAmount);
+        emit ContractAccepted(tenantPublicKey);
     }
 
     // 임차인 또는 임대인이 계약을 서명하는 함수
@@ -92,12 +112,16 @@ contract RealEstateContract {
 
     }
 
-    // 계약을 완료하는 함수
-    function completeTransaction() private {
+    // 계약을 완료하고 완료된 계약의 주소를 반환하는 함수
+    function completeTransaction() public returns (address) {
         require(tenantPublicKey != address(0) && lessorPublicKey != address(0), "임차인과 임대인 모두 계약에 서명해야 합니다");
-        contractStatus = ContractStatus.Completed;
+        require(contractStatus != ContractStatus.Completed, "이미 계약이 완료되었습니다.");
 
-        emit ContractCompleted(lessorPublicKey, tenantPublicKey, agreement.agreementDetails.rentAmount);
+        contractStatus = ContractStatus.Completed;
+        emit ContractCompleted(lessorPublicKey, tenantPublicKey);
+
+        return address(this);
+
     }
 
     // 계약을 취소하는 함수
@@ -109,12 +133,6 @@ contract RealEstateContract {
 
         contractStatus = ContractStatus.Canceled;
         emit ContractCanceled(msg.sender, _reason);
-    }
-
-    // 공개 키로 데이터를 암호화하는 함수
-    function encryptWithPublicKey(bytes memory _hashData, address _publicKey) private pure returns (bytes memory) {
-        // 실제 암호화 로직을 구현해야 합니다.
-        return _hashData; // 임시적으로 해시 데이터를 반환합니다.
     }
 
     // 주소를 문자열로 변환하는 함수
