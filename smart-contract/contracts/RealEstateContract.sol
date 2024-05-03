@@ -36,19 +36,19 @@ contract RealEstateContract {
 
     // 임차인 또는 임대인 modifier
     modifier onlyTenantOrLessor() {
-        require(msg.sender == tenantPublicKey || msg.sender == lessorPublicKey, "임차인 또는 임대인만 계약에 서명할 수 있습니다");
+        require(msg.sender == tenantPublicKey || msg.sender == lessorPublicKey, "Only the tenant or lessor can sign the contract");
         _;
     }
 
     // Getter 함수를 통해 계약 상태를 클라이언트에 제공
     function getContractStatus() public view returns (ContractStatus) {
-        require(msg.sender == tenantPublicKey || msg.sender == lessorPublicKey, "임대인 또는 임차인만 조회할 수 있습니다");
+        require(msg.sender == tenantPublicKey || msg.sender == lessorPublicKey, "Only the lessor or tenant can view");
         return contractStatus;
     }
 
     // Getter 함수를 통해 계약서 내용 해시값을 클라이언트에 제공
     function getMessageHash() public view returns (bytes32) {
-        require(msg.sender == tenantPublicKey || msg.sender == lessorPublicKey, "임대인 또는 임차인만 조회할 수 있습니다");
+        require(msg.sender == tenantPublicKey || msg.sender == lessorPublicKey, "Only the lessor or tenant can view");
         return messageHash;
     }
 
@@ -59,7 +59,7 @@ contract RealEstateContract {
 
     // 임대인이 매물 정보를 입력하고 계약서를 작성하여 임차인에게 보내는 함수
     function sendContract(address _tenant, uint _rentAmount, uint _deposit, uint _paymentSchedule, string memory _propertyAddress, string memory _specialTerms) public {
-        require(msg.sender == lessorPublicKey, "임대인만 계약을 보낼 수 있습니다");
+        require(msg.sender == lessorPublicKey, "Only the lessor can send a contract");
 
         Agreement agreement = new Agreement(_deposit, _rentAmount, _paymentSchedule, _propertyAddress, _specialTerms);
 
@@ -77,8 +77,8 @@ contract RealEstateContract {
 
     // 임차인이 계약을 수락하는 함수
     function acceptLeaseContract() public {
-        require(msg.sender == tenantPublicKey, "임차인만 계약을 수락할 수 있습니다");
-        require(tenantPublicKey != address(0), "계약이 아직 수락되지 않았습니다");
+        require(msg.sender == tenantPublicKey, "Only the tenant can accept the contract");
+        require(tenantPublicKey != address(0), "The contract has not been accepted yet");
 
         contractStatus = ContractStatus.Accepted;
         emit ContractAccepted(tenantPublicKey);
@@ -86,12 +86,12 @@ contract RealEstateContract {
 
     // 임차인 또는 임대인이 계약을 서명하는 함수
     function signContract(bytes memory _signature) public onlyTenantOrLessor {
-        require(contractStatus == ContractStatus.Accepted, "계약이 아직 수락되지 않았습니다");
-        require(messageHash != 0, "계약이 아직 초기화되지 않았습니다");
+        require(contractStatus == ContractStatus.Accepted, "The contract has not been accepted yet");
+        require(messageHash != 0, "The contract has not been initialized yet");
 
         // 계약서의 내용과 서명자에 따른 해시 값 계산
         bytes32 hash = keccak256(abi.encodePacked(messageHash, msg.sender == tenantPublicKey));
-        require(SignatureChecker.isValidSignatureNow(msg.sender, hash, _signature), "잘못된 서명입니다");
+        require(SignatureChecker.isValidSignatureNow(msg.sender, hash, _signature), "Invalid signature");
 
         emit ContractSigned(msg.sender, msg.sender == tenantPublicKey);
 
@@ -114,8 +114,8 @@ contract RealEstateContract {
 
     // 계약을 완료하고 완료된 계약의 주소를 반환하는 함수
     function completeTransaction() public returns (address) {
-        require(tenantPublicKey != address(0) && lessorPublicKey != address(0), "임차인과 임대인 모두 계약에 서명해야 합니다");
-        require(contractStatus != ContractStatus.Completed, "이미 계약이 완료되었습니다.");
+        require(tenantPublicKey != address(0) && lessorPublicKey != address(0), "Both the tenant and lessor must sign the contract");
+        require(contractStatus != ContractStatus.Completed, "The contract has already been completed");
 
         contractStatus = ContractStatus.Completed;
         emit ContractCompleted(lessorPublicKey, tenantPublicKey);
@@ -125,11 +125,11 @@ contract RealEstateContract {
     }
 
     // 계약을 취소하는 함수
-    function cancelContract(string memory _reason)  {
-        require(msg.sender == tenantPublicKey || msg.sender == lessorPublicKey, "임차인 또는 임대인만 계약을 취소할 수 있습니다.");
-        require(contractStatus != ContractStatus.Canceled, "이미 취소된 계약입니다");
-        require(contractStatus != ContractStatus.Completed, "이미 완료된 계약은 취소할 수 없습니다");
-        require(contractStatus != ContractStatus.Signed, "서명이 완료된 계약은 취소할 수 없습니다");
+    function cancelContract(string memory _reason)  public{
+        require(msg.sender == tenantPublicKey || msg.sender == lessorPublicKey, "Only the tenant or lessor can cancel the contract");
+        require(contractStatus != ContractStatus.Canceled, "The contract has already been canceled");
+        require(contractStatus != ContractStatus.Completed, "A completed contract cannot be canceled");
+        require(contractStatus != ContractStatus.Signed, "A signed contract cannot be canceled");
 
         contractStatus = ContractStatus.Canceled;
         emit ContractCanceled(msg.sender, _reason);
@@ -137,7 +137,7 @@ contract RealEstateContract {
 
     // 주소를 문자열로 변환하는 함수
     function addressToString(address _addr) private pure returns(string memory) {
-        bytes32 value = bytes32(uint256(_addr));
+        bytes32 value = bytes32(uint256(uint160(_addr)));
         bytes memory alphabet = "0123456789abcdef";
 
         bytes memory str = new bytes(42);
