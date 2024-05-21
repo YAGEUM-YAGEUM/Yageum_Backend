@@ -74,6 +74,13 @@ dependencies {
 	//redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+	//mongodb
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+	//chatting
+	implementation 'org.springframework.kafka:spring-kafka'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
 	//SMTP
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '3.0.5'
 	implementation 'jakarta.mail:jakarta.mail-api:2.1.2'
