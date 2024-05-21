@@ -81,6 +81,9 @@ dependencies {
 	implementation 'org.springframework.kafka:spring-kafka'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
+	//ImmutableMap
+	implementation 'com.google.guava:guava:31.0.1-jre'
+
 	//SMTP
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '3.0.5'
 	implementation 'jakarta.mail:jakarta.mail-api:2.1.2'
