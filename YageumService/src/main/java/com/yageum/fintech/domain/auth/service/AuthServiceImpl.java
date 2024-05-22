@@ -102,7 +102,6 @@ public class AuthServiceImpl implements AuthService{
         redisServiceImpl.setBlackList(accessToken, "access_token", expiration);
     }
 
-
     private void verifiedRefreshToken(String refreshToken) {
         if (refreshToken == null) {
             throw new BusinessLogicException(ExceptionList.HEADER_REFRESH_TOKEN_NOT_EXISTS);

@@ -164,5 +164,4 @@ public class JwtTokenProvider {
             throw new JwtException("JWT 토큰의 구조가 유효하지 않습니다.");
         }
     }
-
 }

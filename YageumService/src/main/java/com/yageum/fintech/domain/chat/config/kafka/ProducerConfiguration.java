@@ -1,7 +1,7 @@
 package com.yageum.fintech.domain.chat.config.kafka;
 
-import com.example.chatService.domain.Message;
 import com.google.common.collect.ImmutableMap;
+import com.yageum.fintech.domain.chat.dto.Message;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;

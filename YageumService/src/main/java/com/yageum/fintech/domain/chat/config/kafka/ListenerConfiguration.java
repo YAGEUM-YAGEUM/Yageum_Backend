@@ -1,7 +1,7 @@
 package com.yageum.fintech.domain.chat.config.kafka;
 
 import com.google.common.collect.ImmutableMap;
-import com.yageum.fintech.domain.chat.infrastructure.Message;
+import com.yageum.fintech.domain.chat.dto.Message;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +30,7 @@ public class ListenerConfiguration {
     @Bean
     public ConsumerFactory<String, Message> consumerFactory() {
         JsonDeserializer<Message> deserializer = new JsonDeserializer<>();
-        // 패키지 신뢰 오류로 인해 모든 패키지를 신뢰하도록 작성
+        // 모든 패키지를 신뢰
         deserializer.addTrustedPackages("*");
 
         // Kafka Consumer 구성을 위한 설정값들을 설정 -> 변하지 않는 값이므로 ImmutableMap을 이용하여 설정
