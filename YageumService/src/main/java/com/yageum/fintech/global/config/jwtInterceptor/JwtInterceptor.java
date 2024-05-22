@@ -1,5 +1,6 @@
 package com.yageum.fintech.global.config.jwtInterceptor;
 
+import com.yageum.fintech.domain.auth.jwt.JwtContextHolder;
 import com.yageum.fintech.global.model.Exception.ExceptionList;
 import com.yageum.fintech.global.model.Exception.NullJwtTokenException;
 import io.jsonwebtoken.*;
