@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 
-/** JWT를 생성하고 검증하는 컴포넌트 **/
+/** JWT 생성, 유효성 검사 등의 로직을 포함하고 있는 **/
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {

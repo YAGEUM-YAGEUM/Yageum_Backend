@@ -1,7 +1,5 @@
 package com.yageum.fintech.domain.wallet.controller;
 
-import com.yageum.fintech.domain.tenant.dto.request.TenantProfileDto;
-import com.yageum.fintech.domain.tenant.dto.response.GetTenantProfileDto;
 import com.yageum.fintech.domain.wallet.infrastructure.Wallet;
 import com.yageum.fintech.domain.wallet.service.WalletService;
 import com.yageum.fintech.global.model.Result.CommonResult;

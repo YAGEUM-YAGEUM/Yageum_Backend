@@ -5,7 +5,6 @@ public class JwtContextHolder {
     private static final ThreadLocal<String> nameContext = new ThreadLocal<>();
     private static final ThreadLocal<String> uidContext = new ThreadLocal<>();
 
-
     public static void setUserId(Long userId) {
         userIdContext.set(userId);
     }

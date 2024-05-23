@@ -20,7 +20,7 @@ public class Lessor {
     private Long lessorId;
 
     @Column(name = "username", nullable = false, length = 50, unique = true)
-    private String username;
+    private String username; //아이디
 
     @Column(name = "encryptedPwd", nullable = false, length = 100)
     private String encryptedPwd;
