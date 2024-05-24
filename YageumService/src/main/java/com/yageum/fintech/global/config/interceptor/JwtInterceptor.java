@@ -42,16 +42,16 @@ public class JwtInterceptor implements HandlerInterceptor {
                 .parseClaimsJws(token)
                 .getBody();
 
-        Long userId = claims.get("userId", Long.class);
-        String username = claims.get("name", String.class);
-        String id = claims.getSubject();
-        if(userId==null||!StringUtils.hasText(username)||!StringUtils.hasText(id))
+        Long uid = claims.get("uid", Long.class); //사용자 UID
+        String name = claims.get("name", String.class); //사용자 이름
+        String username = claims.getSubject(); //사용자 아이디
+        if(uid==null||!StringUtils.hasText(name)||!StringUtils.hasText(username))
             throw new MalformedJwtException("");
 
 
-        JwtContextHolder.setUserId(claims.get("userId", Long.class));
-        JwtContextHolder.setName(claims.get("name", String.class));
-        JwtContextHolder.setId(claims.getSubject());
+        JwtContextHolder.setUid(claims.get("uid", Long.class)); //사용자 UID
+        JwtContextHolder.setName(claims.get("name", String.class)); //사용자 이름
+        JwtContextHolder.setUsername(claims.getSubject()); //사용자 아이디
         return true;
     }
 

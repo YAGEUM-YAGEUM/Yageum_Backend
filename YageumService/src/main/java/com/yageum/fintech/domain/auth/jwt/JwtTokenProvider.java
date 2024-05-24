@@ -47,11 +47,11 @@ public class JwtTokenProvider {
     }
 
     // JWT 토큰 생성
-    public JWTAuthResponse generateToken(String username, Authentication authentication, Long userId, String name) {
-        String id = authentication.getName();
+    public JWTAuthResponse generateToken(String username, Authentication authentication, Long uid, String name) {
+        String id = authentication.getName(); //사용자 아이디
 
         Claims claims = Jwts.claims().setSubject(username); //사용자 아이디
-        claims.put("userId", userId); //사용자 UID
+        claims.put("uid", uid); //사용자 UID
         claims.put("name", name); //사용자 이름
 
         Date currentDate = new Date();
