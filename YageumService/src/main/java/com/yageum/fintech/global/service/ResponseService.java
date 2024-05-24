@@ -57,10 +57,17 @@ public class ResponseService {
         return result;
     }
 
+    public CommonResult getErrorResult(int code, String message) {
+        CommonResult result = new CommonResult();
+        result.setSuccess(false);
+        result.setCode(code);
+        result.setMessage(message);
+        return result;
+    }
+
     private void setSuccessResult(CommonResult result) {
         result.setSuccess(true);
         result.setCode(CommonResponse.SUCCESS.getCode());
         result.setMessage(CommonResponse.SUCCESS.getMessage());
     }
-
 }

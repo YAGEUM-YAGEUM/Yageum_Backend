@@ -79,6 +79,10 @@ public class House {
     @Column(nullable = false)
     private String location;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private DealStatus dealStatus;
+
     //OneToOne
     @OneToOne(mappedBy = "house", cascade = CascadeType.ALL)
     private HouseOption houseOption;
@@ -88,7 +92,7 @@ public class House {
                  Integer activeFloor, Integer totalFloor, Float exclusiveArea, Integer totalRoom,
                  Integer totalBathroom, Direction direction, String heatingType, Integer parking,
                  Date moveInDate, String buildingPurpose, Date approvedDate, String description,
-                 String location) {
+                 String location, DealStatus dealStatus) {
         this.houseId = houseId;
         this.lessor = lessor;
         this.category = category;
@@ -108,6 +112,7 @@ public class House {
         this.approvedDate = approvedDate;
         this.description = description;
         this.location = location;
+        this.dealStatus = dealStatus;
     }
 
     public void update(HouseRequestDto houseRequestDto) {
@@ -130,4 +135,7 @@ public class House {
         this.location = houseRequestDto.getLocation();
     }
 
+    public void updateDealStatus(DealStatus newDealStatus) {
+        this.dealStatus = newDealStatus;
+    }
 }

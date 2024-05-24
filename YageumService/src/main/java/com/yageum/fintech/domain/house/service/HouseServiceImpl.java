@@ -4,10 +4,7 @@ import com.yageum.fintech.domain.house.dto.request.HouseOptionDto;
 import com.yageum.fintech.domain.house.dto.request.HouseRequestDto;
 import com.yageum.fintech.domain.house.dto.response.HouseOptionResponseDto;
 import com.yageum.fintech.domain.house.dto.response.HouseResponseDto;
-import com.yageum.fintech.domain.house.infrastructure.House;
-import com.yageum.fintech.domain.house.infrastructure.HouseOption;
-import com.yageum.fintech.domain.house.infrastructure.HouseOptionRepository;
-import com.yageum.fintech.domain.house.infrastructure.HouseRepository;
+import com.yageum.fintech.domain.house.infrastructure.*;
 import com.yageum.fintech.domain.lessor.infrastructure.Lessor;
 import com.yageum.fintech.domain.lessor.infrastructure.LessorRepository;
 import com.yageum.fintech.global.model.Exception.ExceptionList;
@@ -93,5 +90,22 @@ public class HouseServiceImpl implements HouseService{
 
         return HouseOptionResponseDto.from(houseOption);
 
+    }
+
+    @Override
+    public void updateDealStatus(Long houseId, DealStatus newDealStatus) {
+        House house = houseRepository.findByHouseId(houseId)
+                .orElseThrow(() -> new NonExistentException(ExceptionList.NON_EXISTENT_HOUSE));
+
+        house.updateDealStatus(newDealStatus);
+    }
+
+    @Override
+    public boolean isHouseDealCompleted(Long houseId) {
+        House house = houseRepository.findByHouseId(houseId)
+                .orElseThrow(() -> new NonExistentException(ExceptionList.NON_EXISTENT_HOUSE));
+
+        // 거래 상태 확인 => 거래 완료 시 true, 아닐 시 false
+        return house.getDealStatus() == DealStatus.DEAL_COMPLETED;
     }
 }

@@ -29,6 +29,7 @@ public enum ExceptionList {
     SIGNATURE_JWT(7005, "토큰의 서명이 검증되지 않았습니다."),
     ILLEGAL_ARGUMENT_JWT(7006, "잘못된 인자가 전달되었습니다."),
     SECURITY_JWT(7007, "보안 관련 문제로 토큰 검증이 실패했습니다."),
+    INVALID_JWT(7008, "유효하지 않은 토큰입니다."),
 
     // TENANT
     NON_EXISTENT_TENANT(5010, "존재하지 않는 임차인입니다."),
@@ -46,6 +47,7 @@ public enum ExceptionList {
     NON_EXISTENT_HOUSE(5030, "존재하지 않은 매물입니다."),
     NON_EXISTENT_HOUSELIST(5031, "매물 목록이 존재하지 않습니다."),
     NON_EXISTENT_HOUSEOPTION(5032, "매물 옵션이 존재하지 않습니다."),
+    NON_EXISTENT_DEAL_COMPLETED(5033, "해당 매물은 이미 거래가 완료되었습니다."),
 
     //MATCH
     NON_EXISTENT_MATCH(5033, "관심 매물이 존재하지 않습니다."),

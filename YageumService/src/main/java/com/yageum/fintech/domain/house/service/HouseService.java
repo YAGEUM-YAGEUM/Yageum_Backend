@@ -4,6 +4,7 @@ import com.yageum.fintech.domain.house.dto.request.HouseOptionDto;
 import com.yageum.fintech.domain.house.dto.request.HouseRequestDto;
 import com.yageum.fintech.domain.house.dto.response.HouseOptionResponseDto;
 import com.yageum.fintech.domain.house.dto.response.HouseResponseDto;
+import com.yageum.fintech.domain.house.infrastructure.DealStatus;
 
 import java.util.List;
 
@@ -25,4 +26,9 @@ public interface HouseService {
 
     void updateHouseOption(Long houseId, HouseOptionDto houseOptionDto);
 
+    // 거래 상태 업데이트
+    void updateDealStatus(Long houseId, DealStatus newDealStatus);
+
+    boolean isHouseDealCompleted(Long houseId);
 }
+
