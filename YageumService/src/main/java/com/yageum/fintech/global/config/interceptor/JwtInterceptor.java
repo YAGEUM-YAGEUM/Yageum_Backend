@@ -32,11 +32,14 @@ public class JwtInterceptor implements HandlerInterceptor {
 
         String jwtToken = request.getHeader("Authorization");
 
+        //token의 값이 정상적인지 확인
         if(!StringUtils.hasText(jwtToken)) throw new NullJwtTokenException(ExceptionList.NULL_JWT_TOKEN);
         if(!jwtToken.startsWith("Bearer ")) throw new UnsupportedJwtException("");
 
+        //토큰 추출
         String token = jwtToken.substring(7);
 
+        //토큰 유효성 검증 : 유효하지 않으면 파싱되지 않음
         Claims claims = Jwts.parser()
                 .setSigningKey(jwtSecret)
                 .parseClaimsJws(token)

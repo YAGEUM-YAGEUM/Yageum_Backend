@@ -1,6 +1,7 @@
 package com.yageum.fintech.domain.house.dto.request;
 
 import com.yageum.fintech.domain.house.infrastructure.Category;
+import com.yageum.fintech.domain.house.infrastructure.DealStatus;
 import com.yageum.fintech.domain.house.infrastructure.Direction;
 import com.yageum.fintech.domain.house.infrastructure.House;
 import com.yageum.fintech.domain.lessor.infrastructure.Lessor;
@@ -109,6 +110,7 @@ public class HouseRequestDto {
                 .approvedDate(approvedDate)
                 .description(description)
                 .location(location)
+                .dealStatus(DealStatus.BEFORE_DEAL)
                 .build();
     }
 }
