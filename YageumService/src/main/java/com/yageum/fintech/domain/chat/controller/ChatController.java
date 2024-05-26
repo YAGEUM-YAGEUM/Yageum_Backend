@@ -62,7 +62,7 @@ public class ChatController {
     }
 
 
- 
+
     @MessageExceptionHandler
     @SendTo("/error")
     public String handleException(Exception e) {

@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 
 application.yml
+/src/main/generated/
 
 ### STS ###
 .apt_generated
@@ -40,4 +41,3 @@ out/
 
 ### Mysql Log ###
 mysql_data/
-/src/main/generated/
