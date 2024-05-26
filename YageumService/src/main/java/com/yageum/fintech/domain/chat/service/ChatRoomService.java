@@ -1,5 +1,6 @@
 package com.yageum.fintech.domain.chat.service;
 
+import com.yageum.fintech.domain.auth.jwt.JwtContextHolder;
 import com.yageum.fintech.domain.auth.service.MyUserDetailsService;
 import com.yageum.fintech.domain.chat.dto.request.ChatRoomRequestDto;
 import com.yageum.fintech.domain.chat.infrastructure.ChatRoom;
@@ -26,7 +27,7 @@ public class ChatRoomService {
     private final MyUserDetailsService userDetailsService;
 
     @Transactional
-    public ChatRoom makeChatRoom(ChatRoomRequestDto requestDto, String username) {
+    public ChatRoom makeChatRoom(ChatRoomRequestDto requestDto) {
 
         // 1. 매물 존재 여부 확인
         if (!houseService.existsById(requestDto.getHouseId())) {
@@ -43,7 +44,7 @@ public class ChatRoomService {
         // 3. 채팅방이 이미 존재하는지 확인
         Long houseId = requestDto.getHouseId();
         Long participantId = requestDto.getParticipantId();
-        Long creatorId = getUserIdByUsername(username);
+        Long creatorId = getUserIdByUsername(JwtContextHolder.getUsername());
 
         // 3-1 채팅방이 이미 존재하는 경우 해당 채팅방 반환
         if (chatRoomRepository.existChatRoomByHouseIdAndMembers(houseId, creatorId, participantId)) {
