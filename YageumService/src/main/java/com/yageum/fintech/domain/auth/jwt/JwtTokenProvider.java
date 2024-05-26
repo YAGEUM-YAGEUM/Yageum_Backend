@@ -151,6 +151,7 @@ public class JwtTokenProvider {
             if(redisServiceImpl.hasKeyBlackList(jwtToken)) {
                 return false;
             }
+
             return true;
         } catch (SecurityException e) {
             throw new JwtException("잘못된 JWT 서명입니다.");

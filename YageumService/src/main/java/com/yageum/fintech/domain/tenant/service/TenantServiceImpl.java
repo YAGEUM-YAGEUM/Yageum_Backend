@@ -12,7 +12,7 @@ import com.yageum.fintech.domain.tenant.infrastructure.Tenant;
 import com.yageum.fintech.domain.tenant.infrastructure.TenantRepository;
 import com.yageum.fintech.global.model.Result.CommonResult;
 import com.yageum.fintech.global.service.ResponseService;
-import feign.RetryableException;
+import io.netty.handler.timeout.TimeoutException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -87,7 +87,7 @@ public class TenantServiceImpl implements TenantService {
         GetTenantResponseDto getTenantResponseDto = null;
         try{
             getTenantResponseDto = tenantRepository.findUserResponseByUserId(userId);
-        }catch (RetryableException e){
+        }catch (TimeoutException e){
             e.printStackTrace();
             return "(응답 시간 초과)";
         }catch (Exception e){
