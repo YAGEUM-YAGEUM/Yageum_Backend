@@ -3,6 +3,7 @@ package com.yageum.fintech.domain.chat.controller;
 import com.yageum.fintech.domain.auth.jwt.JwtContextHolder;
 import com.yageum.fintech.domain.chat.dto.request.ChatRoomRequestDto;
 import com.yageum.fintech.domain.chat.dto.response.ChatRoomResponseDto;
+import com.yageum.fintech.domain.chat.dto.response.ChattingHistoryResponseDto;
 import com.yageum.fintech.domain.chat.service.ChatRoomService;
 import com.yageum.fintech.global.model.Result.CommonResult;
 import com.yageum.fintech.global.service.ResponseService;
@@ -17,6 +18,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -53,9 +55,14 @@ public class ChatController {
     }
 
     //채팅 내역 조회
+    @GetMapping("/chatroom/{roomNo}")
+    public CommonResult chattingList(@PathVariable("roomNo") Long roomNo) {
+        ChattingHistoryResponseDto chattingList = chatRoomService.getChattingList(roomNo, JwtContextHolder.getUid());
+        return responseService.getSingleResult(chattingList);
+    }
 
 
-
+ 
     @MessageExceptionHandler
     @SendTo("/error")
     public String handleException(Exception e) {

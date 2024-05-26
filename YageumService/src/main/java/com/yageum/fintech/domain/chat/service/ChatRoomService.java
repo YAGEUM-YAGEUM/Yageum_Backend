@@ -3,7 +3,9 @@ package com.yageum.fintech.domain.chat.service;
 import com.yageum.fintech.domain.auth.jwt.JwtContextHolder;
 import com.yageum.fintech.domain.auth.service.MyUserDetailsService;
 import com.yageum.fintech.domain.chat.dto.request.ChatRoomRequestDto;
+import com.yageum.fintech.domain.chat.dto.response.ChatResponseDto;
 import com.yageum.fintech.domain.chat.dto.response.ChatRoomResponseDto;
+import com.yageum.fintech.domain.chat.dto.response.ChattingHistoryResponseDto;
 import com.yageum.fintech.domain.chat.infrastructure.ChatRoom;
 import com.yageum.fintech.domain.chat.infrastructure.Chatting;
 import com.yageum.fintech.domain.chat.infrastructure.repository.ChatRoomRepository;
@@ -19,11 +21,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -145,7 +149,22 @@ public class ChatRoomService {
         return chatRoomList;
     }
 
-    // username을 통해 creatorId 조회
+    public ChattingHistoryResponseDto getChattingList(Long chatRoomNo, Long memberNo) {
+        updateCountAllZero(chatRoomNo, memberNo);
+
+        String username = userDetailsService.findUsernameById(memberNo);
+        List<ChatResponseDto> chattingList = messageRepository.findByChatRoomNo(chatRoomNo)
+                .stream()
+                .map(chat -> new ChatResponseDto(chat, memberNo)
+                )
+                .collect(Collectors.toList());
+
+        return ChattingHistoryResponseDto.builder()
+                .username(username)
+                .chatList(chattingList)
+                .build();
+    }
+
     private Long getUserIdByUsername(String username) {
         return userDetailsService.findUserIdByUsername(username);
     }
@@ -158,6 +177,18 @@ public class ChatRoomService {
                 .and("senderId").ne(memberNo));  // senderId가 현재 사용자가 아닌 경우
 
         return mongoTemplate.count(query, Chatting.class);
+    }
+
+    // 읽지 않은 메시지 읽음 처리
+    public void updateCountAllZero(Long chatRoomNo, Long memberNo) {
+        //MongoDB 업데이트 쿼리
+        Update update = new Update().set("readCount", 0);
+
+        //내가 보낸 메시지는 읽음 처리 필요 x
+        Query query = new Query(Criteria.where("chatRoomNo").is(chatRoomNo)
+                .and("senderId").ne(memberNo));
+
+        mongoTemplate.updateMulti(query, update, Chatting.class);
     }
 
 }

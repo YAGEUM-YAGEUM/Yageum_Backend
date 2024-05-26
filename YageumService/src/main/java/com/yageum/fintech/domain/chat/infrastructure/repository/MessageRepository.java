@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 
 public interface MessageRepository extends MongoRepository<Chatting, String> {
-    List<Chatting> findByChatRoomNo(Integer chatRoomNo);
+    List<Chatting> findByChatRoomNo(Long chatRoomNo);
 
     Page<Chatting> findByChatRoomNoOrderBySendDateDesc(Long chatRoomNo, Pageable pageable);
 
