@@ -19,6 +19,8 @@ public interface HouseService {
 
     void deleteHouse(Long houseId);
 
+    boolean existsById(Long houseId);
+
     //HOUSE-OPTION
     void createHouseOption(Long houseId, HouseOptionDto houseOptionDto);
 
@@ -26,9 +28,10 @@ public interface HouseService {
 
     void updateHouseOption(Long houseId, HouseOptionDto houseOptionDto);
 
-    // 거래 상태 업데이트
+    // 거래 상태
     void updateDealStatus(Long houseId, DealStatus newDealStatus);
 
     boolean isHouseDealCompleted(Long houseId);
+
 }
 

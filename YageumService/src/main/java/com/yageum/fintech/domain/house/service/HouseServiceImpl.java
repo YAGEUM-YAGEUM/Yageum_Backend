@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class HouseServiceImpl implements HouseService{
 
@@ -25,6 +25,7 @@ public class HouseServiceImpl implements HouseService{
     private final HouseRepository houseRepository;
     private final HouseOptionRepository houseOptionRepository;
 
+    @Transactional
     @Override
     public void createHouse(Long lessorId, HouseRequestDto houseRequestDto) {
         Lessor lessor = lessorRepository.findByLessorId(lessorId)
@@ -33,6 +34,7 @@ public class HouseServiceImpl implements HouseService{
         houseRepository.save(houseRequestDto.toEntity(lessor));
     }
 
+    @Transactional
     @Override
     public void updateHouse(Long houseId, HouseRequestDto houseRequestDto) {
         House house = houseRepository.findByHouseId(houseId)
@@ -56,6 +58,7 @@ public class HouseServiceImpl implements HouseService{
         return houseList;
     }
 
+    @Transactional
     @Override
     public void deleteHouse(Long houseId) {
         House house = houseRepository.findByHouseId(houseId)
@@ -63,6 +66,12 @@ public class HouseServiceImpl implements HouseService{
         houseRepository.deleteByHouseId(houseId);
     }
 
+    @Override
+    public boolean existsById(Long houseId) {
+        return houseRepository.existsById(houseId);
+    }
+
+    @Transactional
     @Override
     public void createHouseOption(Long houseId, HouseOptionDto houseOptionDto) {
         House house = houseRepository.findByHouseId(houseId)
@@ -72,6 +81,7 @@ public class HouseServiceImpl implements HouseService{
         houseOptionRepository.save(houseOption);
     }
 
+    @Transactional
     @Override
     public void updateHouseOption(Long houseId, HouseOptionDto houseOptionDto) {
         House house = houseRepository.findByHouseId(houseId)
@@ -92,6 +102,7 @@ public class HouseServiceImpl implements HouseService{
 
     }
 
+    @Transactional
     @Override
     public void updateDealStatus(Long houseId, DealStatus newDealStatus) {
         House house = houseRepository.findByHouseId(houseId)
