@@ -40,3 +40,4 @@ out/
 
 ### Mysql Log ###
 mysql_data/
+/src/main/generated/
