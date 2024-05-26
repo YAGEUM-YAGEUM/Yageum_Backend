@@ -76,4 +76,33 @@ public class MyUserDetailsService implements UserDetailsService {
         throw new UsernameNotFoundException("해당하는 사용자가 없습니다: " + username);
     }
 
+    //memberNo으로 사용자 아이디 조회
+    public String findUsernameById(Long userId) {
+        Optional<Tenant> tenantOptional = tenantRepository.findById(userId);
+        if (tenantOptional.isPresent()) {
+            return tenantOptional.get().getUsername();
+        }
+
+        Optional<Lessor> lessorOptional = lessorRepository.findById(userId);
+        if (lessorOptional.isPresent()) {
+            return lessorOptional.get().getUsername();
+        }
+
+        throw new UsernameNotFoundException("해당하는 사용자가 없습니다: " + userId);
+    }
+
+    //memberNo으로 사용자 이름 조회
+    public String findNameById(Long userId) {
+        Optional<Tenant> tenantOptional = tenantRepository.findById(userId);
+        if (tenantOptional.isPresent()) {
+            return tenantOptional.get().getName();
+        }
+
+        Optional<Lessor> lessorOptional = lessorRepository.findById(userId);
+        if (lessorOptional.isPresent()) {
+            return lessorOptional.get().getName();
+        }
+
+        throw new UsernameNotFoundException("해당하는 사용자가 없습니다: " + userId);
+    }
 }

@@ -3,18 +3,28 @@ package com.yageum.fintech.domain.chat.service;
 import com.yageum.fintech.domain.auth.jwt.JwtContextHolder;
 import com.yageum.fintech.domain.auth.service.MyUserDetailsService;
 import com.yageum.fintech.domain.chat.dto.request.ChatRoomRequestDto;
+import com.yageum.fintech.domain.chat.dto.response.ChatRoomResponseDto;
 import com.yageum.fintech.domain.chat.infrastructure.ChatRoom;
-import com.yageum.fintech.domain.chat.infrastructure.ChatRoomRepository;
+import com.yageum.fintech.domain.chat.infrastructure.Chatting;
+import com.yageum.fintech.domain.chat.infrastructure.repository.ChatRoomRepository;
+import com.yageum.fintech.domain.chat.infrastructure.repository.MessageRepository;
 import com.yageum.fintech.domain.house.service.HouseService;
 import com.yageum.fintech.global.model.Exception.DealCompletedException;
 import com.yageum.fintech.global.model.Exception.ExceptionList;
 import com.yageum.fintech.global.model.Exception.NonExistentException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 
 @Slf4j
 @Service
@@ -22,6 +32,8 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class ChatRoomService {
 
+    private final MessageRepository messageRepository;
+    private final MongoTemplate mongoTemplate;
     private final ChatRoomRepository chatRoomRepository;
     private final HouseService houseService;
     private final MyUserDetailsService userDetailsService;
@@ -77,8 +89,75 @@ public class ChatRoomService {
         return savedchatRoom;
     }
 
+    @Transactional
+    public List<ChatRoomResponseDto> getChatRoomList(Long memberNo) {
+
+        // 1. 내가 속한 채팅방 리스트 조회
+        List<ChatRoomResponseDto> chatRoomList = chatRoomRepository.getChatRoomList(memberNo);
+
+        //2. Participant 세팅
+        chatRoomList
+                .forEach(chatRoomDto -> {
+                    // 2-1. 채팅방을 조회하려는 사람(memberNo)이 creator일 경우 => Attendee 에 participantId 정보 세팅
+                    if (memberNo.equals(chatRoomDto.getCreatorId())) {
+                        // ParticipantID 로부터 사용자 정보 조회
+                        String username = userDetailsService.findUsernameById(chatRoomDto.getParticipantId());
+                        String name = userDetailsService.findNameById(chatRoomDto.getParticipantId());
+
+                        // Attendee에 참가한 멤버 설정
+                        chatRoomDto.setAttendee(new ChatRoomResponseDto.Attendee(username, name));
+                    }
+
+                    // 2-2. 채팅방을 조회하려는 사람(memberNo)이 participant 경우 => Attendee 에 creator 세팅
+                    if (memberNo.equals(chatRoomDto.getParticipantId())){
+                        // CreatorIO 로부터 사용자 정보 조회
+                        String username = userDetailsService.findUsernameById(chatRoomDto.getCreatorId());
+                        String name = userDetailsService.findNameById(chatRoomDto.getCreatorId());
+
+                        // Attendee에 참가한 멤버 설정
+                        chatRoomDto.setAttendee(new ChatRoomResponseDto.Attendee(username, name));
+                    }
+
+                    // 3. unReadCount: 채팅방별로 읽지 않은 메시지 개수 설정
+                    long unReadCount = countUnReadMessage(chatRoomDto.getChatRoomNo(), memberNo);
+                    chatRoomDto.setUnReadCount(unReadCount);
+
+                    // 4. LatestMessage: 채팅방별로 마지막 채팅 메시지와 전송 시간을 설정
+
+                    // 4-1. 채팅방 번호(chatNo)에 해당하는 채팅 메시지를 최신 순으로 한 개(PageRequest.of(0, 1)) 조회
+                    Page<Chatting> chatting =
+                            messageRepository.findByChatRoomNoOrderBySendDateDesc(chatRoomDto.getChatRoomNo(),
+                                    PageRequest.of(0, 1)); // 첫 번째 페이지의 한 개의 메시지 요청
+
+                    // 4-2. 조회된 채팅 메시지가 있으면 첫번째 메시지 가져옴
+                    if (chatting.hasContent()) {
+                        Chatting chat = chatting.getContent().get(0);
+                        ChatRoomResponseDto.LatestMessage latestMessage = ChatRoomResponseDto.LatestMessage.builder()
+                                .context(chat.getContent())
+                                .sendAt(chat.getSendDate())
+                                .build();
+
+                        // 4-3. 최신 메시지 정보를 채팅방 DTO에 설정
+                        chatRoomDto.setLatestMessage(latestMessage);
+                    }
+                });
+
+        return chatRoomList;
+    }
+
     // username을 통해 creatorId 조회
     private Long getUserIdByUsername(String username) {
         return userDetailsService.findUserIdByUsername(username);
     }
+
+    // 읽지 않은 메시지 개수 조회
+    private long countUnReadMessage(Long chatRoomNo, Long memberNo) {
+        //MongoDB 쿼리
+        Query query = new Query(Criteria.where("chatRoomNo").is(chatRoomNo)
+                .and("readCount").is(1)  // readCount가 1인 경우 읽지 않은 메시지
+                .and("senderId").ne(memberNo));  // senderId가 현재 사용자가 아닌 경우
+
+        return mongoTemplate.count(query, Chatting.class);
+    }
+
 }
