@@ -1,6 +1,7 @@
 package com.yageum.fintech.domain.chat.service;
 
 import com.yageum.fintech.domain.auth.jwt.JwtContextHolder;
+import com.yageum.fintech.domain.auth.jwt.JwtTokenProvider;
 import com.yageum.fintech.domain.auth.service.MyUserDetailsService;
 import com.yageum.fintech.domain.chat.dto.request.ChatRoomRequestDto;
 import com.yageum.fintech.domain.chat.dto.request.Message;
@@ -32,6 +33,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 채팅방과 관련된 비즈니스 로직을 처리하는 클래스
+ * - 채팅방 생성
+ * - 채팅방 목록 조회
+ * - 채팅 기록 조회
+ * - 메시지 처리 (입장, 읽음 처리 등)
+ */
 
 @Slf4j
 @Service
@@ -40,12 +48,16 @@ import java.util.stream.Collectors;
 public class ChatRoomService {
 
     private final MessageRepository messageRepository;
+    private final ChatRoomRepository chatRoomRepository;
+    private final JwtTokenProvider jwtTokenProvider;
     private final MongoTemplate mongoTemplate;
     private final SimpMessagingTemplate messagingTemplate; //특정 Broker로 메세지를 전달
-    private final ChatRoomRepository chatRoomRepository;
+    private final MessageService messageService;
     private final HouseService houseService;
     private final MyUserDetailsService userDetailsService;
 
+
+    /** 새로운 채팅방 생성 */
     @Transactional
     public ChatRoom makeChatRoom(ChatRoomRequestDto requestDto) {
 
@@ -97,6 +109,7 @@ public class ChatRoomService {
         return savedchatRoom;
     }
 
+    /** 특정 회원이 속한 채팅방 목록을 조회힘 */
     @Transactional
     public List<ChatRoomResponseDto> getChatRoomList(Long memberNo) {
 
@@ -153,6 +166,7 @@ public class ChatRoomService {
         return chatRoomList;
     }
 
+    /** 특정 채팅방의 채팅 기록을 조회 */
     public ChattingHistoryResponseDto getChattingList(Long chatRoomNo, Long memberNo) {
         updateCountAllZero(chatRoomNo, memberNo);
 
@@ -169,11 +183,36 @@ public class ChatRoomService {
                 .build();
     }
 
-    private Long getUserIdByUsername(String username) {
-        return userDetailsService.findUserIdByUsername(username);
+    @Transactional
+    public Message sendMessage(Message message, String accessToken) {
+
+        String username = jwtTokenProvider.getUsername(accessToken);
+        Long uid = getUserIdByUsername(username);
+        String name = getNameByUsername(username);
+
+        // 채팅방에 모든 유저가 참여 중인지 확인
+        boolean isConnectedAll = messageService.isAllConnected(message.getChatRoomNo());
+
+        // 1:1 채팅이므로 2명 접속 시 readCount 0, 한 명 접속 시 1
+        Integer readCount = isConnectedAll ? 0 : 1;
+
+        // message 객체에 보낸 시간, 보낸 사람 memberNo, 보낸 사람 이름을 설정
+        message.setSendTimeAndSender(LocalDateTime.now(), uid, name, readCount);
+
+        // Message 객체를 Chatting 객체로 변환
+        // 메시지를 저장
+        Chatting chatting = message.convertEntity();
+
+        // 채팅 저장
+        messageRepository.save(chatting);
+
+        // 해당 채팅방의 구독자에게 메시지 브로드캐스트
+        messagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatRoomNo(), message);
+
+        return message;
     }
 
-    //참가자 입장 알림
+    /** 참가자 입장 메시지를 sub/chat/room/{chatRoomNo} 로 브로드캐스트 */
     public void broadcastEnterMessage(Long chatRoomNo, String name) {
 
         Message message = Message.builder()
@@ -184,7 +223,8 @@ public class ChatRoomService {
          messagingTemplate.convertAndSend("/sub/chat/room/" + chatRoomNo, message);
     }
 
-    // 읽지 않은 메시지 읽음 처리
+
+    /** 특정 채팅방에서 읽지 않은 메시지를 모두 읽음 처리 */
     public void updateCountAllZero(Long chatRoomNo, Long memberNo) {
         //MongoDB 업데이트 쿼리
         Update update = new Update().set("readCount", 0);
@@ -196,7 +236,7 @@ public class ChatRoomService {
         mongoTemplate.updateMulti(query, update, Chatting.class);
     }
 
-    // 읽지 않은 메시지 개수 조회
+    /** 읽지 않은 메시지 개수 조회 */
     private long countUnReadMessage(Long chatRoomNo, Long memberNo) {
         //MongoDB 쿼리
         Query query = new Query(Criteria.where("chatRoomNo").is(chatRoomNo)
@@ -204,6 +244,14 @@ public class ChatRoomService {
                 .and("senderId").ne(memberNo));  // senderId가 현재 사용자가 아닌 경우
 
         return mongoTemplate.count(query, Chatting.class);
+    }
+
+    private Long getUserIdByUsername(String username) {
+        return userDetailsService.findUserIdByUsername(username);
+    }
+
+    private String getNameByUsername(String username) {
+        return userDetailsService.findNameByUsername(username);
     }
 
 }

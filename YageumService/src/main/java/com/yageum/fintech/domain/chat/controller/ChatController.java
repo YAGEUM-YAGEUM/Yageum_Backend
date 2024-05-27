@@ -2,16 +2,17 @@ package com.yageum.fintech.domain.chat.controller;
 
 import com.yageum.fintech.domain.auth.jwt.JwtContextHolder;
 import com.yageum.fintech.domain.chat.dto.request.ChatRoomRequestDto;
+import com.yageum.fintech.domain.chat.dto.request.Message;
 import com.yageum.fintech.domain.chat.dto.response.ChatRoomResponseDto;
 import com.yageum.fintech.domain.chat.dto.response.ChattingHistoryResponseDto;
 import com.yageum.fintech.domain.chat.service.ChatRoomService;
+import com.yageum.fintech.domain.chat.service.MessageService;
 import com.yageum.fintech.global.model.Result.CommonResult;
 import com.yageum.fintech.global.service.ResponseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
-import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.handler.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,6 @@ import java.util.List;
 public class ChatController {
 
     private final ChatRoomService chatRoomService;
-//    private final ChatService chatService;
     private final ResponseService responseService;
 
     //채팅방 생성
@@ -58,7 +58,15 @@ public class ChatController {
         return responseService.getSingleResult(chattingList);
     }
 
-    // 채팅방 입장은 StompHandler에서 처리
+    //채팅방 입장은 StompHandler(Subscribe)에서 처리
+
+    // 채팅방 대화
+    @MessageMapping("/chat/talk/{roomId}")
+    @SendTo("/sub/chat/room/{roomId}")
+    public void talkUser(@DestinationVariable("roomId") Long roomId, @Payload Message message, @Header("Authorization") final String accessToken){
+        String token = accessToken.substring(7);
+        chatRoomService.sendMessage(message, token);
+    }
     
 
     @MessageExceptionHandler

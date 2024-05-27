@@ -16,16 +16,19 @@ public class Chatting { //Mongo DB에 메시지 저장
     private Long chattingId;
     private Long chatRoomNo;
     private Long senderId;
+    private Long houseId;
     private String senderName;
     private ChatContentType contentType;
     private String content;
-    private LocalDateTime sendDate;
+    private long sendDate;
     private long readCount;
 
     @Builder
-    public Chatting(Long chattingId, Long chatRoomNo, Long senderId, String senderName, ChatContentType contentType, String content, LocalDateTime sendDate, long readCount) {
+    public Chatting(Long chattingId, Long chatRoomNo, Long senderId, Long houseId, String senderName,
+                    ChatContentType contentType, String content, long sendDate, long readCount) {
         this.chattingId = chattingId;
         this.chatRoomNo = chatRoomNo;
+        this.houseId = houseId;
         this.senderId = senderId;
         this.senderName = senderName;
         this.contentType = contentType;

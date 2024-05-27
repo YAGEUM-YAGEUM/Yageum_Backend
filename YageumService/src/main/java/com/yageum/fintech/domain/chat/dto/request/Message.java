@@ -56,7 +56,8 @@ public class Message implements Serializable {
                 .chatRoomNo(chatRoomNo)
                 .contentType(contentType)
                 .content(content)
-                .sendDate(Instant.ofEpochMilli(sendTime).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime())
+                .houseId(houseId)
+                .sendDate(sendTime)
                 .readCount(readCount)
                 .build();
     }

@@ -65,9 +65,9 @@ public class ChatRoomResponseDto {
         private long sendAt;
 
         @Builder
-        public LatestMessage(String context, LocalDateTime sendAt) {
+        public LatestMessage(String context, long sendAt) {
             this.context = context;
-            this.sendAt = sendAt.atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
+            this.sendAt = sendAt;
         }
     }
 }
