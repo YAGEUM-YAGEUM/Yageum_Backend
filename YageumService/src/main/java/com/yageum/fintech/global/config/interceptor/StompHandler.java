@@ -3,7 +3,7 @@ package com.yageum.fintech.global.config.interceptor;
 import com.yageum.fintech.domain.auth.jwt.JwtTokenProvider;
 import com.yageum.fintech.domain.auth.service.MyUserDetailsService;
 import com.yageum.fintech.domain.chat.service.ChatRoomService;
-import com.yageum.fintech.domain.chat.service.ChattingService;
+import com.yageum.fintech.domain.chat.service.MessageService;
 import com.yageum.fintech.global.model.Exception.ExceptionList;
 import com.yageum.fintech.global.model.Exception.InvalidJwtTokenException;
 import com.yageum.fintech.global.model.Exception.NullJwtTokenException;
@@ -29,7 +29,7 @@ import java.util.Objects;
 public class StompHandler implements ChannelInterceptor {
 
     private final ChatRoomService chatRoomService;
-    private final ChattingService chattingService;
+    private final MessageService messageService;
     private final MyUserDetailsService userDetailsService;
     private final JwtTokenProvider tokenProvider;
 
@@ -65,7 +65,7 @@ public class StompHandler implements ChannelInterceptor {
                 tokenProvider.getUsername(getAccessToken(accessor));
                 break;
             case DISCONNECT:
-                chattingService.disconnectChatRoom(getChatRoomNo(accessor), username);
+                messageService.disconnectChatRoom(getChatRoomNo(accessor), username);
                 break;
         }
     }
@@ -94,11 +94,11 @@ public class StompHandler implements ChannelInterceptor {
         Long userId = getUserIdByUsername(username);
 
         // 채팅방 입장 처리 -> Redis에 입장 내역 저장
-        chattingService.connectChatRoom(chatRoomNo, username, houseId);
+        messageService.connectChatRoom(chatRoomNo, username, houseId);
         // 읽지 않은 채팅을 전부 읽음 처리
         chatRoomService.updateCountAllZero(chatRoomNo, userId);
         // 현재 채팅방에 접속중인 인원이 있는지 확인
-        boolean isConnected = chattingService.isConnected(chatRoomNo);
+        boolean isConnected = messageService.isConnected(chatRoomNo);
 
         if (isConnected) {
             // 입장 메시지 생성 및 브로드캐스트
@@ -106,8 +106,6 @@ public class StompHandler implements ChannelInterceptor {
         }
 
     }
-
-
 
     private Long getChatRoomNo(StompHeaderAccessor accessor) {
         return Long.valueOf(Objects.requireNonNull(accessor.getFirstNativeHeader("chatRoomNo")));
