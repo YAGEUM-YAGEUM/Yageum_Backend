@@ -33,7 +33,9 @@ public class StompHandler implements ChannelInterceptor {
     private final MyUserDetailsService userDetailsService;
     private final JwtTokenProvider tokenProvider;
 
-    // websocket을 통해 들어온 요청이 처리 되기 전 실행됨
+    /**
+     * 웹소켓을 통해 들어온 요청이 처리되기 전 실행됨
+     */
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
 
@@ -52,6 +54,9 @@ public class StompHandler implements ChannelInterceptor {
         return message;
     }
 
+    /**
+     * STOMP 명령어에 따라 다른 처리를 수행
+     */
     private void handleMessage(StompCommand stompCommand, StompHeaderAccessor accessor, String username) {
         switch (stompCommand) {
             case CONNECT:
@@ -85,8 +90,11 @@ public class StompHandler implements ChannelInterceptor {
         return tokenProvider.getUsername(accessToken);
 
     }
+
+    /**
+     * 채팅방에 접속 처리 및 관련 작업 수행
+     */
     private void connectToChatRoom(StompHeaderAccessor accessor, String username) {
-        //StompHeaderAccessor에서 채팅방 번호와 매물 번호 가져옴
         Long chatRoomNo = getChatRoomNo(accessor);
         Long houseId = getHouseId(accessor);
 
@@ -97,7 +105,7 @@ public class StompHandler implements ChannelInterceptor {
         messageService.connectChatRoom(chatRoomNo, username, houseId);
         // 2. 읽지 않은 채팅을 전부 읽음 처리
         chatRoomService.updateCountAllZero(chatRoomNo, userId);
-        // 3. 현재 채팅방에 접속중인 인원이 있는지 확인
+        // 3. 현재 채팅방에 접속 중인 인원이 있는지 확인
         boolean isConnected = messageService.isConnected(chatRoomNo);
 
         if (isConnected) {
@@ -107,6 +115,7 @@ public class StompHandler implements ChannelInterceptor {
 
     }
 
+    /** STOMP 헤더에서 필요한 정보 추출 */
     private Long getChatRoomNo(StompHeaderAccessor accessor) {
         return Long.valueOf(Objects.requireNonNull(accessor.getFirstNativeHeader("chatRoomNo")));
     }
@@ -115,6 +124,7 @@ public class StompHandler implements ChannelInterceptor {
         return Long.valueOf(Objects.requireNonNull(accessor.getFirstNativeHeader("houseId")));
     }
 
+    /** 사용자 아이디로 필요한 정보 조회 */
     private String getNameByUsername(String username) {
         return userDetailsService.findNameByUsername(username);
     }
