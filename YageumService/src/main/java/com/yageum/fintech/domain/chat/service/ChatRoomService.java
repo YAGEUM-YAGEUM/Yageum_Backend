@@ -212,17 +212,28 @@ public class ChatRoomService {
         return message;
     }
 
-    /** 참가자 입장 메시지를 sub/chat/room/{chatRoomNo} 로 브로드캐스트 */
+    /** 참가자 입장 및 퇴장 메시지를 sub/chat/room/{chatRoomNo} 로 브로드캐스트 */
     public void broadcastEnterMessage(Long chatRoomNo, String name) {
 
-        Message message = Message.builder()
+        Message enterMessage = Message.builder()
                 .contentType(ChatContentType.ENTER)
                 .chatRoomNo(chatRoomNo)
                 .content(name + " 님이 돌아오셨습니다.")
                 .build();
-         messagingTemplate.convertAndSend("/sub/chat/room/" + chatRoomNo, message);
-    }
 
+        // 상대방에게 입장 메시지를 브로드캐스트
+         messagingTemplate.convertAndSend("/sub/chat/room/" + chatRoomNo, enterMessage);
+    }
+    public void broadcastExitMessage(Long chatRoomNo, String name) {
+        Message exitMessage = Message.builder()
+                .contentType(ChatContentType.EXIT)
+                .chatRoomNo(chatRoomNo)
+                .content(name + " 님이 채팅방을 나갔습니다..")
+                .build();
+
+        // 상대방에게 퇴장 메시지를 브로드캐스트
+        messagingTemplate.convertAndSend("/sub/chat/room/" + chatRoomNo, exitMessage);
+    }
 
     /** 특정 채팅방에서 읽지 않은 메시지를 모두 읽음 처리 */
     public void updateCountAllZero(Long chatRoomNo, Long memberNo) {
@@ -250,7 +261,7 @@ public class ChatRoomService {
         return userDetailsService.findUserIdByUsername(username);
     }
 
-    private String getNameByUsername(String username) {
+    public String getNameByUsername(String username) {
         return userDetailsService.findNameByUsername(username);
     }
 
