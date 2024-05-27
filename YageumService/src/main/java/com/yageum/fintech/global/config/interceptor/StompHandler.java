@@ -93,15 +93,15 @@ public class StompHandler implements ChannelInterceptor {
         String name = getNameByUsername(username);
         Long userId = getUserIdByUsername(username);
 
-        // 채팅방 입장 처리 -> Redis에 입장 내역 저장
+        // 1. 채팅방 입장 처리 -> Redis에 입장 내역 저장
         messageService.connectChatRoom(chatRoomNo, username, houseId);
-        // 읽지 않은 채팅을 전부 읽음 처리
+        // 2. 읽지 않은 채팅을 전부 읽음 처리
         chatRoomService.updateCountAllZero(chatRoomNo, userId);
-        // 현재 채팅방에 접속중인 인원이 있는지 확인
+        // 3. 현재 채팅방에 접속중인 인원이 있는지 확인
         boolean isConnected = messageService.isConnected(chatRoomNo);
 
         if (isConnected) {
-            // 입장 메시지 생성 및 브로드캐스트
+            // 4. 입장 메시지 생성 및 브로드캐스트
             chatRoomService.broadcastEnterMessage(chatRoomNo, name);
         }
 

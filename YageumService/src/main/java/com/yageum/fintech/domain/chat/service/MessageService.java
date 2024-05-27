@@ -21,7 +21,7 @@ public class MessageService {
 
     private final ChatSessionRepository chatSessionRepository;
 
-    //채팅방 연결
+    //채팅방 입장 처리 -> Redis에 입장 내역 저장
     @Transactional
     public void connectChatRoom(Long chatRoomNo, String username, Long houseId) {
         ChatSession chatSession = ChatSession.builder()
