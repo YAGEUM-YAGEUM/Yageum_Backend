@@ -1,13 +1,10 @@
 package com.yageum.fintech.domain.chat.service;
 
 
-import com.yageum.fintech.domain.auth.jwt.JwtTokenProvider;
-import com.yageum.fintech.domain.auth.service.MyUserDetailsService;
 import com.yageum.fintech.domain.chat.dto.request.ChatSession;
 import com.yageum.fintech.domain.chat.infrastructure.repository.ChatSessionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +39,7 @@ public class MessageService {
 
     /**
      * 사용자가 채팅방에서 나갈 때 입장 내역을 Redis에서 삭제
+     * 네트워크 끊김, 창닫기 등의 상황이 있을 수 있기 때문에 StompHandler, RestAPI 두 군데서 처리
      */
     @Transactional
     public void disconnectChatRoom(Long chatRoomNo, String username) {

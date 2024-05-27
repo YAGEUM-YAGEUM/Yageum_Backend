@@ -70,7 +70,7 @@ public class StompHandler implements ChannelInterceptor {
                 tokenProvider.getUsername(getAccessToken(accessor));
                 break;
             case DISCONNECT:
-                messageService.disconnectChatRoom(getChatRoomNo(accessor), username);
+                disconnectChatRoom(accessor, username);
                 break;
         }
     }
@@ -113,6 +113,22 @@ public class StompHandler implements ChannelInterceptor {
             chatRoomService.broadcastEnterMessage(chatRoomNo, name);
         }
 
+    }
+
+    /**
+     * 사용자 퇴장 처리를 담당하는 메소드
+     */
+    private void disconnectChatRoom(StompHeaderAccessor accessor, String username) {
+        Long chatRoomNo = getChatRoomNo(accessor);
+        String name = getNameByUsername(username);
+
+        // 채팅방에 아직 누군가가 있으면 퇴장 메시지를 보냄
+        if (messageService.isConnected(chatRoomNo)) {
+            chatRoomService.broadcastExitMessage(chatRoomNo, name);
+        }
+
+        // 채팅방에서 퇴장 처리
+        messageService.disconnectChatRoom(chatRoomNo, username);
     }
 
     /** STOMP 헤더에서 필요한 정보 추출 */
