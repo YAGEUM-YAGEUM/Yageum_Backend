@@ -33,7 +33,7 @@ public class MessageService {
         chatSessionRepository.save(chatSession);
     }
 
-    //채팅방 disconnect
+    //채팅방 disconnect -> 내역 삭제
     @Transactional
     public void disconnectChatRoom(Long chatRoomNo, String username) {
         ChatSession chatSession = chatSessionRepository.findByChatroomNoAndUsername(chatRoomNo, username)
@@ -41,7 +41,7 @@ public class MessageService {
         chatSessionRepository.delete(chatSession);
     }
 
-    //채팅방 1명 연결됐는지 확인
+    //채팅방 1명 연결됐는지 확인 -> 한명이면 입장 메시지 알림
     public boolean isConnected(Long chatRoomNo) {
         List<ChatSession> connectedList = chatSessionRepository.findByChatroomNo(chatRoomNo);
         return connectedList.size() == 1;
