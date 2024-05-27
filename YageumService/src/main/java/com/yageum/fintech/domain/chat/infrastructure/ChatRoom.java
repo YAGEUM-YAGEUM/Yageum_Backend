@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "chatRoom")
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChatRoom { //mysql 에 채팅방 정보 저장
+public class ChatRoom { //mysql 에 저장할 ChatRoom entity
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chatroom_no")

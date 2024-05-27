@@ -7,13 +7,10 @@ import com.yageum.fintech.domain.chat.dto.response.ChattingHistoryResponseDto;
 import com.yageum.fintech.domain.chat.service.ChatRoomService;
 import com.yageum.fintech.global.model.Result.CommonResult;
 import com.yageum.fintech.global.service.ResponseService;
-import jakarta.security.auth.message.MessageInfo;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -61,7 +58,8 @@ public class ChatController {
         return responseService.getSingleResult(chattingList);
     }
 
-
+    // 채팅방 입장은 StompHandler에서 처리
+    
 
     @MessageExceptionHandler
     @SendTo("/error")

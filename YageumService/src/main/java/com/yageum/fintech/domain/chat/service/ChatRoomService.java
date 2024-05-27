@@ -3,9 +3,11 @@ package com.yageum.fintech.domain.chat.service;
 import com.yageum.fintech.domain.auth.jwt.JwtContextHolder;
 import com.yageum.fintech.domain.auth.service.MyUserDetailsService;
 import com.yageum.fintech.domain.chat.dto.request.ChatRoomRequestDto;
+import com.yageum.fintech.domain.chat.dto.request.Message;
 import com.yageum.fintech.domain.chat.dto.response.ChatResponseDto;
 import com.yageum.fintech.domain.chat.dto.response.ChatRoomResponseDto;
 import com.yageum.fintech.domain.chat.dto.response.ChattingHistoryResponseDto;
+import com.yageum.fintech.domain.chat.infrastructure.ChatContentType;
 import com.yageum.fintech.domain.chat.infrastructure.ChatRoom;
 import com.yageum.fintech.domain.chat.infrastructure.Chatting;
 import com.yageum.fintech.domain.chat.infrastructure.repository.ChatRoomRepository;
@@ -22,6 +24,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +41,7 @@ public class ChatRoomService {
 
     private final MessageRepository messageRepository;
     private final MongoTemplate mongoTemplate;
+    private final SimpMessagingTemplate messagingTemplate; //특정 Broker로 메세지를 전달
     private final ChatRoomRepository chatRoomRepository;
     private final HouseService houseService;
     private final MyUserDetailsService userDetailsService;
@@ -169,14 +173,15 @@ public class ChatRoomService {
         return userDetailsService.findUserIdByUsername(username);
     }
 
-    // 읽지 않은 메시지 개수 조회
-    private long countUnReadMessage(Long chatRoomNo, Long memberNo) {
-        //MongoDB 쿼리
-        Query query = new Query(Criteria.where("chatRoomNo").is(chatRoomNo)
-                .and("readCount").is(1)  // readCount가 1인 경우 읽지 않은 메시지
-                .and("senderId").ne(memberNo));  // senderId가 현재 사용자가 아닌 경우
+    //참가자 입장 알림
+    public void broadcastEnterMessage(Long chatRoomNo, String name) {
 
-        return mongoTemplate.count(query, Chatting.class);
+        Message message = Message.builder()
+                .contentType(ChatContentType.ENTER)
+                .chatRoomNo(chatRoomNo)
+                .content(name + " 님이 돌아오셨습니다.")
+                .build();
+         messagingTemplate.convertAndSend("/sub/chat/room/" + chatRoomNo, message);
     }
 
     // 읽지 않은 메시지 읽음 처리
@@ -189,6 +194,16 @@ public class ChatRoomService {
                 .and("senderId").ne(memberNo));
 
         mongoTemplate.updateMulti(query, update, Chatting.class);
+    }
+
+    // 읽지 않은 메시지 개수 조회
+    private long countUnReadMessage(Long chatRoomNo, Long memberNo) {
+        //MongoDB 쿼리
+        Query query = new Query(Criteria.where("chatRoomNo").is(chatRoomNo)
+                .and("readCount").is(1)  // readCount가 1인 경우 읽지 않은 메시지
+                .and("senderId").ne(memberNo));  // senderId가 현재 사용자가 아닌 경우
+
+        return mongoTemplate.count(query, Chatting.class);
     }
 
 }

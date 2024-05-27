@@ -17,20 +17,22 @@ import java.time.ZoneId;
 @AllArgsConstructor
 public class Message implements Serializable {
 
-    private Long chattingId;
+    private Long messageId;
 
     @NotNull
     private Long chatRoomNo;
-
-    private Long senderId;
-
-    private String senderName;
 
     @NotNull
     private ChatContentType contentType;
 
     @NotNull
     private String content;
+
+    private Long senderId;
+
+    private String senderName;
+
+    private Long houseId;
 
     private long sendTime;
 
@@ -43,8 +45,8 @@ public class Message implements Serializable {
         this.readCount = readCount;
     }
 
-    public void setId(Long chattingId) {
-        this.chattingId = chattingId;
+    public void setId(Long messageId) {
+        this.messageId = messageId;
     }
 
     public Chatting convertEntity() {
