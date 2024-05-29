@@ -80,6 +80,7 @@ public class RedisServiceImpl implements RedisService{
     public boolean deleteBlackList(String key) {
         return redisBlackListTemplate.delete(key);
     }
+
     public boolean hasKeyBlackList(String key) {
         return redisBlackListTemplate.hasKey(key);
     }

@@ -94,12 +94,24 @@ public class AuthServiceImpl implements AuthService{
         if (!jwtTokenProvider.validateToken(accessToken)) {
             throw new UnauthorizedAccessException(ExceptionList.SIGNATURE_JWT);
         }
+        //access token에서 인증정보 조회
         Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
         String username = authentication.getName(); //사용자 아이디
-        redisServiceImpl.deleteValues(username);
 
+        //아이디로 조회되는 refresh token 이 있으면 삭제
+        if(redisServiceImpl.getValues(username)!=null){
+            redisServiceImpl.deleteValues(username);
+        }
+
+        //Access Token 남은 유효시간 가지고 와서 blacklist에 추가
         Long expiration = jwtTokenProvider.getAccessTokenExpiration(accessToken);
         redisServiceImpl.setBlackList(accessToken, "access_token", expiration);
+
+        // Refresh Token 남은 유효시간 가지고 와서 blacklist에 추가
+        if (refreshToken != null && jwtTokenProvider.validateToken(refreshToken)) {
+            Long refreshTokenExpiration = jwtTokenProvider.getRefreshTokenExpiration(refreshToken);
+            redisServiceImpl.setBlackList(refreshToken, "refresh_token", refreshTokenExpiration);
+        }
     }
 
     private void verifiedRefreshToken(String refreshToken) {

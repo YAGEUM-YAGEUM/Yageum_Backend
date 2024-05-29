@@ -90,16 +90,27 @@ public class JwtTokenProvider {
                 .getBody();
     }
 
-    // 리프레시 토큰 만료 시간을 가져오는 메서드
-    public Long getRefreshTokenExpirationMillis() {
-        return REFRESH_TOKEN_VALID_TIME;
-    }
-
     // Access Token의 만료 시간을 가져오는 메서드
     public Long getAccessTokenExpiration(String accessToken) {
         Claims claims = Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(accessToken)
+                .getBody();
+        Date expiration = claims.getExpiration();
+
+        if (expiration != null) {
+            return expiration.getTime();
+        } else {
+            // 만료 시간이 null이면 기본값인 0 반환
+            return 0L;
+        }
+    }
+
+    // Refresh Token의 만료 시간을 가져오는 메서드
+    public Long getRefreshTokenExpiration(String refreshToken) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(refreshToken)
                 .getBody();
         Date expiration = claims.getExpiration();
 
