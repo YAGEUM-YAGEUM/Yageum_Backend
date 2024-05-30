@@ -29,7 +29,7 @@ public class ChatResponseDto { //Chatting 응답 객체
         this.senderName = chatting.getSenderName();
         this.contentType = chatting.getContentType();
         this.content = chatting.getContent();
-        this.sendDate = chatting.getSendDate().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
+        this.sendDate = chatting.getSendDate();
         this.readCount = chatting.getReadCount();
         this.isMine = chatting.getSenderId().equals(memberNo);
     }

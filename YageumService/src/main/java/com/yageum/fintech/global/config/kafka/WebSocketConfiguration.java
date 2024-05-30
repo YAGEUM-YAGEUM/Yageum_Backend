@@ -29,6 +29,8 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
         registry.addEndpoint("/stomp/chat")
                 .setAllowedOriginPatterns("*")
                 .withSockJS(); // sock.js를 통하여 낮은 버전의 브라우저에서도 websocket이 동작할 수 있게 설정
+        registry.addEndpoint("/stomp/chat")
+                .setAllowedOriginPatterns("*");
     }
 
     // 클라이언트 인바운드 채널을 구성하는 메서드
