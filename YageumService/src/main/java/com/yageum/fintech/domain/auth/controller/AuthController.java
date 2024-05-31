@@ -17,6 +17,8 @@ import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+/**인터셉터가 적용되지 않음**/
+
 @Tag(name = "사용자 인증 API", description = "사용자 로그인, 회원가입과 관련된 API")
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -29,8 +31,6 @@ public class AuthController {
     private final AuthService authService;
     private final ResponseService responseService;
 
-    //인터셉터가 적용되지 않음
-    //회원가입
     @Operation(summary = "임차인 회원가입")
     @PostMapping("/tenant/register")
     public CommonResult tenantRegister(@RequestBody TenantRequestDto tenantRequestDto){
@@ -43,7 +43,6 @@ public class AuthController {
         return lessorService.register(lessorRequestDto);
     }
 
-    // 로그인
     @Operation(summary = "임차인 로그인")
     @PostMapping("/tenant/login")
     public CommonResult tenantLogin(@RequestBody LoginRequest loginRequest){
@@ -58,7 +57,6 @@ public class AuthController {
         return responseService.getSingleResult(token);
     }
 
-    // 이메일 인증번호 전송
     @Operation(summary = "이메일 인증번호 전송")
     @PostMapping("/emails/verification-requests")
     public CommonResult sendMessage(@RequestParam("email") @Valid String email) {
@@ -66,7 +64,6 @@ public class AuthController {
         return responseService.getSuccessfulResult();
     }
 
-    //이메일 인증번호 검증
     @Operation(summary = "이메일 인증번호 검증")
     @GetMapping("/emails/verifications")
     public EmailVerificationResult verificationEmail(@RequestParam("email") @Valid @Email String email,
