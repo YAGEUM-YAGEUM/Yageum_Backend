@@ -19,7 +19,7 @@ public class Wallet {
 
     @NotNull
     @Column(name = "username", length = 16, nullable = false)
-    private String usearname;
+    private String username;
 
     @NotNull
     @Column(name = "accountAddress", nullable = false)
