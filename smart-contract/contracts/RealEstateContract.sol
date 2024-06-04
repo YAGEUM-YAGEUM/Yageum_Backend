@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./EnumDeclaration.sol";
 import "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
@@ -15,6 +14,14 @@ contract RealEstateContract {
         string specialTerms; // 특약사항
         string lessorSignaturePad; // 임대인의 사인패드 서명 값
         string tenantSignaturePad; // 임차인의 사인패드 서명 값
+    }
+
+    enum ContractStatus {
+        Initiated,
+        Accepted,
+        Signed,
+        Completed,
+        Canceled
     }
 
     // 공개 키
