@@ -9,7 +9,6 @@ contract RealEstateContract {
     struct ContractDetails {
         uint deposit; // 보증금
         uint rentAmount; // 월세
-        uint paymentSchedule; // 지불 일정
         string propertyAddress; // 매물 주소
         string specialTerms; // 특약사항
         string lessorSignaturePad; // 임대인의 사인패드 서명 값
@@ -64,24 +63,22 @@ contract RealEstateContract {
     }
 
     //매물 정보를 조회하는 함수
-    function getContractDetails() public view returns (uint, uint, uint, string memory, string memory) {
+    function getContractDetails() public view returns (uint, uint, string memory, string memory) {
         return (
             contractDetails.deposit,
             contractDetails.rentAmount,
-            contractDetails.paymentSchedule,
             contractDetails.propertyAddress,
             contractDetails.specialTerms
         );
     }
 
     // 임대인이 매물 정보를 입력하고 계약서를 작성하여 임차인에게 보내는 함수
-    function sendContract(address _tenant, uint _rentAmount, uint _deposit, uint _paymentSchedule, string memory _propertyAddress, string memory _specialTerms, string memory _lessorSignaturePad) public {
+    function sendContract(address _tenant, uint _rentAmount, uint _deposit, string memory _propertyAddress, string memory _specialTerms, string memory _lessorSignaturePad) public {
         require(msg.sender == lessorPublicKey, "Only the lessor can send a contract");
 
         contractDetails = ContractDetails({
             deposit: _deposit,
             rentAmount: _rentAmount,
-            paymentSchedule: _paymentSchedule,
             propertyAddress: _propertyAddress,
             specialTerms: _specialTerms,
             lessorSignaturePad: _lessorSignaturePad,
@@ -89,7 +86,7 @@ contract RealEstateContract {
         });
 
         // 계약서 내용을 해시화하여 messageHash 설정
-        messageHash = hashContractDetails(_deposit, _rentAmount, _paymentSchedule, _propertyAddress, _specialTerms, _lessorSignaturePad, "");
+        messageHash = hashContractDetails(_deposit, _rentAmount, _propertyAddress, _specialTerms, _lessorSignaturePad, "");
 
         tenantPublicKey = _tenant;
         contractStatus = ContractStatus.Initiated;
@@ -108,7 +105,6 @@ contract RealEstateContract {
         messageHash = hashContractDetails(
             contractDetails.deposit,
             contractDetails.rentAmount,
-            contractDetails.paymentSchedule,
             contractDetails.propertyAddress,
             contractDetails.specialTerms,
             contractDetails.lessorSignaturePad,
@@ -120,7 +116,6 @@ contract RealEstateContract {
 
     // 임차인 또는 임대인이 계약을 서명하는 함수
     function signContract(bytes memory _signature) public onlyTenantOrLessor {
-        require(contractStatus == ContractStatus.Accepted, "To proceed with the contract, you need to sign on the signature pad first");
         require(messageHash != 0, "The contract has not been initialized yet");
 
         // 계약서의 내용과 서명자에 따른 해시 값 계산(서명값 생성)
@@ -168,8 +163,8 @@ contract RealEstateContract {
     }
 
     // 계약서 내용을 해시화하여 messageHash를 설정하는 함수
-    function hashContractDetails(uint _deposit, uint _rentAmount, uint _paymentSchedule, string memory _propertyAddress, string memory _specialTerms, string memory _lessorSignaturePad, string memory _tenantSignaturePad) internal pure returns (bytes32) {
-        return keccak256(abi.encodePacked(_deposit, _rentAmount, _paymentSchedule, _propertyAddress, _specialTerms, _lessorSignaturePad, _tenantSignaturePad));
+    function hashContractDetails(uint _deposit, uint _rentAmount, string memory _propertyAddress, string memory _specialTerms, string memory _lessorSignaturePad, string memory _tenantSignaturePad) internal pure returns (bytes32) {
+        return keccak256(abi.encodePacked(_deposit, _rentAmount, _propertyAddress, _specialTerms, _lessorSignaturePad, _tenantSignaturePad));
     }
 
 }
