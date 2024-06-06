@@ -55,6 +55,9 @@ public enum ExceptionList {
     //WALLET
     NON_EXISTENT_WALLET(5034, "지갑 주소가 존재하지 않습니다"),
 
+    //CONTRACT
+    CONTRACT_DETAILS_NOT_FOUND(6000, "해당 해시값으로 조회된 계약 정보가 없습니다."),
+
     // 권한
     UNAUTHORIZED_ACCESS(8000, "접근 권한이 없습니다.");
 
