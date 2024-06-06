@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "채팅 관련 API", description = "채팅방 생성, 조회, 메시지 전송 및 퇴장 등 채팅과 관련된 API")
+@Tag(name = "채팅 API", description = "채팅방 생성, 조회, 메시지 전송 및 퇴장 등 채팅과 관련된 API")
 @Slf4j
 @Controller
 @RequiredArgsConstructor

@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @Configuration
 @RequiredArgsConstructor
-@EnableMongoRepositories(basePackages = "com.yageum.fintech.domain.chat.infrastructure")
+@EnableMongoRepositories(basePackages = "com.yageum.fintech.domain.chat.infrastructure.repository")
 public class MongoConfig {
 
     private final MongoProperties mongoProperties;

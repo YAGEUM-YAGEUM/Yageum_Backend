@@ -79,11 +79,11 @@ public class ChatRoomService {
         Long creatorId = getUserIdByUsername(JwtContextHolder.getUsername());
 
         // 3-1 채팅방이 이미 존재하는 경우 해당 채팅방 반환
-        if (chatRoomRepository.existChatRoomByHouseIdAndMembers(houseId, creatorId, participantId)) {
+        if (chatRoomRepository.existsByHouseIdAndCreatorIdAndParticipantId(houseId, creatorId, participantId)) {
             return chatRoomRepository.findChatRoomByHouseIdAndMembers(houseId, creatorId, participantId);
         }
         // 3-2 상대방이 이미 채팅방을 만든 경우 해당 채팅방 반환
-        else if (chatRoomRepository.existChatRoomByHouseIdAndMembersReverse(houseId, creatorId, participantId)) {
+        else if (chatRoomRepository.existsByHouseIdAndParticipantIdAndCreatorId(houseId, creatorId, participantId)) {
             return chatRoomRepository.findChatRoomByHouseIdAndMembers(houseId, participantId, creatorId);
         }
 
