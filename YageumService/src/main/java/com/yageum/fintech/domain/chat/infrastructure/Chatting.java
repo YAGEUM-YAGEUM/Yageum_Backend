@@ -4,6 +4,7 @@ import jakarta.persistence.Id;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Document(collection = "chatting")
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 public class Chatting { //Mongo DB에 메시지 저장
 
     @Id
-    private Long chattingId;
+    private Long id;
     private Long chatRoomNo;
     private Long senderId;
     private Long houseId;
@@ -24,9 +25,9 @@ public class Chatting { //Mongo DB에 메시지 저장
     private long readCount;
 
     @Builder
-    public Chatting(Long chattingId, Long chatRoomNo, Long senderId, Long houseId, String senderName,
+    public Chatting(Long id, Long chatRoomNo, Long senderId, Long houseId, String senderName,
                     ChatContentType contentType, String content, long sendDate, long readCount) {
-        this.chattingId = chattingId;
+        this.id = id;
         this.chatRoomNo = chatRoomNo;
         this.houseId = houseId;
         this.senderId = senderId;

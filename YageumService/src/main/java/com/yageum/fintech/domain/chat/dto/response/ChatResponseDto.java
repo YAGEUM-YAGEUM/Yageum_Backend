@@ -23,7 +23,7 @@ public class ChatResponseDto { //Chatting 응답 객체
     private boolean isMine;
 
     public ChatResponseDto(Chatting chatting, Long memberNo) {
-        this.chattingId = chatting.getChattingId();
+        this.chattingId = chatting.getId();
         this.chatRoomNo = chatting.getChatRoomNo();
         this.senderId = chatting.getSenderId();
         this.senderName = chatting.getSenderName();
