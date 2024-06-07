@@ -17,6 +17,7 @@ import com.yageum.fintech.domain.house.service.HouseService;
 import com.yageum.fintech.global.model.Exception.DealCompletedException;
 import com.yageum.fintech.global.model.Exception.ExceptionList;
 import com.yageum.fintech.global.model.Exception.NonExistentException;
+import com.yageum.fintech.global.util.kafka.KafkaUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -51,7 +52,7 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final MongoTemplate mongoTemplate;
-    private final SimpMessagingTemplate messagingTemplate; //특정 Broker로 메세지를 전달
+    private final MessageSender messageSender;
     private final MessageService messageService;
     private final HouseService houseService;
     private final MyUserDetailsService userDetailsService;
@@ -97,15 +98,10 @@ public class ChatRoomService {
 
         ChatRoom savedchatRoom = chatRoomRepository.save(chatroom);
 
-//        // 채팅방 카운트 증가 : kafka
-//        AggregationDto aggregationDto = AggregationDto
-//                .builder()
-//                .isIncrease("true")
-//                .target(AggregationTarget.CHAT)
-//                .saleNo(requestDto.getSaleNo())
-//                .build();
-//
-//        aggregationSender.send(ConstantUtil.KAFKA_AGGREGATION, aggregationDto);
+        /**
+         * 채팅방 집계를 위한 aggregation 도 kafka 로 추가 구현
+         */
+
         return savedchatRoom;
     }
 
@@ -199,15 +195,15 @@ public class ChatRoomService {
         // message 객체에 보낸 시간, 보낸 사람 memberNo, 보낸 사람 이름을 설정
         message.setSendTimeAndSender(LocalDateTime.now(), uid, name, readCount);
 
+        //메시지 전송
+        messageSender.send(KafkaUtil.KAFKA_TOPIC, message);
+
         // Message 객체를 Chatting 객체로 변환
         // 메시지를 저장
         Chatting chatting = message.convertEntity();
 
         // 채팅 저장
         messageRepository.save(chatting);
-
-        // 해당 채팅방의 구독자에게 메시지 브로드캐스트
-        messagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatRoomNo(), message);
 
         return message;
     }
@@ -222,7 +218,7 @@ public class ChatRoomService {
                 .build();
 
         // 상대방에게 입장 메시지를 브로드캐스트
-         messagingTemplate.convertAndSend("/sub/chat/room/" + chatRoomNo, enterMessage);
+        messageSender.send(KafkaUtil.KAFKA_TOPIC, enterMessage);
     }
     public void broadcastExitMessage(Long chatRoomNo, String name) {
         Message exitMessage = Message.builder()
@@ -232,7 +228,7 @@ public class ChatRoomService {
                 .build();
 
         // 상대방에게 퇴장 메시지를 브로드캐스트
-        messagingTemplate.convertAndSend("/sub/chat/room/" + chatRoomNo, exitMessage);
+        messageSender.send(KafkaUtil.KAFKA_TOPIC, exitMessage);
     }
 
     /** 특정 채팅방에서 읽지 않은 메시지를 모두 읽음 처리 */

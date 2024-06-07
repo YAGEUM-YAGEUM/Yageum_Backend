@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
 @EnableJpaAuditing
-//@EnableDiscoveryClient
-//@EnableFeignClients
 public class YageumApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(YageumApplication.class, args);
