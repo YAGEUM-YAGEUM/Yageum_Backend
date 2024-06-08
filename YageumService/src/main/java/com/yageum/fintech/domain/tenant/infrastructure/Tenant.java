@@ -16,7 +16,8 @@ public class Tenant {
 
     @Id
     @Column(name = "tenant_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_seq")
+    @SequenceGenerator(name = "id_seq", sequenceName = "id_seq", allocationSize = 1)
     private Long tenantId;
 
     @Column(name = "username", nullable = false, length = 50, unique = true)
