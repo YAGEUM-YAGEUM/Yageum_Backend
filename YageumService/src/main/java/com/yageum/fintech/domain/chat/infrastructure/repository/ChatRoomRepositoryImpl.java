@@ -19,6 +19,9 @@ public class ChatRoomRepositoryImpl implements CustomChatRoomRepository{
     //엔티티와 다른 반환 타입 -> Projections
     @Override
     public List<ChatRoomResponseDto> getChatRoomList(@Param("memberNo") Long memberNo) {
+        if (memberNo == null) {
+            throw new IllegalArgumentException("memberNo cannot be null");
+        }
         List<ChatRoomResponseDto> chatRoomList = jpaQueryFactory
                 .select(Projections.constructor(ChatRoomResponseDto.class,
                         chatRoom.chatRoomNo,
