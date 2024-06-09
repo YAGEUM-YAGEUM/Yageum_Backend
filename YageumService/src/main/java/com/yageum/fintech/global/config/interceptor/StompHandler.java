@@ -1,5 +1,6 @@
 package com.yageum.fintech.global.config.interceptor;
 
+import com.yageum.fintech.domain.auth.jwt.JwtContextHolder;
 import com.yageum.fintech.domain.auth.jwt.JwtTokenProvider;
 import com.yageum.fintech.domain.auth.service.MyUserDetailsService;
 import com.yageum.fintech.domain.chat.service.ChatRoomService;
@@ -54,6 +55,14 @@ public class StompHandler implements ChannelInterceptor {
         // 인증 발급
         Authentication authentication = tokenProvider.getAuthentication(accessToken);
         accessor.setUser(authentication);
+
+        String name = getNameByUsername(username);
+        Long userId = getUserIdByUsername(username);
+
+        //JwtContextHolder 에 저장 (Thread)
+        JwtContextHolder.setUid(userId);
+        JwtContextHolder.setName(name);
+        JwtContextHolder.setUsername(username);
 
         handleMessage(accessor.getCommand(), accessor, username);
         return message;
