@@ -40,4 +40,4 @@ out/
 .vscode/
 
 ### Mysql Log ###
-mysql_data/
+mysql_data/.env
