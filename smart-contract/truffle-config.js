@@ -9,16 +9,18 @@ module.exports = {
 //      port: 7545,            // Standard Ethereum port (default: none)
 //      network_id: "*",       // Any network (default: none)
 //     },
-  sepolia: {
-    provider: () => new HDWalletProvider(mnemonic, `https://sepolia.infura.io/v3/${infuraProjectId}`),
-    network_id: "11155111", // Sepolia network ID
-    gas: 5500000, // Gas limit
-    confirmations: 2, // Number of confirmations to wait between deployments
-    skipDryRun: true,
-    pollingInterval : 1800000,
-    disableConfirmationListener: true,
-    timeoutBlocks: 200,
-  },
+     sepolia: {
+       provider: () => new HDWalletProvider(mnemonic, `https://sepolia.infura.io/v3/${infuraProjectId}`),
+       network_id: "11155111", // Sepolia network ID
+       gas: 5000000, // Gas limit
+       gasPrice: 30000000000,
+       confirmations: 2, // Number of confirmations to wait between deployments
+       skipDryRun: true,
+       pollingInterval : 1800000,
+       disableConfirmationListener: true,
+       timeoutBlocks: 200,
+       networkCheckTimeout: 1000000,
+     },
 },
   compilers: {
     solc: {
