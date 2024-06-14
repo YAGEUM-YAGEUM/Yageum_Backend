@@ -1,6 +1,5 @@
 package com.yageum.fintech.domain.chat.service;
 
-import com.yageum.fintech.domain.auth.jwt.JwtContextHolder;
 import com.yageum.fintech.domain.auth.jwt.JwtTokenProvider;
 import com.yageum.fintech.domain.auth.service.MyUserDetailsService;
 import com.yageum.fintech.domain.chat.dto.request.ChatRoomRequestDto;
@@ -17,7 +16,8 @@ import com.yageum.fintech.domain.house.service.HouseService;
 import com.yageum.fintech.global.model.Exception.DealCompletedException;
 import com.yageum.fintech.global.model.Exception.ExceptionList;
 import com.yageum.fintech.global.model.Exception.NonExistentException;
-import com.yageum.fintech.global.util.kafka.KafkaUtil;
+import com.yageum.fintech.global.util.KafkaUtil;
+import com.yageum.fintech.global.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,7 +26,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,7 +76,7 @@ public class ChatRoomService {
         // 3. 채팅방이 이미 존재하는지 확인
         Long houseId = requestDto.getHouseId();
         Long participantId = requestDto.getParticipantId();
-        Long creatorId = getUserIdByUsername(JwtContextHolder.getUsername());
+        Long creatorId = getUserIdByUsername(SecurityUtils.getUsername());
 
         // 3-1 채팅방이 이미 존재하는 경우 해당 채팅방 반환
         if (chatRoomRepository.existsByHouseIdAndCreatorIdAndParticipantId(houseId, creatorId, participantId)) {
@@ -107,7 +106,9 @@ public class ChatRoomService {
 
     /** 특정 회원이 속한 채팅방 목록을 조회힘 */
     @Transactional
-    public List<ChatRoomResponseDto> getChatRoomList(Long memberNo) {
+    public List<ChatRoomResponseDto> getChatRoomList() {
+
+        Long memberNo = getUserIdByUsername(SecurityUtils.getUsername());
 
         // 1. 내가 속한 채팅방 리스트 조회
         List<ChatRoomResponseDto> chatRoomList = chatRoomRepository.getChatRoomList(memberNo);
@@ -163,7 +164,9 @@ public class ChatRoomService {
     }
 
     /** 특정 채팅방의 채팅 기록을 조회 */
-    public ChattingHistoryResponseDto getChattingList(Long chatRoomNo, Long memberNo) {
+    public ChattingHistoryResponseDto getChattingList(Long chatRoomNo) {
+
+        Long memberNo = getUserIdByUsername(SecurityUtils.getUsername());
         updateCountAllZero(chatRoomNo, memberNo);
 
         String username = userDetailsService.findUsernameById(memberNo);

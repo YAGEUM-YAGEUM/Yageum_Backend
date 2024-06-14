@@ -1,7 +1,7 @@
 package com.yageum.fintech.domain.chat.service;
 
 import com.yageum.fintech.domain.chat.dto.request.Message;
-import com.yageum.fintech.global.util.kafka.KafkaUtil;
+import com.yageum.fintech.global.util.KafkaUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;

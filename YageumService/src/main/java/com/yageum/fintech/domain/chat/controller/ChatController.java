@@ -1,6 +1,5 @@
 package com.yageum.fintech.domain.chat.controller;
 
-import com.yageum.fintech.domain.auth.jwt.JwtContextHolder;
 import com.yageum.fintech.domain.chat.dto.request.ChatRoomRequestDto;
 import com.yageum.fintech.domain.chat.dto.request.Message;
 import com.yageum.fintech.domain.chat.dto.response.ChatRoomResponseDto;
@@ -23,7 +22,7 @@ import java.util.List;
 
 @Tag(name = "채팅 API", description = "채팅방 생성, 조회, 메시지 전송 및 퇴장 등 채팅과 관련된 API")
 @Slf4j
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class ChatController {
 
@@ -46,16 +45,16 @@ public class ChatController {
     }
 
     @Operation(summary = "채팅방 리스트 조회", description = "내가 속한 채팅방 리스트를 조회하는 API")
-    @GetMapping("/chatroom")
+    @GetMapping("/chatrooms")
     public CommonResult chatRoomList() {
-        List<ChatRoomResponseDto> chatList = chatRoomService.getChatRoomList(JwtContextHolder.getUid());
+        List<ChatRoomResponseDto> chatList = chatRoomService.getChatRoomList();
         return responseService.getListResult(chatList);
     }
 
     @Operation(summary = "채팅 내역 조회", description = "특정 채팅방의 채팅 내역을 조회하는 API")
     @GetMapping("/chatroom/{roomNo}")
     public CommonResult chattingList(@PathVariable("roomNo") Long roomNo) {
-        ChattingHistoryResponseDto chattingList = chatRoomService.getChattingList(roomNo, JwtContextHolder.getUid());
+        ChattingHistoryResponseDto chattingList = chatRoomService.getChattingList(roomNo);
         return responseService.getSingleResult(chattingList);
     }
 

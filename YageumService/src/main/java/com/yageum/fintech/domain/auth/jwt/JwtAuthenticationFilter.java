@@ -1,5 +1,6 @@
 package com.yageum.fintech.domain.auth.jwt;
 
+import com.yageum.fintech.domain.auth.service.MyUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
