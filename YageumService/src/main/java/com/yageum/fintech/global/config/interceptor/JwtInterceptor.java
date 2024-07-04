@@ -45,10 +45,10 @@ public class JwtInterceptor implements HandlerInterceptor {
                 throw new MalformedJwtException("JWT 토큰의 클레임이 잘못되었습니다.");
             }
 
-            //JwtContextHolder 에 저장 (Thread)
-            JwtContextHolder.setUid(uid); // 사용자 UID
-            JwtContextHolder.setName(name); // 사용자 이름
-            JwtContextHolder.setUsername(username); // 사용자 아이디
+//            //JwtContextHolder 에 저장 (Thread)
+//            JwtContextHolder.setUid(uid); // 사용자 UID
+//            JwtContextHolder.setName(name); // 사용자 이름
+//            JwtContextHolder.setUsername(username); // 사용자 아이디
 
         } catch (JwtException e) {
             throw new IllegalArgumentException("JWT 토큰 검증 실패", e);

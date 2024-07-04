@@ -44,34 +44,40 @@ public class StompHandler implements ChannelInterceptor {
         //StompHeaderAccessor : 메시지의 Stomp 헤더를 쉽게 접근하기 위한 유틸리티 클래스
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
 
-        String accessToken = getAccessToken(accessor);
-        if (accessToken == null) {
-            throw new NullJwtTokenException(ExceptionList.NULL_JWT_TOKEN);
+        if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+            String accessToken = getAccessToken(accessor);
+            if (accessToken == null) {
+                throw new NullJwtTokenException(ExceptionList.NULL_JWT_TOKEN);
+            }
+
+            String username = verifyAccessToken(accessToken);
+            log.info("StompAccessor = {}", accessor);
+
+            // 인증 발급
+            Authentication authentication = tokenProvider.getAuthentication(accessToken);
+            accessor.setUser(authentication);
+
+            String name = getNameByUsername(username);
+            Long userId = getUserIdByUsername(username);
+
+            //JwtContextHolder 에 저장 (Thread)
+            JwtContextHolder.setUid(userId);
+            JwtContextHolder.setName(name);
+            JwtContextHolder.setUsername(username);
+
+            accessor.getSessionAttributes().put("username", username);
         }
 
-        String username = verifyAccessToken(accessToken);
-        log.info("StompAccessor = {}", accessor);
-
-        // 인증 발급
-        Authentication authentication = tokenProvider.getAuthentication(accessToken);
-        accessor.setUser(authentication);
-
-        String name = getNameByUsername(username);
-        Long userId = getUserIdByUsername(username);
-
-        //JwtContextHolder 에 저장 (Thread)
-        JwtContextHolder.setUid(userId);
-        JwtContextHolder.setName(name);
-        JwtContextHolder.setUsername(username);
-
-        handleMessage(accessor.getCommand(), accessor, username);
+        handleMessage(accessor.getCommand(), accessor);
         return message;
     }
 
     /**
      * STOMP 명령어에 따라 다른 처리를 수행
      */
-    private void handleMessage(StompCommand stompCommand, StompHeaderAccessor accessor, String username) {
+    private void handleMessage(StompCommand stompCommand, StompHeaderAccessor accessor) {
+        String username = (String) accessor.getSessionAttributes().get("username");
+
         switch (stompCommand) {
             case CONNECT:
                 // 연결 설정만 처리
@@ -79,9 +85,11 @@ public class StompHandler implements ChannelInterceptor {
                 break;
             case SUBSCRIBE:
                 connectToChatRoom(accessor, username);
+                log.info("User {} subscribe", username);
                 break;
             case SEND:
                 tokenProvider.getUsername(getAccessToken(accessor));
+                log.info("User {} send", username);
                 break;
             case DISCONNECT:
                 disconnectChatRoom(accessor, username);
