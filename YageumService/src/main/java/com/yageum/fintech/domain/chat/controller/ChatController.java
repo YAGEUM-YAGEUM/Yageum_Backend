@@ -14,7 +14,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.*;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,13 +62,14 @@ public class ChatController {
     @MessageMapping("/chat/talk/{roomId}")
     @SendTo("/sub/chat/room/{roomId}")
     public void talkUser(@DestinationVariable("roomId") Long roomId, @Payload Message message, @Header("Authorization") final String accessToken){
+        log.info("talk{}", roomId);
         String token = accessToken.substring(7);
         chatRoomService.sendMessage(message, token);
     }
 
     @Operation(summary = "채팅방 퇴장", description = "채팅방 접속 끊을수 있는 API, 채팅방 접속 끊은 시 redis 채팅방 인원 제거하는 API")
     @PostMapping("/chat/exit/{roomId}")
-    public CommonResult exitUser(@DestinationVariable("roomId") Long roomId, @RequestParam(value = "username", required = false) String username){
+    public CommonResult exitUser(@PathVariable("roomId") Long roomId, @RequestParam(value = "username", required = false) String username){
         // 사용자 입장 내역을 삭제
         messageService.disconnectChatRoom(roomId, username);
 
