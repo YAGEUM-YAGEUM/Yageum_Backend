@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class Chatting { //Mongo DB에 메시지 저장
 
     @Id
-    private Long id;
+    private String id; // MongoDB 기본 ID 타입이 String
     private Long chatRoomNo;
     private Long senderId;
     private Long houseId;
@@ -25,7 +25,7 @@ public class Chatting { //Mongo DB에 메시지 저장
     private long readCount;
 
     @Builder
-    public Chatting(Long id, Long chatRoomNo, Long senderId, Long houseId, String senderName,
+    public Chatting(String id, Long chatRoomNo, Long senderId, Long houseId, String senderName,
                     ChatContentType contentType, String content, long sendDate, long readCount) {
         this.id = id;
         this.chatRoomNo = chatRoomNo;

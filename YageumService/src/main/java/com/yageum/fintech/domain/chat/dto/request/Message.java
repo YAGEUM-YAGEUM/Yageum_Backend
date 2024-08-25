@@ -16,7 +16,7 @@ import java.time.ZoneId;
 @AllArgsConstructor
 public class Message implements Serializable {
 
-    private Long messageId;
+    private String messageId;
 
     @NotNull
     private Long chatRoomNo;
@@ -44,7 +44,7 @@ public class Message implements Serializable {
         this.readCount = readCount;
     }
 
-    public void setId(Long messageId) {
+    public void setId(String messageId) {
         this.messageId = messageId;
     }
 

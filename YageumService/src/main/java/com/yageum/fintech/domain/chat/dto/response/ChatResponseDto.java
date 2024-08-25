@@ -12,7 +12,7 @@ import java.time.ZoneId;
 @ToString
 @AllArgsConstructor
 public class ChatResponseDto { //Chatting 응답 객체
-    private Long chattingId;
+    private String chattingId;
     private Long chatRoomNo;
     private Long senderId;
     private String senderName;
