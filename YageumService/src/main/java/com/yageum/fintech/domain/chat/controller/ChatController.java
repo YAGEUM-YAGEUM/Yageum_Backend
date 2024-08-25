@@ -58,11 +58,8 @@ public class ChatController {
     }
 
     //채팅방 입장은 StompHandler(Subscribe)에서 처리
-
-    @MessageMapping("/chat/talk/{roomId}")
-    @SendTo("/sub/chat/room/{roomId}")
-    public void talkUser(@DestinationVariable("roomId") Long roomId, @Payload Message message, @Header("Authorization") final String accessToken){
-        log.info("talk{}", roomId);
+    @MessageMapping("/chat/message")
+    public void talkUser(@Valid Message message, @Header("Authorization") final String accessToken){
         String token = accessToken.substring(7);
         chatRoomService.sendMessage(message, token);
     }
