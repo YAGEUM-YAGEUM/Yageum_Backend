@@ -92,7 +92,7 @@ public class StompHandler implements ChannelInterceptor {
                 log.info("User {} send", username);
                 break;
             case DISCONNECT:
-                disconnectChatRoom(accessor, username);
+//                disconnectChatRoom(accessor, username);
                 break;
         }
     }
