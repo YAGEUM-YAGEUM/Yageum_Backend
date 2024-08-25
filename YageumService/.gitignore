@@ -41,3 +41,5 @@ out/
 
 ### Mysql Log ###
 mysql_data/
+
+.application-local.yml
