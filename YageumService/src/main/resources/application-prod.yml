@@ -43,10 +43,10 @@ spring:
 
   kafka:
     consumer:
-      bootstrap-servers: localhost:9092 # 컨슈머 서버 주소
+      bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS} # 컨슈머 서버 주소
       group-id: yg-chatting-group
     producer:
-      bootstrap-servers: localhost:9092 # 프로듀서 서버 주소
+      bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS} # 프로듀서 서버 주소
 
 mongodb:
   client: ${mongo.client}
