@@ -6,29 +6,27 @@ spring:
     name: Yageum-Service
 
   datasource:
-    url: jdbc-secretsmanager:mysql://yg-database.cjq2ocek4xmp.ap-northeast-2.rds.amazonaws.com:3306/yageum
+    url: jdbc-secretsmanager:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
     driver-class-name: com.amazonaws.secretsmanager.sql.AWSSecretsManagerMySQLDriver
-    username: prod/AppBeta/MysqlYG
 
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: ${SHOW_SQL:false}
     properties:
       hibernate:
-        format_sql: true
+        format_sql: ${FORMAT_SQL:false}
         dialect: org.hibernate.dialect.MySQLDialect
 
   redis:
-    host: localhost
-#    host: redis
-    port: 6379
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
 
   mail:
-    host: ${mail.host}
-    port: 587
-    username: ${mail.username}
-    password: ${mail.password}
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
@@ -43,17 +41,14 @@ spring:
 
   kafka:
     consumer:
-      bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS} # 컨슈머 서버 주소
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
       group-id: yg-chatting-group
     producer:
-      bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS} # 프로듀서 서버 주소
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
 
 mongodb:
-  client: ${mongo.client}
-  name: ${mongo.name}
+  client: ${MONGO_CLIENT}
+  name: ${MONGO_NAME}
 
 jwt:
-  secret: ${jwt.secret}
-
-#user-service:
-#  url: http://52.78.155.253:8081/user-service
+  secret: ${JWT_SECRET}
