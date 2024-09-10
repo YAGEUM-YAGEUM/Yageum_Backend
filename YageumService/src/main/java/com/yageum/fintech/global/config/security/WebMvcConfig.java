@@ -18,6 +18,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         String[] activeProfiles = environment.getActiveProfiles();
         if(activeProfiles != null && activeProfiles.length > 0 && !activeProfiles[0].equals("test"))
             registry.addInterceptor(jwtInterceptor).addPathPatterns("/api/**")
-                    .excludePathPatterns("/api/v1/auth/**");
+                    .excludePathPatterns("/api/v1/auth/**", "/health_check");
     }
 }
